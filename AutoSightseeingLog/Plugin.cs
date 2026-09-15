@@ -16,11 +16,15 @@ using ECommons;
 using ECommons.DalamudServices;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AutoSightseeingLog;
 
 public sealed class Plugin : IDalamudPlugin
 {
+    private const string GotoSubcommand = "goto";
+    private const string NavmeshIpcProviderMarker = "Navmesh.IPCProvider";
+
     [PluginService]
     internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
 
@@ -65,6 +69,7 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
 
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
         Svc.Framework.Update += OnFrameworkUpdate;
         Svc.ClientState.Login += OnLogin;
         if (Svc.ClientState.IsLoggedIn)
@@ -82,6 +87,7 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw -= OnDraw;
         PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
+        TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
         Svc.Framework.Update -= OnFrameworkUpdate;
         Svc.ClientState.Login -= OnLogin;
         Configuration.SaveIfPending();
@@ -142,10 +148,36 @@ public sealed class Plugin : IDalamudPlugin
         {
             VistaDumper.Dump();
         }
+        else if (IsGotoCommand(trimmed))
+        {
+            AutoGoto.HandleCommand(trimmed[GotoSubcommand.Length..].Trim(), Controller.Running);
+        }
         else
         {
             ToggleMainUi();
         }
+    }
+
+    private static bool IsGotoCommand(string arguments)
+        => arguments.StartsWith(GotoSubcommand, StringComparison.OrdinalIgnoreCase)
+        && (arguments.Length == GotoSubcommand.Length || char.IsWhiteSpace(arguments[GotoSubcommand.Length]));
+
+    // The navmesh plugin answers pathfind IPC on fire-and-forget tasks this plugin never gets a handle to. When one
+    // faults, typically a query issued while the zone mesh is still building, the finalizer would rethrow it as noise.
+    private static void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs eventArgs)
+    {
+        if (eventArgs.Observed)
+        {
+            return;
+        }
+
+        if (!eventArgs.Exception.ToString().Contains(NavmeshIpcProviderMarker, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        eventArgs.SetObserved();
+        Svc.Log.Debug($"{AslConstants.LogPrefix} Observed a navmesh IPC task fault: {eventArgs.Exception.GetBaseException().Message}");
     }
 
     private void OnDraw()

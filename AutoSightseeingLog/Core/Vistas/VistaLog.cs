@@ -65,6 +65,26 @@ internal static unsafe class VistaLog
         firstLogRecorded = CountRecorded(1, VistaData.FirstLogCount) == VistaData.FirstLogCount;
     }
 
+    // Asks the game directly, for the run waiting on an emote, and updates the kept bit to match.
+    public static bool CheckRecorded(ushort number)
+    {
+        var playerState = PlayerState.Instance();
+        var index = number - 1;
+        var word = index / BitsPerWord;
+        if (playerState == null || index < 0 || word >= recorded.Length)
+        {
+            return IsRecorded(number);
+        }
+
+        if (!playerState->IsAdventureComplete((uint)index))
+        {
+            return false;
+        }
+
+        recorded[word] |= 1UL << (index % BitsPerWord);
+        return true;
+    }
+
     public static bool IsRecorded(ushort number)
     {
         var index = number - 1;

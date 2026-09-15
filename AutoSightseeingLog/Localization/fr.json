@@ -122,6 +122,9 @@
   "tour.state.paused": "en pause",
   "tour.stopSub": "{0} · {1}",
   "run.phase.reading": "Lecture du carnet",
+  "run.phase.travelling": "En route",
+  "run.phase.waiting": "En attente du créneau",
+  "run.phase.emoting": "Contemplation de la vue",
   "run.phase.standingBy": "En attente",
   "run.phase.ready": "Prêt",
   "run.phase.paused": "En pause",
@@ -250,6 +253,6 @@
   "settings.general.behavior": "Comportement",
   "settings.general.autoPause": "Pause automatique en instance",
   "settings.general.autoPauseHelp": "Met la session en pause pendant un donjon, une épreuve, un raid ou tout autre contenu instancié, puis la reprend une fois dehors. Votre plan et vos statistiques sont conservés.",
-  "plugin.commandHelp": "Ouvre ou ferme la fenêtre Auto Sightseeing Log. /asl config | stats | deps | about | pause (mettre en pause ou reprendre la session) | logdump (écrire l'état du carnet d'exploration dans le journal du plugin).",
+  "plugin.commandHelp": "Ouvre ou ferme la fenêtre Auto Sightseeing Log. /asl config | stats | deps | about | pause (mettre en pause ou reprendre la session) | goto <numéro> (se rendre à un panorama sans l'enregistrer ; goto stop annule) | logdump (écrire l'état du carnet d'exploration dans le journal du plugin).",
   "plugin.commandHelpAlias": "Alias de /asl."
 }

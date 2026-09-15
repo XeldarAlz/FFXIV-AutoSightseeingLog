@@ -48,6 +48,7 @@ internal sealed partial class TourController
         pausing.BeginPause();
         currentTask = null;
         Svc.Automation.Stop();
+        ReleaseHelpers();
 
         Diag($"Run paused ({reason}); session kept at {pausing.VistasLogged} vistas.");
         ECommons.DalamudServices.Svc.Chat.Print(reason == PauseReason.InContent

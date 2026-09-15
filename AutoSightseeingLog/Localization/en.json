@@ -122,6 +122,9 @@
   "tour.state.paused": "paused",
   "tour.stopSub": "{0} · {1}",
   "run.phase.reading": "Reading your log",
+  "run.phase.travelling": "Travelling",
+  "run.phase.waiting": "Waiting for the window",
+  "run.phase.emoting": "Taking in the view",
   "run.phase.standingBy": "Standing by",
   "run.phase.ready": "Ready",
   "run.phase.paused": "Paused",
@@ -250,6 +253,6 @@
   "settings.general.behavior": "Behavior",
   "settings.general.autoPause": "Auto-pause in content",
   "settings.general.autoPauseHelp": "Pause the run while you are inside a duty, trial, raid, or any other instanced content, then resume it once you are back outside. Your plan and session stats are kept.",
-  "plugin.commandHelp": "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | pause (pause or resume the run) | logdump (write the Sightseeing Log state to the plugin log).",
+  "plugin.commandHelp": "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | pause (pause or resume the run) | goto <number> (travel to a vista without logging it; goto stop cancels) | logdump (write the Sightseeing Log state to the plugin log).",
   "plugin.commandHelpAlias": "Alias for /asl."
 }

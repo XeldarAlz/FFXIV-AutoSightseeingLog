@@ -1,4 +1,5 @@
 using AutoSightseeingLog.Core.External;
+using AutoSightseeingLog.Core.Ipc;
 using clib.Services;
 
 namespace AutoSightseeingLog.Core.Tasks;
@@ -44,6 +45,7 @@ internal sealed partial class TourController
             return;
         }
 
+        NavmeshSettings.WarnIfInputCancelsMovement();
         PauseReason = PauseReason.None;
         session = new TourSession(plan);
         Diag($"Run starting: {plan.Length} vista(s).");
@@ -57,6 +59,7 @@ internal sealed partial class TourController
         currentTask = null;
         PauseReason = PauseReason.None;
         Svc.Automation.Stop();
+        ReleaseHelpers();
 
         // Pause already credited the run, and anything done since was the player's own play.
         FinalizeRun(ending, sample: !wasPaused);
@@ -127,6 +130,14 @@ internal sealed partial class TourController
         session = null;
         progress.Reset();
     }
+
+    // A stopped task unwinds on a later frame, and after an unload that frame may never come, so the pathfinder and the
+    // combat plugin's movement are released here as well.
+    private static void ReleaseHelpers()
+    {
+        NavmeshIPC.Instance.Stop();
+        BossModIPC.Instance.ReleaseMovement();
+    }
 }
 
-internal enum TourPhase { Idle, Reading, Paused }
+internal enum TourPhase { Idle, Reading, Travelling, Waiting, Emoting, Paused }

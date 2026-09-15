@@ -122,6 +122,9 @@
   "tour.state.paused": "duraklatıldı",
   "tour.stopSub": "{0} · {1}",
   "run.phase.reading": "Günlük okunuyor",
+  "run.phase.travelling": "Yolda",
+  "run.phase.waiting": "Zaman aralığı bekleniyor",
+  "run.phase.emoting": "Manzara seyrediliyor",
   "run.phase.standingBy": "Bekleniyor",
   "run.phase.ready": "Hazır",
   "run.phase.paused": "Duraklatıldı",
@@ -250,6 +253,6 @@
   "settings.general.behavior": "Davranış",
   "settings.general.autoPause": "İçerikte otomatik duraklat",
   "settings.general.autoPauseHelp": "Bir zindan, sınav, baskın ya da başka bir örneklenmiş içerikteyken çalışmayı duraklatır, dışarı çıkınca sürdürür. Planınız ve oturum istatistikleriniz korunur.",
-  "plugin.commandHelp": "Auto Sightseeing Log penceresini açar/kapatır. /asl config | stats | deps | about | pause (oturumu duraklat ya da sürdür) | logdump (gezi günlüğü durumunu eklenti günlüğüne yaz).",
+  "plugin.commandHelp": "Auto Sightseeing Log penceresini açar/kapatır. /asl config | stats | deps | about | pause (oturumu duraklat ya da sürdür) | goto <numara> (bir manzaraya kaydetmeden git; goto stop iptal eder) | logdump (gezi günlüğü durumunu eklenti günlüğüne yaz).",
   "plugin.commandHelpAlias": "/asl için kısayol."
 }

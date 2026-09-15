@@ -148,6 +148,9 @@ internal static class L
     internal static class Run
     {
         public static readonly LocString PhaseReading = new("run.phase.reading", "Reading your log");
+        public static readonly LocString PhaseTravelling = new("run.phase.travelling", "Travelling");
+        public static readonly LocString PhaseWaiting = new("run.phase.waiting", "Waiting for the window");
+        public static readonly LocString PhaseEmoting = new("run.phase.emoting", "Taking in the view");
         public static readonly LocString PhaseStandingBy = new("run.phase.standingBy", "Standing by");
         public static readonly LocString PhaseReady = new("run.phase.ready", "Ready");
         public static readonly LocString PhasePaused = new("run.phase.paused", "Paused");
@@ -310,7 +313,7 @@ internal static class L
 
     internal static class Plugin
     {
-        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | pause (pause or resume the run) | logdump (write the Sightseeing Log state to the plugin log).");
+        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | pause (pause or resume the run) | goto <number> (travel to a vista without logging it; goto stop cancels) | logdump (write the Sightseeing Log state to the plugin log).");
         public static readonly LocString CommandHelpAlias = new("plugin.commandHelpAlias", "Alias for /asl.");
     }
 }

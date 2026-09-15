@@ -9,13 +9,21 @@ internal sealed class TourProgress
 
     public ReadOnlySpan<ushort> Queue => queue;
 
+    // Log number of the vista the run is working on, or 0 between vistas.
+    public ushort CurrentVista { get; private set; }
+
     public void SetPhase(TourPhase phase) => Phase = phase;
 
     public void SetQueue(ushort[] ordered) => queue = ordered;
+
+    public void SetVista(ushort number) => CurrentVista = number;
+
+    public void ClearVista() => CurrentVista = 0;
 
     public void Reset()
     {
         Phase = TourPhase.Idle;
         queue = [];
+        CurrentVista = 0;
     }
 }

@@ -122,6 +122,9 @@
   "tour.state.paused": "en pausa",
   "tour.stopSub": "{0} · {1}",
   "run.phase.reading": "Leyendo el diario",
+  "run.phase.travelling": "Viajando",
+  "run.phase.waiting": "Esperando la ventana",
+  "run.phase.emoting": "Contemplando la vista",
   "run.phase.standingBy": "En espera",
   "run.phase.ready": "Listo",
   "run.phase.paused": "En pausa",
@@ -250,6 +253,6 @@
   "settings.general.behavior": "Comportamiento",
   "settings.general.autoPause": "Pausa automática en contenido",
   "settings.general.autoPauseHelp": "Pausa la sesión mientras estás en una mazmorra, prueba, incursión u otro contenido instanciado, y la reanuda al volver fuera. Tu plan y tus estadísticas se conservan.",
-  "plugin.commandHelp": "Abre o cierra la ventana de Auto Sightseeing Log. /asl config | stats | deps | about | pause (pausar o reanudar la sesión) | logdump (escribir el estado del diario de exploración en el registro del plugin).",
+  "plugin.commandHelp": "Abre o cierra la ventana de Auto Sightseeing Log. /asl config | stats | deps | about | pause (pausar o reanudar la sesión) | goto <número> (viajar a un mirador sin registrarlo; goto stop cancela) | logdump (escribir el estado del diario de exploración en el registro del plugin).",
   "plugin.commandHelpAlias": "Alias de /asl."
 }

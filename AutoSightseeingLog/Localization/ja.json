@@ -122,6 +122,9 @@
   "tour.state.paused": "一時停止中",
   "tour.stopSub": "{0} · {1}",
   "run.phase.reading": "手帳を確認中",
+  "run.phase.travelling": "移動中",
+  "run.phase.waiting": "条件待ち",
+  "run.phase.emoting": "景色を眺め中",
   "run.phase.standingBy": "待機中",
   "run.phase.ready": "準備完了",
   "run.phase.paused": "一時停止中",
@@ -250,6 +253,6 @@
   "settings.general.behavior": "動作",
   "settings.general.autoPause": "コンテンツ中は自動で一時停止",
   "settings.general.autoPauseHelp": "コンテンツ、討滅戦、レイド、その他のインスタンスコンテンツ中は実行を一時停止し、外に戻ったら再開します。プランとセッション統計は保持されます。",
-  "plugin.commandHelp": "Auto Sightseeing Log のウィンドウを開閉します。/asl config | stats | deps | about | pause（実行の一時停止／再開）| logdump（探検手帳の状態をプラグインログに出力）。",
+  "plugin.commandHelp": "Auto Sightseeing Log のウィンドウを開閉します。/asl config | stats | deps | about | pause（実行の一時停止／再開）| goto <番号>（記録せずに探検ポイントへ移動。goto stop で中止）| logdump（探検手帳の状態をプラグインログに出力）。",
   "plugin.commandHelpAlias": "/asl の別名です。"
 }

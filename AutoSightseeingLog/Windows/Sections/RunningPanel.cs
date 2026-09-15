@@ -19,6 +19,8 @@ internal static class RunningPanel
 
     private static uint cachedTerritoryId = uint.MaxValue;
     private static string cachedZoneName = string.Empty;
+    private static ushort cachedVista;
+    private static string cachedVistaLine = string.Empty;
 
     public static void Draw(TourController controller)
     {
@@ -93,6 +95,14 @@ internal static class RunningPanel
         var y = origin.Y + 16f * scale;
 
         y += DrawPhaseChip(columnX, y, label, accent, accentSoft) + 10f * scale;
+
+        var vistaLine = CurrentVistaLine(controller.Progress.CurrentVista);
+        if (vistaLine.Length > 0)
+        {
+            var vista = TextDraw.Truncate(vistaLine, columnWidth);
+            TextDraw.At(vista, new Vector2(columnX, y), Styling.TextStrong);
+            y += TextDraw.Measure(vista).Y + 4f * scale;
+        }
 
         var status = TextDraw.Truncate(string.IsNullOrWhiteSpace(controller.Status) ? Loc.T(L.Common.Working) : controller.Status, columnWidth);
         var statusSize = TextDraw.Measure(status);
@@ -278,6 +288,18 @@ internal static class RunningPanel
         TextDraw.At(name, new Vector2(nameX, midY - nameSize.Y * 0.5f), emphasize ? Styling.TextStrong : Styling.TextSecondary);
 
         ImGui.Dummy(size);
+    }
+
+    private static string CurrentVistaLine(ushort number)
+    {
+        if (number == cachedVista)
+        {
+            return cachedVistaLine;
+        }
+
+        cachedVista = number;
+        cachedVistaLine = number == 0 ? string.Empty : string.Concat(VistaText.NumberLabel(number), "  ", VistaRegistry.Name(number));
+        return cachedVistaLine;
     }
 
     private static string CurrentZoneName()

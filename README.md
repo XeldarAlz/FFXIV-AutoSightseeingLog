@@ -17,7 +17,7 @@
 
 ---
 
-> **Early development.** The first release is not out yet. The window, the vista picker, and the live log reader with every vista's time and weather window are in place; the automation that travels to each vista and logs it is being built now.
+> **Early development.** The first release is not out yet. The window, the vista picker, the live log reader with every vista's time and weather window, and a first version of the automation (travel to each vista, perform its emote, confirm the log recorded it) are in place. The automation is still being tested in game.
 
 ## What it does
 
@@ -57,6 +57,7 @@ The plugin needs a helper for movement to be installed and loaded. Open `/asl de
 | `/asl deps` | Open the Plugins page |
 | `/asl about` | Open the About page |
 | `/asl pause` | Pause or resume the current run |
+| `/asl goto <number>` | Travel to a vista without logging it (debug helper); `/asl goto stop` cancels |
 | `/asl logdump` | Write the Sightseeing Log state to the plugin log (debug helper) |
 
 ## Languages

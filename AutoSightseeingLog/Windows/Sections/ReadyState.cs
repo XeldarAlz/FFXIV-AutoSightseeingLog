@@ -81,8 +81,11 @@ internal static class ReadyState
 
     public static string PhaseLabel(TourPhase phase) => phase switch
     {
-        TourPhase.Reading => Loc.T(L.Run.PhaseReading),
-        TourPhase.Paused  => Loc.T(L.Run.PhasePaused),
-        _                 => Loc.T(L.Run.PhaseStandingBy),
+        TourPhase.Reading    => Loc.T(L.Run.PhaseReading),
+        TourPhase.Travelling => Loc.T(L.Run.PhaseTravelling),
+        TourPhase.Waiting    => Loc.T(L.Run.PhaseWaiting),
+        TourPhase.Emoting    => Loc.T(L.Run.PhaseEmoting),
+        TourPhase.Paused     => Loc.T(L.Run.PhasePaused),
+        _                    => Loc.T(L.Run.PhaseStandingBy),
     };
 }

@@ -122,6 +122,9 @@
   "tour.state.paused": "пауза",
   "tour.stopSub": "{0} · {1}",
   "run.phase.reading": "Чтение журнала",
+  "run.phase.travelling": "В пути",
+  "run.phase.waiting": "Ожидание окна",
+  "run.phase.emoting": "Любуемся видом",
   "run.phase.standingBy": "Ожидание",
   "run.phase.ready": "Готов",
   "run.phase.paused": "Пауза",
@@ -250,6 +253,6 @@
   "settings.general.behavior": "Поведение",
   "settings.general.autoPause": "Автопауза в контенте",
   "settings.general.autoPauseHelp": "Приостанавливает запуск, пока вы в подземелье, испытании, рейде или другом инстансе, и продолжает его, когда вы вернётесь. План и статистика сессии сохраняются.",
-  "plugin.commandHelp": "Открыть или закрыть окно Auto Sightseeing Log. /asl config | stats | deps | about | pause (пауза или продолжение сессии) | logdump (записать состояние журнала достопримечательностей в лог плагина).",
+  "plugin.commandHelp": "Открыть или закрыть окно Auto Sightseeing Log. /asl config | stats | deps | about | pause (пауза или продолжение сессии) | goto <номер> (переместиться к панораме, не отмечая её; goto stop отменяет) | logdump (записать состояние журнала достопримечательностей в лог плагина).",
   "plugin.commandHelpAlias": "Псевдоним для /asl."
 }
