@@ -1,0 +1,113 @@
+name: Bug report
+description: Something's broken or behaving unexpectedly.
+title: "[Bug] "
+labels: ["bug"]
+assignees: ["XeldarAlz"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill out as much as you can; it makes a huge difference.
+
+        If you're not sure whether it's a bug or expected behavior, prefer the [Q&A discussions](https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog/discussions/new?category=q-a); triage is faster there.
+
+        For security issues, please use [private vulnerability reporting](https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog/security/advisories/new) instead.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see? What did you expect to see instead?
+      placeholder: "The plugin flew to #073 The Fury's Gaze during Blizzards but the vista never recorded..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps to trigger the bug. If it's intermittent, say so.
+      placeholder: |
+        1. Open `/asl`
+        2. Tick the Stormblood vistas in The Fringes
+        3. Press Start
+        4. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: Shown in `/xlplugins` next to "Auto Sightseeing Log".
+      options:
+        - 0.1.0.0
+        - Older / not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: expansion
+    attributes:
+      label: Expansion of the affected vista(s)
+      description: Time windows, weather rules, and how a vista is reached differ per expansion, so expansion is a frequent root cause.
+      options:
+        - ARR (A Realm Reborn)
+        - HW (Heavensward)
+        - StB (Stormblood)
+        - ShB (Shadowbringers)
+        - EW (Endwalker)
+        - DT (Dawntrail)
+        - Multiple expansions
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: vistas-affected
+    attributes:
+      label: Specific vista(s) affected
+      description: The log number and name as the Sightseeing Log shows them. List one or more.
+      placeholder: "#073 The Fury's Gaze, #162 The Hidden Tunnel, ..."
+
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where in the run did it fail?
+      description: The plugin's flow runs read the log -> plan the order -> teleport -> fly or walk to the spot -> wait for the window -> emote -> next vista.
+      options:
+        - Selection / UI (issue before pressing Start)
+        - Wrong status (a vista shown as open, locked, or done when it isn't)
+        - Teleport (didn't move / wrong destination)
+        - Movement (stuck, can't reach the spot)
+        - Waiting (wrong hour or weather, or waited forever)
+        - Emote (did the emote but the vista didn't record)
+        - Next vista (didn't move on to the next vista)
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: attachments
+    attributes:
+      label: Attachments
+      description: |
+        **If you can provide any of these, it turns guesswork into a fix.**
+
+        - **Dalamud log**: open `/xllog`, click the *Open log folder* button at the bottom-right, attach `dalamud.log`. Filter by `[AutoSightseeingLog]` if you want to trim it down. Running `/asl logdump` first adds the plugin's view of your log to it.
+        - **Screenshots / short clip** if the issue is visual (a wrong status, a stuck spot, a wrong tooltip, etc.)
+        - **Other plugins active** that touch movement, teleport, emotes, or input, which helps rule out conflicts.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Inline log excerpt (optional)
+      description: |
+        Short snippets (chat-log tail, Dalamud error text) belong here. For full log files, use **Attachments** above; don't paste them inline.
+      render: text
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Whether you can fly in the zone, which unlock quests you've done, hunches, anything that helps the bug land.

@@ -1,0 +1,18 @@
+{
+    "Author": "XeldarAlz",
+    "Name": "Auto Sightseeing Log",
+    "InternalName": "AutoSightseeingLog",
+    "Punchline": "Sightseeing vistas, logged for you.",
+    "Description": "Fills in your Sightseeing Log for you: tick the vistas you want, and the plugin travels to each one, waits for its hour and weather, performs the emote the log asks for, and moves on until every vista is logged.",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog",
+    "IconUrl": "https://raw.githubusercontent.com/XeldarAlz/FFXIV-AutoSightseeingLog/master/AutoSightseeingLog/Images/Icon.png",
+    "Tags": [
+        "Sightseeing",
+        "Sightseeing Log",
+        "Vistas",
+        "Exploration",
+        "Achievements",
+        "Automation"
+    ]
+}
