@@ -33,6 +33,10 @@ internal abstract partial class AutoCommon
     private const int EmoteRefusedRetryMs = 1_000;
     private const int MaxEmoteAttempts = 3;
     private const int StillnessBeforeEmoteMs = 2_000;
+    // The game ignores the emote while the sit-down animation is still playing.
+    private const int PoseSettleMs = 1_500;
+    private const int StandUpWaitMs = 3_000;
+    private const int StandUpAttempts = 2;
 
     // True once the character stands on foot at the vista's approach point, or at its log point when it has none.
     protected async Task<bool> ReachVista(Vista vista, string scope)
@@ -94,6 +98,11 @@ internal abstract partial class AutoCommon
             Diag($"{attemptScope}: emote {vista.EmoteId} performed {DistanceTo(vista.Position):F1}m from the log point");
             if (await WaitUntilTimed(() => VistaLog.CheckRecorded(vista.Number), EmoteRecordWaitMs, $"{attemptScope}-record", EmoteRecordPollFrames))
             {
+                if (EmoteOps.EntersPose(vista.EmoteId))
+                {
+                    await LeavePose(vista.EmoteId, attemptScope);
+                }
+
                 return VistaOutcome.Recorded;
             }
 
@@ -161,6 +170,30 @@ internal abstract partial class AutoCommon
 
         Diag($"{scope}: not recorded; stepping {DistanceTo(closer):F1}m closer to the log point");
         await WalkTo(closer, StandingToleranceMeters, $"{scope}-closer", $"Stepping closer to {VistaRegistry.Name(vista.Number)}");
+    }
+
+    // Walking stands a seated character up, but the next leg may start by mounting, so the pose is left first by using
+    // its emote again.
+    private async Task LeavePose(ushort emoteId, string scope)
+    {
+        for (var attempt = 1; attempt <= StandUpAttempts; attempt++)
+        {
+            await DelayMs(PoseSettleMs);
+            if (CancelToken.IsCancellationRequested || !EmoteOps.InPose())
+            {
+                return;
+            }
+
+            Status = "Standing up";
+            EmoteOps.Execute(emoteId);
+            if (await WaitUntilTimed(static () => !EmoteOps.InPose(), StandUpWaitMs, $"{scope}-stand#{attempt}", EmoteRecordPollFrames))
+            {
+                Diag($"{scope}: stood up from the pose");
+                return;
+            }
+        }
+
+        Warn($"{scope}: still seated after using emote {emoteId} again; the next leg starts from the pose");
     }
 
     private static bool IsOpenNow(in Vista vista)

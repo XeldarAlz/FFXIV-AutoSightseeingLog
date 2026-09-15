@@ -1,4 +1,8 @@
+using ECommons.DalamudServices;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using Lumina.Excel.Sheets;
+using ClientCharacter = FFXIVClientStructs.FFXIV.Client.Game.Character.Character;
 
 namespace AutoSightseeingLog.Core.Game.Ops;
 
@@ -22,5 +26,15 @@ internal static unsafe class EmoteOps
 
         agent->ExecuteEmote(emoteId, null, false, false);
         return true;
+    }
+
+    // Emotes with a mode, such as Sit on Ground, hold the character in their pose until it stands up.
+    public static bool EntersPose(ushort emoteId)
+        => Svc.Data.GetExcelSheet<Emote>().GetRowOrDefault(emoteId) is { } emote && emote.EmoteMode.RowId != 0;
+
+    public static bool InPose()
+    {
+        var player = Svc.Objects.LocalPlayer;
+        return player != null && ((ClientCharacter*)player.Address)->Mode == CharacterModes.InPositionLoop;
     }
 }
