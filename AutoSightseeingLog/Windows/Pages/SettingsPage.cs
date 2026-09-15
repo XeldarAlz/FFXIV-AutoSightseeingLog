@@ -66,7 +66,7 @@ internal sealed class SettingsPage
         for (var index = 0; index < entries.Length; index++)
         {
             var entry = entries[index];
-            if (SidebarTab.Draw(Loc.T(entry.Label), entry.Icon, Styling.AccentSky, activeTab == entry.Tab))
+            if (SidebarTab.Draw(Loc.T(entry.Label), entry.Icon, Styling.AccentStar, activeTab == entry.Tab))
             {
                 Select(entry.Tab);
             }

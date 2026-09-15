@@ -43,10 +43,10 @@ internal static class VistaText
             case VistaStatus.Open:
                 if (VistaLog.TryGetWindow(vista, now, out var open) && !open.IsEndless)
                 {
-                    return new Visual(FontAwesomeIcon.Eye, CountdownText(vista.Number, Countdown.Left, open.End - now), Styling.AccentSky);
+                    return new Visual(FontAwesomeIcon.Eye, CountdownText(vista.Number, Countdown.Left, open.End - now), Styling.AccentStar);
                 }
 
-                return new Visual(FontAwesomeIcon.Eye, Loc.T(L.Library.StatusOpen), Styling.AccentSky);
+                return new Visual(FontAwesomeIcon.Eye, Loc.T(L.Library.StatusOpen), Styling.AccentStar);
             case VistaStatus.Waiting:
                 if (VistaLog.TryGetWindow(vista, now, out var next))
                 {

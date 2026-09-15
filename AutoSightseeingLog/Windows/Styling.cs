@@ -7,10 +7,10 @@ namespace AutoSightseeingLog.Windows;
 
 internal static class Styling
 {
-    public static readonly Vector4 AccentSky        = new(0.667f, 0.878f, 1.000f, 1.00f);
-    public static readonly Vector4 AccentSkySoft    = new(0.831f, 0.945f, 1.000f, 1.00f);
-    public static readonly Vector4 AccentDusk       = new(0.984f, 0.561f, 0.451f, 1.00f);
-    public static readonly Vector4 InkOnSky         = new(0.039f, 0.078f, 0.133f, 1.00f);
+    public static readonly Vector4 AccentStar       = new(0.902f, 0.871f, 0.980f, 1.00f);
+    public static readonly Vector4 AccentStarSoft   = new(0.961f, 0.945f, 1.000f, 1.00f);
+    public static readonly Vector4 AccentAether     = new(0.851f, 0.353f, 0.651f, 1.00f);
+    public static readonly Vector4 InkOnStar        = new(0.078f, 0.059f, 0.133f, 1.00f);
     public static readonly Vector4 AccentMint       = new(0.46f, 0.86f, 0.66f, 1.00f);
     public static readonly Vector4 AccentMintSoft   = new(0.66f, 0.96f, 0.80f, 1.00f);
     public static readonly Vector4 AccentAmber      = new(0.92f, 0.74f, 0.34f, 1.00f);
@@ -21,22 +21,22 @@ internal static class Styling
     public static readonly Vector4 AccentBlueSoft   = new(0.62f, 0.82f, 1.00f, 1.00f);
     public static readonly Vector4 AccentDiscord    = new(0.345f, 0.396f, 0.949f, 1.00f);
 
-    public static readonly Vector4 WindowBg = new(0.039f, 0.055f, 0.086f, 0.985f);
-    public static readonly Vector4 Surface0 = new(0.063f, 0.086f, 0.129f, 1.00f);
-    public static readonly Vector4 Surface1 = new(0.086f, 0.114f, 0.165f, 1.00f);
-    public static readonly Vector4 Surface2 = new(0.114f, 0.149f, 0.212f, 1.00f);
-    public static readonly Vector4 Surface3 = new(0.149f, 0.192f, 0.263f, 1.00f);
+    public static readonly Vector4 WindowBg = new(0.047f, 0.039f, 0.086f, 0.985f);
+    public static readonly Vector4 Surface0 = new(0.075f, 0.063f, 0.122f, 1.00f);
+    public static readonly Vector4 Surface1 = new(0.102f, 0.086f, 0.161f, 1.00f);
+    public static readonly Vector4 Surface2 = new(0.133f, 0.114f, 0.208f, 1.00f);
+    public static readonly Vector4 Surface3 = new(0.173f, 0.149f, 0.263f, 1.00f);
 
-    public static readonly Vector4 CardBg      = new(0.063f, 0.086f, 0.129f, 0.90f);
-    public static readonly Vector4 CardBgSoft  = new(0.086f, 0.114f, 0.165f, 0.62f);
-    public static readonly Vector4 CardBgHover = new(0.114f, 0.149f, 0.212f, 0.95f);
-    public static readonly Vector4 SliderBg    = new(0.133f, 0.169f, 0.235f, 1.00f);
-    public static readonly Vector4 BorderDim   = new(0.227f, 0.282f, 0.365f, 1.00f);
+    public static readonly Vector4 CardBg      = new(0.075f, 0.063f, 0.122f, 0.90f);
+    public static readonly Vector4 CardBgSoft  = new(0.102f, 0.086f, 0.161f, 0.62f);
+    public static readonly Vector4 CardBgHover = new(0.133f, 0.114f, 0.208f, 0.95f);
+    public static readonly Vector4 SliderBg    = new(0.157f, 0.137f, 0.235f, 1.00f);
+    public static readonly Vector4 BorderDim   = new(0.239f, 0.208f, 0.353f, 1.00f);
 
-    public static readonly Vector4 TextStrong    = new(0.953f, 0.965f, 0.980f, 1.00f);
-    public static readonly Vector4 TextSecondary = new(0.780f, 0.812f, 0.859f, 1.00f);
-    public static readonly Vector4 TextDim       = new(0.565f, 0.612f, 0.690f, 1.00f);
-    public static readonly Vector4 TextMuted     = new(0.408f, 0.451f, 0.529f, 1.00f);
+    public static readonly Vector4 TextStrong    = new(0.957f, 0.945f, 0.980f, 1.00f);
+    public static readonly Vector4 TextSecondary = new(0.808f, 0.780f, 0.871f, 1.00f);
+    public static readonly Vector4 TextDim       = new(0.612f, 0.576f, 0.702f, 1.00f);
+    public static readonly Vector4 TextMuted     = new(0.431f, 0.400f, 0.529f, 1.00f);
 
     public static readonly Vector4 Hairline  = new(1f, 1f, 1f, 0.055f);
     public static readonly Vector4 Highlight = new(1f, 1f, 1f, 0.075f);
@@ -74,7 +74,7 @@ internal static class Styling
         => Vector4.Lerp(baseColor, accent, amount) with { W = baseColor.W };
 
     // Only the pale brand crosses 0.65; amber, mint and rose keep white text like the sibling plugins.
-    public static Vector4 ForegroundOn(Vector4 fill) => Luminance(fill) > 0.65f ? InkOnSky : TextStrong;
+    public static Vector4 ForegroundOn(Vector4 fill) => Luminance(fill) > 0.65f ? InkOnStar : TextStrong;
 
     // WCAG relative luminance of an sRGB color.
     private static float Luminance(Vector4 color) => 0.2126f * Linear(color.X) + 0.7152f * Linear(color.Y) + 0.0722f * Linear(color.Z);
@@ -140,20 +140,20 @@ internal static class Styling
             .Push(ImGuiCol.ScrollbarGrabActive, new Vector4(1f, 1f, 1f, 0.28f))
             .Push(ImGuiCol.Button, Surface1)
             .Push(ImGuiCol.ButtonHovered, Surface2)
-            .Push(ImGuiCol.ButtonActive, Tint(Surface2, AccentSky, 0.35f))
-            .Push(ImGuiCol.Header, Tint(Surface1, AccentSky, 0.30f))
+            .Push(ImGuiCol.ButtonActive, Tint(Surface2, AccentStar, 0.35f))
+            .Push(ImGuiCol.Header, Tint(Surface1, AccentStar, 0.30f))
             .Push(ImGuiCol.HeaderHovered, Surface2)
-            .Push(ImGuiCol.HeaderActive, Tint(Surface2, AccentSky, 0.40f))
-            .Push(ImGuiCol.CheckMark, AccentSkySoft)
-            .Push(ImGuiCol.SliderGrab, AccentSky)
-            .Push(ImGuiCol.SliderGrabActive, AccentSkySoft)
+            .Push(ImGuiCol.HeaderActive, Tint(Surface2, AccentStar, 0.40f))
+            .Push(ImGuiCol.CheckMark, AccentStarSoft)
+            .Push(ImGuiCol.SliderGrab, AccentStar)
+            .Push(ImGuiCol.SliderGrabActive, AccentStarSoft)
             .Push(ImGuiCol.Text, TextStrong)
             .Push(ImGuiCol.TextDisabled, TextMuted)
             .Push(ImGuiCol.Separator, Hairline)
             .Push(ImGuiCol.ResizeGrip, Vector4.Zero)
             .Push(ImGuiCol.ResizeGripHovered, Vector4.Zero)
             .Push(ImGuiCol.ResizeGripActive, Vector4.Zero)
-            .Push(ImGuiCol.TextSelectedBg, WithAlpha(AccentDusk, 0.40f));
+            .Push(ImGuiCol.TextSelectedBg, WithAlpha(AccentAether, 0.40f));
 
         return new ChromeScope(style, color);
     }

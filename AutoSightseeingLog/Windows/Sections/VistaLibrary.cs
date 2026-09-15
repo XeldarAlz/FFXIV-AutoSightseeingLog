@@ -91,7 +91,7 @@ internal static class VistaLibrary
         var label = allSelected ? Loc.T(L.Common.Clear) : Loc.T(L.Common.SelectAll);
         var width = PillButton.Width(label);
         ImGui.SetCursorScreenPos(new Vector2(origin.X + avail - width, origin.Y));
-        if (PillButton.Draw("##asl_vista_bulk", label, allSelected ? Styling.AccentRose : Styling.AccentSky,
+        if (PillButton.Draw("##asl_vista_bulk", label, allSelected ? Styling.AccentRose : Styling.AccentStar,
                 PillButton.Emphasis.Ghost, enabled: !controller.Running && selectable > 0, height: SummaryRowHeight))
         {
             SetAll(configuration, vistas, !allSelected, now);
@@ -161,7 +161,7 @@ internal static class VistaLibrary
         }
 
         var drawList = ImGui.GetWindowDrawList();
-        Paint.Glass(drawList, origin, end, Styling.CardRounding * scale, Styling.AccentSky, 0.02f + 0.16f * active, hover);
+        Paint.Glass(drawList, origin, end, Styling.CardRounding * scale, Styling.AccentStar, 0.02f + 0.16f * active, hover);
 
         var midY = origin.Y + size.Y * 0.5f;
         var discRadius = DiscRadius * scale;
@@ -212,17 +212,17 @@ internal static class VistaLibrary
             return;
         }
 
-        var ring = Vector4.Lerp(Styling.WithAlpha(Styling.BorderDim, 0.9f), Styling.AccentSkySoft, active);
+        var ring = Vector4.Lerp(Styling.WithAlpha(Styling.BorderDim, 0.9f), Styling.AccentStarSoft, active);
         drawList.AddCircle(center, radius, Paint.Col(ring), 0, 1.4f * scale);
         if (active <= 0.01f)
         {
             return;
         }
 
-        drawList.AddCircleFilled(center, radius * active, Paint.Col(Styling.AccentSky));
+        drawList.AddCircleFilled(center, radius * active, Paint.Col(Styling.AccentStar));
         if (active > 0.5f)
         {
-            Paint.Check(drawList, center, radius * 1.1f, Styling.WithAlpha(Styling.InkOnSky, (active - 0.5f) * 2f), 1.8f * scale);
+            Paint.Check(drawList, center, radius * 1.1f, Styling.WithAlpha(Styling.InkOnStar, (active - 0.5f) * 2f), 1.8f * scale);
         }
     }
 
@@ -298,8 +298,8 @@ internal static class VistaLibrary
                 return (LockLine(vista), Styling.AccentAmber);
             case VistaStatus.Open:
                 return VistaLog.TryGetWindow(vista, now, out var open) && !open.IsEndless
-                    ? (Loc.T(L.Library.TooltipOpenFor, VistaText.Duration(open.End - now)), Styling.AccentSky)
-                    : (Loc.T(L.Library.TooltipOpenAlways), Styling.AccentSky);
+                    ? (Loc.T(L.Library.TooltipOpenFor, VistaText.Duration(open.End - now)), Styling.AccentStar)
+                    : (Loc.T(L.Library.TooltipOpenAlways), Styling.AccentStar);
             case VistaStatus.Waiting:
                 return VistaLog.TryGetWindow(vista, now, out var next)
                     ? (Loc.T(L.Library.TooltipOpensIn, VistaText.Duration(next.Start - now)), Styling.AccentAmberSoft)

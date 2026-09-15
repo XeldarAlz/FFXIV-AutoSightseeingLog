@@ -69,7 +69,7 @@ internal sealed class HistoryPage
         var gap = 8f * scale;
         var tileWidth = (ImGui.GetContentRegionAvail().X - gap * (TileCount - 1)) / TileCount;
 
-        StatTile.Draw(Loc.T(L.History.TileRuns), totals.Runs.ToString("N0", Loc.Culture), null, Styling.AccentSky, tileWidth);
+        StatTile.Draw(Loc.T(L.History.TileRuns), totals.Runs.ToString("N0", Loc.Culture), null, Styling.AccentStar, tileWidth);
         ImGui.SameLine(0, gap);
         StatTile.Draw(Loc.T(L.History.TileVistas), totals.Vistas.ToString("N0", Loc.Culture), null, Styling.AccentMint, tileWidth);
         ImGui.SameLine(0, gap);
@@ -145,7 +145,7 @@ internal sealed class HistoryPage
             var height = MathF.Max(2f * scale, plotHeight * record.VistasLogged / peak);
             var barMin = new Vector2(plotMin.X + stride * index, plotMax.Y - height);
             var barMax = new Vector2(barMin.X + barWidth, plotMax.Y);
-            var color = index == hovered ? Styling.AccentSkySoft : Styling.AccentSky;
+            var color = index == hovered ? Styling.AccentStarSoft : Styling.AccentStar;
             drawList.AddRectFilled(barMin, barMax, Paint.Col(color), rounding, ImDrawFlags.RoundCornersTop);
         }
 
@@ -177,7 +177,7 @@ internal sealed class HistoryPage
         var hover = Motion.Hover(Motion.Key("##run"), hit.Hovered);
         ImGui.PopID();
 
-        Paint.Glass(drawList, origin, end, Styling.CardRounding * scale, Styling.AccentSky, 0.02f, hover);
+        Paint.Glass(drawList, origin, end, Styling.CardRounding * scale, Styling.AccentStar, 0.02f, hover);
 
         var padX = PadX * scale;
         var midY = origin.Y + size.Y * 0.5f;
@@ -296,7 +296,7 @@ internal sealed class HistoryPage
 
         var x = origin.X + available - noWidth - slide;
         ImGui.SetCursorScreenPos(new Vector2(x, origin.Y));
-        if (PillButton.Draw("##asl_hist_clear_no", no, Styling.AccentSky, PillButton.Emphasis.Ghost))
+        if (PillButton.Draw("##asl_hist_clear_no", no, Styling.AccentStar, PillButton.Emphasis.Ghost))
         {
             confirmClear = false;
         }

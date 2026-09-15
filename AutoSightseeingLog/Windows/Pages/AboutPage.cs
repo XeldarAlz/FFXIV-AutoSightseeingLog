@@ -113,9 +113,9 @@ internal sealed class AboutPage
         dl.PushClipRect(rmin, rmax, true);
 
         SoftBlob(rmin + new Vector2(w * (0.26f + 0.12f * Motion.Wave(11000)), h * (0.20f + 0.10f * Motion.Wave(13700))),
-            w * 0.55f, Styling.AccentSky, 0.075f);
+            w * 0.55f, Styling.AccentStar, 0.075f);
         SoftBlob(rmin + new Vector2(w * (0.80f + 0.12f * Motion.Wave(15500)), h * (0.32f + 0.10f * Motion.Wave(9300))),
-            w * 0.48f, Styling.AccentDusk, 0.060f);
+            w * 0.48f, Styling.AccentAether, 0.060f);
         SoftBlob(rmin + new Vector2(w * (0.55f + 0.14f * Motion.Wave(17900)), h * (0.82f + 0.08f * Motion.Wave(12100))),
             w * 0.52f, Styling.AccentBlue, 0.050f);
 
@@ -148,11 +148,11 @@ internal sealed class AboutPage
         var bob = Motion.Wave(3000) * 3f * s;
         var center = new Vector2(start.X + availX * 0.5f, start.Y + ringR * s + bob);
 
-        ProgressRing.Glow(center, ringR * s, Styling.AccentSky, 0.55f + 0.5f * Styling.Pulse(Styling.PulseBreath));
+        ProgressRing.Glow(center, ringR * s, Styling.AccentStar, 0.55f + 0.5f * Styling.Pulse(Styling.PulseBreath));
         ProgressRing.Track(center, ringR * s, 1.5f * s, Styling.WithAlpha(Styling.BorderDim, 0.7f));
-        ProgressRing.Sweep(center, ringR * s, 2.6f * s, Styling.AccentSkySoft, Styling.PulseOrbit, MathF.PI * 0.55f, 1f);
-        OrbitParticles(center, ringR * s, 3, 4600, +1, Styling.AccentSkySoft, 2.4f * s);
-        OrbitParticles(center, ringR * s * 0.74f, 2, 6000, -1, Styling.AccentDusk, 2.0f * s);
+        ProgressRing.Sweep(center, ringR * s, 2.6f * s, Styling.AccentStarSoft, Styling.PulseOrbit, MathF.PI * 0.55f, 1f);
+        OrbitParticles(center, ringR * s, 3, 4600, +1, Styling.AccentStarSoft, 2.4f * s);
+        OrbitParticles(center, ringR * s * 0.74f, 2, 6000, -1, Styling.AccentAether, 2.0f * s);
 
         var half = iconSize * 0.5f * s;
         var imin = new Vector2(center.X - half, center.Y - half);
@@ -160,7 +160,7 @@ internal sealed class AboutPage
 
         var rounding = iconSize * 0.20f * s;
         AppIcon.Draw(dl, imin, imax, rounding, 0.92f + 0.08f * Styling.Pulse(2200.0));
-        dl.AddRect(imin, imax, ImGui.GetColorU32(Styling.WithAlpha(Styling.AccentSkySoft, 0.55f)),
+        dl.AddRect(imin, imax, ImGui.GetColorU32(Styling.WithAlpha(Styling.AccentStarSoft, 0.55f)),
             rounding, ImDrawFlags.RoundCornersAll, 1.5f * s);
 
         IconEasterEgg(imin, imax, s);
@@ -169,12 +169,12 @@ internal sealed class AboutPage
         ImGui.Dummy(new Vector2(availX, ringR * 2f * s));
 
         Styling.VSpace(10);
-        ShimmerCentered(Name, Styling.TextStrong, Styling.AccentSkySoft, Styling.PulseOrbit, 0.42f);
+        ShimmerCentered(Name, Styling.TextStrong, Styling.AccentStarSoft, Styling.PulseOrbit, 0.42f);
         Styling.VSpace(9);
 
         var version = typeof(AboutPage).Assembly.GetName().Version?.ToString() ?? "?";
         CenteredPill(Loc.T(L.About.Version, version), Styling.TextSecondary,
-            Styling.WithAlpha(Styling.AccentSky, 0.45f), Styling.CardBgSoft);
+            Styling.WithAlpha(Styling.AccentStar, 0.45f), Styling.CardBgSoft);
     }
 
     private static void OrbitParticles(Vector2 c, float r, int count, double periodMs, int dir, Vector4 color, float dotR)
@@ -261,7 +261,7 @@ internal sealed class AboutPage
         var s = ImGuiHelpers.GlobalScale;
         var dl = ImGui.GetWindowDrawList();
         var pulse = Styling.Pulse(Styling.PulseBreath);
-        var accent = Styling.PulseColor(Styling.AccentDusk, Styling.Lighten(Styling.AccentDusk, 0.18f), 5200.0);
+        var accent = Styling.PulseColor(Styling.AccentAether, Styling.Lighten(Styling.AccentAether, 0.18f), 5200.0);
 
         var title = Loc.T(L.About.SupportTitle);
         var body = Loc.T(L.About.SupportBody);
@@ -288,7 +288,7 @@ internal sealed class AboutPage
         var end = new Vector2(origin.X + availX, origin.Y + height);
         var centerX = origin.X + availX * 0.5f;
 
-        dl.AddRectFilled(origin, end, ImGui.GetColorU32(Vector4.Lerp(Styling.CardBg, Styling.AccentDusk, 0.07f)), Styling.CardRounding * s);
+        dl.AddRectFilled(origin, end, ImGui.GetColorU32(Vector4.Lerp(Styling.CardBg, Styling.AccentAether, 0.07f)), Styling.CardRounding * s);
         dl.AddRect(origin, end, ImGui.GetColorU32(Styling.WithAlpha(accent, 0.55f + 0.35f * pulse)),
             Styling.CardRounding * s, ImDrawFlags.None, 1.5f);
 
@@ -425,7 +425,7 @@ internal sealed class AboutPage
         var pillH = ImGui.GetFrameHeight() * 1.15f;
         var accents = new[]
         {
-            Styling.AccentSky, Styling.AccentBlue, Styling.AccentRose,
+            Styling.AccentStar, Styling.AccentBlue, Styling.AccentRose,
             Styling.AccentMint, Styling.AccentAmber, Styling.AccentDiscord,
         };
 
@@ -623,7 +623,7 @@ internal sealed class AboutPage
 
         var startScreen = ImGui.GetCursorScreenPos();
 
-        var bloom = Styling.WithAlpha(Styling.AccentSky, 0.22f);
+        var bloom = Styling.WithAlpha(Styling.AccentStar, 0.22f);
         foreach (var off in BloomOffsets)
         {
             ImGui.SetCursorScreenPos(startScreen + off * ImGuiHelpers.GlobalScale);

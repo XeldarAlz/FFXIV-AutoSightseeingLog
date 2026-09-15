@@ -147,7 +147,7 @@ internal static class ExpansionStrip
             ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
         }
 
-        var accent = Styling.AccentSky;
+        var accent = Styling.AccentStar;
         var rounding = height * 0.5f;
         var tint = running ? 0.06f : 0.24f + 0.14f * hover;
         Paint.Gradient(drawList, origin, end, Styling.Tint(Styling.Surface2, accent, tint), Styling.Tint(Styling.Surface1, accent, tint * 0.8f), rounding);

@@ -141,9 +141,9 @@ internal sealed class PluginsPage
             var labelSize = TextDraw.Measure(label);
             var tagMin = new Vector2(x, midY - labelSize.Y * 0.5f - 3f * scale);
             var tagMax = tagMin + labelSize + new Vector2(14f * scale, 6f * scale);
-            var accent = required ? Styling.AccentSky : Styling.TextDim;
+            var accent = required ? Styling.AccentStar : Styling.TextDim;
             Paint.Pill(drawList, tagMin, tagMax, Styling.WithAlpha(accent, 0.18f), Styling.WithAlpha(accent, 0.45f));
-            TextDraw.Middle(label, tagMin, tagMax, required ? Styling.AccentSkySoft : Styling.TextSecondary);
+            TextDraw.Middle(label, tagMin, tagMax, required ? Styling.AccentStarSoft : Styling.TextSecondary);
         }
     }
 
@@ -168,7 +168,7 @@ internal sealed class PluginsPage
         var width = PillButton.Width(text, FontAwesomeIcon.Download);
         ImGui.SetCursorScreenPos(new Vector2(end.X - padX - width, midY - InstallButtonHeight * scale * 0.5f));
         ImGui.PushID((nint)((int)plugin + 1));
-        if (PillButton.Draw("##install", text, Styling.AccentSky, PillButton.Emphasis.Filled, FontAwesomeIcon.Download, enabled: !installing, height: InstallButtonHeight))
+        if (PillButton.Draw("##install", text, Styling.AccentStar, PillButton.Emphasis.Filled, FontAwesomeIcon.Download, enabled: !installing, height: InstallButtonHeight))
         {
             _ = PluginInstaller.Install(plugin);
         }

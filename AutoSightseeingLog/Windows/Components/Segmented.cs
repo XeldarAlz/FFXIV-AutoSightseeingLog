@@ -53,12 +53,12 @@ internal static class Segmented
         var indicatorWidth = Motion.Approach(Motion.Key("##seg", 1), segmentWidths[current], 18f);
         var indicatorMin = new Vector2(origin.X + inset + indicatorX, origin.Y + inset);
         var indicatorMax = indicatorMin + new Vector2(indicatorWidth, size.Y - inset * 2f);
-        var indicatorAccent = enabled ? Styling.AccentSky : Styling.Surface3;
+        var indicatorAccent = enabled ? Styling.AccentStar : Styling.Surface3;
         // Kept low so the pale brand leaves the white label readable.
         Paint.Gradient(dl, indicatorMin, indicatorMax,
             Styling.Tint(Styling.Surface3, indicatorAccent, 0.30f), Styling.Tint(Styling.Surface2, indicatorAccent, 0.22f), rounding - inset);
         Paint.TopLight(dl, indicatorMin, indicatorMax, rounding - inset, 0.10f);
-        Paint.Stroke(dl, indicatorMin, indicatorMax, Styling.WithAlpha(enabled ? Styling.AccentSkySoft : Styling.BorderDim, 0.55f), rounding - inset);
+        Paint.Stroke(dl, indicatorMin, indicatorMax, Styling.WithAlpha(enabled ? Styling.AccentStarSoft : Styling.BorderDim, 0.55f), rounding - inset);
 
         var changed = false;
         var segmentX = origin.X + inset;
@@ -156,7 +156,7 @@ internal static class Segmented
 
         if (item.Icon is { } glyph)
         {
-            var iconColor = !enabled ? Styling.TextMuted : selected ? Styling.AccentSkySoft : textColor;
+            var iconColor = !enabled ? Styling.TextMuted : selected ? Styling.AccentStarSoft : textColor;
             TextDraw.Icon(glyph, new Vector2(x, midY - metric.Icon.Y * 0.5f), iconColor);
             x += iconSpan;
         }

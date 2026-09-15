@@ -191,7 +191,7 @@ internal static class RunningPanel
         var gap = 8f * scale;
         var tileWidth = (ImGui.GetContentRegionAvail().X - gap * 3f) / 4f;
 
-        StatTile.Draw(Loc.T(L.Run.TileVistas), NumberText.Of(session?.VistasLogged ?? 0), null, Styling.AccentSky, tileWidth);
+        StatTile.Draw(Loc.T(L.Run.TileVistas), NumberText.Of(session?.VistasLogged ?? 0), null, Styling.AccentStar, tileWidth);
         ImGui.SameLine(0, gap);
         StatTile.Draw(Loc.T(L.Run.TileZones), NumberText.Of(session?.ZonesVisited ?? 0), null, Styling.AccentMint, tileWidth);
         ImGui.SameLine(0, gap);

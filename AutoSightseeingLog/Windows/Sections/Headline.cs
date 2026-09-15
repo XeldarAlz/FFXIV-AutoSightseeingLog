@@ -65,10 +65,10 @@ internal static class Headline
 
     private static (FontAwesomeIcon Icon, Vector4 Color, string Greeting) Greeting() => DateTime.Now.Hour switch
     {
-        >= 5 and < 12  => (FontAwesomeIcon.Sun,       Styling.AccentAmber,   Loc.T(L.Shell.GreetingMorning)),
-        >= 12 and < 17 => (FontAwesomeIcon.Sun,       Styling.AccentAmber,   Loc.T(L.Shell.GreetingAfternoon)),
-        >= 17 and < 22 => (FontAwesomeIcon.CloudMoon, Styling.AccentSkySoft, Loc.T(L.Shell.GreetingEvening)),
-        _              => (FontAwesomeIcon.Moon,      Styling.AccentBlue,    Loc.T(L.Shell.GreetingNight)),
+        >= 5 and < 12  => (FontAwesomeIcon.Sun,       Styling.AccentAmber,    Loc.T(L.Shell.GreetingMorning)),
+        >= 12 and < 17 => (FontAwesomeIcon.Sun,       Styling.AccentAmber,    Loc.T(L.Shell.GreetingAfternoon)),
+        >= 17 and < 22 => (FontAwesomeIcon.CloudMoon, Styling.AccentStarSoft, Loc.T(L.Shell.GreetingEvening)),
+        _              => (FontAwesomeIcon.Moon,      Styling.AccentBlue,     Loc.T(L.Shell.GreetingNight)),
     };
 
     private static float DrawRightColumn(ReadyState.Info info, RunHistory history, float rightX, float midY, out bool openPlugins)
