@@ -16,7 +16,7 @@ internal static unsafe class VistaLog
     private static ulong[] recorded = [];
     private static bool[] questDone = [];
     private static CachedWindow[] windows = [];
-    private static long refreshedAtMs = long.MinValue;
+    private static long nextRefreshAtMs;
     private static bool firstLogRecorded;
 
     private readonly record struct CachedWindow(VistaWindow Window, bool Found, long ValidUntil);
@@ -28,12 +28,12 @@ internal static unsafe class VistaLog
     public static void Refresh(bool force = false)
     {
         var nowMs = Environment.TickCount64;
-        if (!force && nowMs - refreshedAtMs < RefreshIntervalMs)
+        if (!force && nowMs < nextRefreshAtMs)
         {
             return;
         }
 
-        refreshedAtMs = nowMs;
+        nextRefreshAtMs = nowMs + RefreshIntervalMs;
         var vistas = VistaRegistry.All;
         var gateQuests = VistaRegistry.GateQuests;
         EnsureCapacity(vistas.Length, gateQuests.Length);
