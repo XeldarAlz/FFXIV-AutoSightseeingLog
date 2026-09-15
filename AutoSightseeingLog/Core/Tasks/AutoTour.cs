@@ -1,6 +1,7 @@
 using AutoSightseeingLog.Core.Ipc;
 using AutoSightseeingLog.Core.Time;
 using AutoSightseeingLog.Core.Vistas;
+using Dalamud.Game.ClientState.Conditions;
 using ECommons.DalamudServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
     private const long WindowWaitLimitSeconds = 20 * TimeUnits.SecondsPerMinute;
     private const int WindowPollMs = 1_000;
     private const int MaxVisitsPerVista = 3;
+    private const int SettleWaitMs = 15_000;
 
     private readonly Dictionary<ushort, int> visits = new();
     private readonly List<ushort> leftToPlayer = [];
@@ -29,6 +31,8 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
         await HoldCombatMovementAndSettle("tour");
         try
         {
+            // A teleport cast when the run was paused still lands, so the run starts from wherever it takes the character.
+            await WaitUntilTimed(static () => !Svc.Condition[ConditionFlag.Casting] && !Svc.Condition[ConditionFlag.BetweenAreas], SettleWaitMs, "tour-settle");
             await WorkPlan();
         }
         finally
@@ -46,6 +50,13 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
             var now = EorzeaTime.Now();
             var ordered = VistaPlan.Order(CollectRemaining(), now);
             progress.SetQueue(ordered);
+            if (!Svc.ClientState.IsLoggedIn)
+            {
+                Warn("the character logged out; ending the run");
+                Report(ordered, now);
+                return;
+            }
+
             if (ordered.Length == 0 || !VistaRegistry.TryGet(ordered[0], out var next))
             {
                 Report(ordered, now);
@@ -101,7 +112,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
         progress.SetPhase(TourPhase.Travelling);
         if (!await ReachVista(vista, scope))
         {
-            if (!CancelToken.IsCancellationRequested)
+            if (!CancelToken.IsCancellationRequested && Svc.ClientState.IsLoggedIn)
             {
                 Warn($"{scope}: could not reach {name}");
                 notLogged.Add(number);
@@ -158,6 +169,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
             {
                 progress.SetPhase(TourPhase.Waiting);
                 Diag($"{scope}: waiting {TimeSpan.FromSeconds(wait)} on the spot for {name}'s window");
+                Svc.Chat.Print($"{AslConstants.LogPrefix} Waiting at #{vista.Number:000} {name}: its window opens in {TimeSpan.FromSeconds(wait):m\\:ss}.");
                 announced = true;
             }
 
@@ -184,12 +196,18 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
 
         if (waiting.Length > 0 && VistaRegistry.TryGet(waiting[0], out var soonest) && VistaLog.TryGetWindow(soonest, now, out var window))
         {
-            summary.Append($" {waiting.Length} wait(s) for a later window; the next opens in {TimeSpan.FromSeconds(Math.Max(0, window.Start - now)):h\\:mm}.");
+            summary.Append($" {waiting.Length} wait(s) for a later window; the next opens in {Minutes(window.Start - now)}.");
         }
 
         var text = summary.ToString();
         Diag(text);
         Svc.Chat.Print($"{AslConstants.LogPrefix} {text}");
+    }
+
+    private static string Minutes(long seconds)
+    {
+        var minutes = Math.Max(0, (seconds + TimeUnits.SecondsPerMinute - 1) / TimeUnits.SecondsPerMinute);
+        return minutes >= 60 ? $"{minutes / 60} h {minutes % 60:00} min" : $"{minutes} min";
     }
 
     private static string Describe(List<ushort> numbers)

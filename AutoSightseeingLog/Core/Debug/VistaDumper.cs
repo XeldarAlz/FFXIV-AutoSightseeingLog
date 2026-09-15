@@ -1,8 +1,8 @@
+using AutoSightseeingLog.Core.Game.Ops;
 using AutoSightseeingLog.Core.Time;
 using AutoSightseeingLog.Core.Travel;
 using AutoSightseeingLog.Core.Vistas;
 using ECommons.DalamudServices;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 using System.Numerics;
@@ -54,9 +54,7 @@ internal static unsafe class VistaDumper
     private static void DumpCurrentZone(long now)
     {
         uint territoryId = Svc.ClientState.TerritoryType;
-        var weatherManager = WeatherManager.Instance();
-        var gameWeather = weatherManager != null ? weatherManager->GetCurrentWeather() : (byte)0;
-        Write($"zone {territoryId} {TerritoryNames.Of(territoryId)}: forecast weather={ZoneWeather.WeatherAt(territoryId, now)} game weather={gameWeather}");
+        Write($"zone {territoryId} {TerritoryNames.Of(territoryId)}: forecast weather={ZoneWeather.WeatherAt(territoryId, now)} game weather={WeatherOps.Current()}");
 
         var player = Svc.Objects.LocalPlayer;
         var vistas = VistaRegistry.All;
