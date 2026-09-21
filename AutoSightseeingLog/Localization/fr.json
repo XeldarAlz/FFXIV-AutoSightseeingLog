@@ -256,7 +256,7 @@
   "settings.general.autoPause": "Pause automatique en instance",
   "settings.general.autoPauseHelp": "Met la session en pause pendant un donjon, une épreuve, un raid ou tout autre contenu instancié, puis la reprend une fois dehors. Votre plan et vos statistiques sont conservés.",
   "settings.general.askAtHardSpots": "Me demander aux endroits difficiles",
-  "settings.general.askAtHardSpotsHelp": "Certains panoramas se trouvent sur un petit objet sur lequel le personnage doit sauter. Quand le plugin ne peut pas atteindre l'endroit lui-même, il le marque dans le monde et attend jusqu'à une minute que vous vous placiez à l'intérieur, puis continue. Désactivez cette option pour les sessions sans surveillance.",
+  "settings.general.askAtHardSpotsHelp": "Certains panoramas se trouvent sur un petit objet sur lequel le personnage doit sauter. Quand le plugin ne peut pas atteindre l'endroit lui-même, il le marque dans le monde et attend jusqu'à une minute que vous vous placiez à l'intérieur, puis continue. Si le jeu est en arrière-plan, son bouton dans la barre des tâches clignote pour vous rappeler. Désactivez cette option pour les sessions sans surveillance.",
   "plugin.commandHelp": "Ouvre ou ferme la fenêtre Auto Sightseeing Log. /asl config | stats | deps | about | pause (mettre en pause ou reprendre la session) | goto <numéro> (se rendre à un panorama sans l'enregistrer ; goto stop annule) | logdump (écrire l'état du carnet d'exploration dans le journal du plugin).",
   "plugin.commandHelpAlias": "Alias de /asl."
 }

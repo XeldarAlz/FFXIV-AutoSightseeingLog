@@ -256,7 +256,7 @@
   "settings.general.autoPause": "Pausar automaticamente em conteúdo",
   "settings.general.autoPauseHelp": "Pausa a sessão enquanto você está em uma masmorra, provação, raide ou outro conteúdo instanciado, e retoma quando você volta. Seu plano e suas estatísticas são mantidos.",
   "settings.general.askAtHardSpots": "Pedir minha ajuda em pontos difíceis",
-  "settings.general.askAtHardSpotsHelp": "Alguns mirantes ficam sobre um objeto pequeno no qual o personagem precisa pular. Quando o plugin não consegue chegar ao ponto sozinho, ele o marca no mundo e espera até um minuto para você ficar dentro dele, e então continua. Desative para execuções sem supervisão.",
+  "settings.general.askAtHardSpotsHelp": "Alguns mirantes ficam sobre um objeto pequeno no qual o personagem precisa pular. Quando o plugin não consegue chegar ao ponto sozinho, ele o marca no mundo e espera até um minuto para você ficar dentro dele, e então continua. Se o jogo estiver em segundo plano, o botão dele na barra de tarefas pisca para chamar você de volta. Desative para execuções sem supervisão.",
   "plugin.commandHelp": "Abre ou fecha a janela do Auto Sightseeing Log. /asl config | stats | deps | about | pause (pausar ou retomar a sessão) | goto <número> (viajar até um mirante sem registrá-lo; goto stop cancela) | logdump (gravar o estado do diário de exploração no log do plugin).",
   "plugin.commandHelpAlias": "Atalho para /asl."
 }

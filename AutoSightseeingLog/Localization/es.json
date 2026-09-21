@@ -256,7 +256,7 @@
   "settings.general.autoPause": "Pausa automática en contenido",
   "settings.general.autoPauseHelp": "Pausa la sesión mientras estás en una mazmorra, prueba, incursión u otro contenido instanciado, y la reanuda al volver fuera. Tu plan y tus estadísticas se conservan.",
   "settings.general.askAtHardSpots": "Pedirme ayuda en puntos difíciles",
-  "settings.general.askAtHardSpotsHelp": "Algunos miradores están sobre un objeto pequeño al que el personaje debe subirse de un salto. Cuando el plugin no puede llegar por sí mismo, marca el punto en el mundo y espera hasta un minuto a que te coloques dentro; después continúa. Desactívalo para ejecuciones desatendidas.",
+  "settings.general.askAtHardSpotsHelp": "Algunos miradores están sobre un objeto pequeño al que el personaje debe subirse de un salto. Cuando el plugin no puede llegar por sí mismo, marca el punto en el mundo y espera hasta un minuto a que te coloques dentro; después continúa. Si el juego está en segundo plano, su botón de la barra de tareas parpadea para avisarte. Desactívalo para ejecuciones desatendidas.",
   "plugin.commandHelp": "Abre o cierra la ventana de Auto Sightseeing Log. /asl config | stats | deps | about | pause (pausar o reanudar la sesión) | goto <número> (viajar a un mirador sin registrarlo; goto stop cancela) | logdump (escribir el estado del diario de exploración en el registro del plugin).",
   "plugin.commandHelpAlias": "Alias de /asl."
 }

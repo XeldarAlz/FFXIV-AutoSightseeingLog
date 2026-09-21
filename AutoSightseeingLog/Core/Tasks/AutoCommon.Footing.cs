@@ -230,15 +230,19 @@ internal abstract partial class AutoCommon
         NavmeshIPC.Instance.Stop();
         var seconds = PlayerFootingWaitMs / TimeUnits.MillisecondsPerSecond;
         Diag($"{scope}: asking the player to stand inside the volume, waiting {seconds}s");
-        Svc.Chat.Print($"{AslConstants.LogPrefix} #{vista.Number:000} {name}: I cannot get onto this spot myself. Stand inside the marked box within {seconds}s and I will do the rest.");
+        var spot = $"#{vista.Number:000} {name}";
+        var request = $"I cannot get onto this spot myself. Stand inside the marked box within {seconds}s and I will do the rest.";
+        Svc.Chat.Print($"{AslConstants.LogPrefix} {spot}: {request}");
         Status = $"Stand inside the marked spot at {name}";
         VistaSpot.SetAwaitingPlayer(true);
+        var notification = AttentionOps.Ask(spot, request, TimeSpan.FromMilliseconds(PlayerFootingWaitMs));
         try
         {
             return await WaitUntilTimed(() => IsStandingInside(volume), PlayerFootingWaitMs, $"{scope}-player", PlayerFootingPollFrames);
         }
         finally
         {
+            notification.DismissNow();
             VistaSpot.SetAwaitingPlayer(false);
         }
     }

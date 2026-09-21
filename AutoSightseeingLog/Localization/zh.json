@@ -256,7 +256,7 @@
   "settings.general.autoPause": "副本中自动暂停",
   "settings.general.autoPauseHelp": "在副本、讨伐战、团队副本或其他实例化内容中时暂停运行，回到外面后继续。你的计划和本次统计会保留。",
   "settings.general.askAtHardSpots": "在困难地点请我帮忙",
-  "settings.general.askAtHardSpotsHelp": "有些探索点位于需要跳上去的小物体上。当插件无法自行到达时，它会在游戏世界中标出该位置，并等待最多一分钟让你站进去，然后继续。无人值守运行时请关闭。",
+  "settings.general.askAtHardSpotsHelp": "有些探索点位于需要跳上去的小物体上。当插件无法自行到达时，它会在游戏世界中标出该位置，并等待最多一分钟让你站进去，然后继续。如果游戏处于后台，任务栏按钮会闪烁以提醒你。无人值守运行时请关闭。",
   "plugin.commandHelp": "打开或关闭 Auto Sightseeing Log 窗口。/asl config | stats | deps | about | pause（暂停或继续运行）| goto <编号>（前往探索点但不记录；goto stop 取消）| logdump（将探索笔记状态写入插件日志）。",
   "plugin.commandHelpAlias": "/asl 的别名。"
 }
