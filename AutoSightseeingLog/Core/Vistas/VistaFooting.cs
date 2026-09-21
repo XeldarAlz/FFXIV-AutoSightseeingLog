@@ -7,6 +7,8 @@ namespace AutoSightseeingLog.Core.Vistas;
 
 internal readonly record struct Footing(Vector3 Point, Vector3 WalkFrom, float Margin, bool Walkable, int Candidates);
 
+internal record struct FootingProbe(int Rays, int Hits, int TooSteep, int OutsideHeight);
+
 internal static class VistaFooting
 {
     public const float WalkMaxAcrossMeters = 2f;
@@ -35,10 +37,11 @@ internal static class VistaFooting
 
     private readonly record struct Candidate(Vector3 Point, float Margin);
 
-    public static bool TryFind(in VistaVolume volume, out Footing footing)
+    public static bool TryFind(in VistaVolume volume, out Footing footing, out FootingProbe probe)
     {
         Span<Candidate> candidates = stackalloc Candidate[MaxCandidates];
-        var count = CollectCandidates(volume, candidates);
+        probe = default;
+        var count = CollectCandidates(volume, candidates, ref probe);
         if (count == 0)
         {
             footing = default;
@@ -51,7 +54,7 @@ internal static class VistaFooting
         return true;
     }
 
-    private static int CollectCandidates(in VistaVolume volume, Span<Candidate> candidates)
+    private static int CollectCandidates(in VistaVolume volume, Span<Candidate> candidates, ref FootingProbe probe)
     {
         var count = 0;
         for (var stepX = -GridSteps; stepX <= GridSteps; stepX++)
@@ -69,25 +72,40 @@ internal static class VistaFooting
                     fractionX * volume.HalfExtents.X * EdgeInsetFraction,
                     0f,
                     fractionZ * volume.HalfExtents.Z * EdgeInsetFraction));
-                count = CollectColumn(volume, column, candidates, count);
+                count = CollectColumn(volume, column, candidates, count, ref probe);
             }
         }
 
         return count;
     }
 
-    private static int CollectColumn(in VistaVolume volume, Vector3 column, Span<Candidate> candidates, int count)
+    private static int CollectColumn(in VistaVolume volume, Vector3 column, Span<Candidate> candidates, int count, ref FootingProbe probe)
     {
         var startY = volume.Top + RayStartLiftMeters;
         for (var layer = 0; layer < MaxLayersPerColumn && count < candidates.Length; layer++)
         {
             var reach = startY - volume.Bottom;
-            if (reach <= 0f || !BGCollisionModule.RaycastMaterialFilter(column with { Y = startY }, down, out var hit, reach))
+            if (reach <= 0f)
             {
                 break;
             }
 
-            if (hit.Normal.Y >= WalkableNormalY && volume.VerticalMargin(hit.Point) >= MinimumVerticalMarginMeters)
+            probe.Rays++;
+            if (!BGCollisionModule.RaycastMaterialFilter(column with { Y = startY }, down, out var hit, reach))
+            {
+                break;
+            }
+
+            probe.Hits++;
+            if (!(hit.Normal.Y >= WalkableNormalY))
+            {
+                probe.TooSteep++;
+            }
+            else if (volume.VerticalMargin(hit.Point) < MinimumVerticalMarginMeters)
+            {
+                probe.OutsideHeight++;
+            }
+            else
             {
                 candidates[count++] = new Candidate(hit.Point, volume.HorizontalMargin(hit.Point));
             }

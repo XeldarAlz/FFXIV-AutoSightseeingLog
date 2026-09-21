@@ -1,6 +1,9 @@
 using AutoSightseeingLog.Core.Ipc;
+using clib.Enums;
+using clib.Extensions;
 using Dalamud.Game.ClientState.Conditions;
 using ECommons.DalamudServices;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Numerics;
 using System.Threading.Tasks;
 
@@ -21,6 +24,7 @@ internal abstract partial class AutoCommon
     private const int GroundDismountWatchdogMs = 8_000;
     private const float LandingBackOffMeters = 8f;
     private const int LandingBackOffMs = 1_500;
+    private const uint DismountGeneralActionId = 23;
 
     private readonly Vector3[] landingSpots = new Vector3[LandingCandidateCount];
 
@@ -98,7 +102,7 @@ internal abstract partial class AutoCommon
         return false;
     }
 
-    private async Task<bool> DescendAndDismount(string scope)
+    private async Task<bool> DescendAndDismount(string scope, bool inPlace = false)
     {
         if (!Svc.Condition[ConditionFlag.Mounted])
         {
@@ -110,7 +114,15 @@ internal abstract partial class AutoCommon
             return await GroundDismount(scope);
         }
 
-        await DismountViaOp(scope, LandingDismountWatchdogMs, StuckDetector.AirborneFreezeAbort(scope));
+        if (inPlace)
+        {
+            await DismountInPlace(scope);
+        }
+        else
+        {
+            await DismountViaOp(scope, LandingDismountWatchdogMs, StuckDetector.AirborneFreezeAbort(scope));
+        }
+
         if (!Svc.Condition[ConditionFlag.Mounted])
         {
             return true;
@@ -119,6 +131,36 @@ internal abstract partial class AutoCommon
         Diag($"{scope}: the descent did not land ({ConditionTag()})");
         CancelDescent();
         return false;
+    }
+
+    // The movement library's dismount first flies to the nearest floor that can be walked to, which carries the mount
+    // off a spot only flight reaches. This one comes down where the mount already hovers: the game's own descent until a
+    // surface is close below, then the drop onto it.
+    private async Task DismountInPlace(string scope)
+    {
+        var frozen = StuckDetector.AirborneFreezeAbort(scope);
+        var deadline = Environment.TickCount64 + LandingDismountWatchdogMs;
+        while (Svc.Condition[ConditionFlag.Mounted]
+            && Svc.Objects.LocalPlayer is { } player
+            && Environment.TickCount64 < deadline
+            && !CancelToken.IsCancellationRequested
+            && !frozen())
+        {
+            if (!Svc.Condition[ConditionFlag.InFlight])
+            {
+                GameMain.ExecuteCommand(CommandFlag.Dismount, 1);
+            }
+            else if (player.IsAirDismountable)
+            {
+                GameMain.ExecuteLocationCommand(LocationCommandFlag.Dismount, player.Position, (int)player.PackedRotation);
+            }
+            else
+            {
+                UseGeneralAction(DismountGeneralActionId);
+            }
+
+            await NextFrame();
+        }
     }
 
     private async Task<bool> GroundDismount(string scope)
