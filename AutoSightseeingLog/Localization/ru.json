@@ -125,6 +125,7 @@
   "run.phase.travelling": "В пути",
   "run.phase.waiting": "Ожидание окна",
   "run.phase.emoting": "Любуемся видом",
+  "run.phase.finishing": "Завершение",
   "run.phase.standingBy": "Ожидание",
   "run.phase.ready": "Готов",
   "run.phase.paused": "Пауза",

@@ -125,6 +125,7 @@
   "run.phase.travelling": "移动中",
   "run.phase.waiting": "等待时机",
   "run.phase.emoting": "欣赏风景",
+  "run.phase.finishing": "收尾中",
   "run.phase.standingBy": "待命中",
   "run.phase.ready": "就绪",
   "run.phase.paused": "已暂停",

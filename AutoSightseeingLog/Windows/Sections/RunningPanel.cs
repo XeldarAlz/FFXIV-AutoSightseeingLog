@@ -190,9 +190,12 @@ internal static class RunningPanel
                 : (Styling.AccentAmber, Styling.AccentAmberSoft, Loc.T(L.Run.PhasePaused));
         }
 
-        return controller.Phase == TourPhase.Idle
-            ? (Styling.TextDim, Styling.TextSecondary, Loc.T(L.Run.PhaseStandingBy))
-            : (Styling.AccentBlue, Styling.AccentBlueSoft, ReadyState.PhaseLabel(controller.Phase));
+        return controller.Phase switch
+        {
+            TourPhase.Idle      => (Styling.TextDim, Styling.TextSecondary, Loc.T(L.Run.PhaseStandingBy)),
+            TourPhase.Finishing => (Styling.AccentMint, Styling.AccentMintSoft, Loc.T(L.Run.PhaseFinishing)),
+            _                   => (Styling.AccentBlue, Styling.AccentBlueSoft, ReadyState.PhaseLabel(controller.Phase)),
+        };
     }
 
     private static void DrawStatTiles(TourSession? session, TourProgress progress, long now)

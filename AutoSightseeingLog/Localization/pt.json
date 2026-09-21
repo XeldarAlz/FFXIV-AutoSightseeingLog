@@ -125,6 +125,7 @@
   "run.phase.travelling": "Viajando",
   "run.phase.waiting": "Aguardando a janela",
   "run.phase.emoting": "Apreciando a vista",
+  "run.phase.finishing": "Finalizando",
   "run.phase.standingBy": "Aguardando",
   "run.phase.ready": "Pronto",
   "run.phase.paused": "Pausado",

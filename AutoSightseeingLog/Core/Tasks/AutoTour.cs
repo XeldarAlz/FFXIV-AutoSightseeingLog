@@ -40,6 +40,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
             NavmeshIPC.Instance.Stop();
             ReleaseCombatMovement("tour");
             progress.ClearVista();
+            VistaSpot.Clear();
         }
     }
 
@@ -57,14 +58,12 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
                 return;
             }
 
-            if (ordered.Length == 0 || !VistaRegistry.TryGet(ordered[0], out var next))
+            if (ordered.Length == 0
+                || !VistaRegistry.TryGet(ordered[0], out var next)
+                || !VistaLog.TryGetWindow(next, now, out var window)
+                || (!window.IsOpenAt(now) && window.Start - now > WindowWaitLimitSeconds))
             {
-                Report(ordered, now);
-                return;
-            }
-
-            if (!VistaLog.TryGetWindow(next, now, out var window) || (!window.IsOpenAt(now) && window.Start - now > WindowWaitLimitSeconds))
-            {
+                session.EndedOnItsOwn = true;
                 Report(ordered, now);
                 return;
             }

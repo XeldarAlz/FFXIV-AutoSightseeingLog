@@ -85,6 +85,7 @@ internal static class ReadyState
         TourPhase.Travelling => Loc.T(L.Run.PhaseTravelling),
         TourPhase.Waiting    => Loc.T(L.Run.PhaseWaiting),
         TourPhase.Emoting    => Loc.T(L.Run.PhaseEmoting),
+        TourPhase.Finishing  => Loc.T(L.Run.PhaseFinishing),
         TourPhase.Paused     => Loc.T(L.Run.PhasePaused),
         _                    => Loc.T(L.Run.PhaseStandingBy),
     };

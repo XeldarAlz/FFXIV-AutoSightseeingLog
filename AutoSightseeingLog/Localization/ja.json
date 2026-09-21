@@ -125,6 +125,7 @@
   "run.phase.travelling": "移動中",
   "run.phase.waiting": "条件待ち",
   "run.phase.emoting": "景色を眺め中",
+  "run.phase.finishing": "終了処理中",
   "run.phase.standingBy": "待機中",
   "run.phase.ready": "準備完了",
   "run.phase.paused": "一時停止中",

@@ -106,6 +106,7 @@ internal sealed partial class TourController
     {
         progress.Reset();
         progress.SetPhase(TourPhase.Reading);
+        owningSession.EndedOnItsOwn = false;
         RunTask(new AutoTour(owningSession, progress), () => OnTourEnded(owningSession));
     }
 
@@ -140,4 +141,4 @@ internal sealed partial class TourController
     }
 }
 
-internal enum TourPhase { Idle, Reading, Travelling, Waiting, Emoting, Paused }
+internal enum TourPhase { Idle, Reading, Travelling, Waiting, Emoting, Finishing, Paused }

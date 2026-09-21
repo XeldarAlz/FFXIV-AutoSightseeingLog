@@ -151,6 +151,7 @@ internal static class L
         public static readonly LocString PhaseTravelling = new("run.phase.travelling", "Travelling");
         public static readonly LocString PhaseWaiting = new("run.phase.waiting", "Waiting for the window");
         public static readonly LocString PhaseEmoting = new("run.phase.emoting", "Taking in the view");
+        public static readonly LocString PhaseFinishing = new("run.phase.finishing", "Finishing up");
         public static readonly LocString PhaseStandingBy = new("run.phase.standingBy", "Standing by");
         public static readonly LocString PhaseReady = new("run.phase.ready", "Ready");
         public static readonly LocString PhasePaused = new("run.phase.paused", "Paused");

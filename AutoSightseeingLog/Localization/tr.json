@@ -125,6 +125,7 @@
   "run.phase.travelling": "Yolda",
   "run.phase.waiting": "Zaman aralığı bekleniyor",
   "run.phase.emoting": "Manzara seyrediliyor",
+  "run.phase.finishing": "Bitiriliyor",
   "run.phase.standingBy": "Bekleniyor",
   "run.phase.ready": "Hazır",
   "run.phase.paused": "Duraklatıldı",

@@ -1,4 +1,5 @@
 using clib.TaskSystem;
+using Dalamud.Game.ClientState.Objects.Types;
 using System.Numerics;
 using System.Threading.Tasks;
 
@@ -34,6 +35,9 @@ internal sealed class MoveOp(Func<MoveOp, Task> body) : TaskBase
 
     public Task Aethernet(uint territoryId, Vector3 destination)
         => UseAethernet(territoryId, destination);
+
+    public Task Interact(IGameObject gameObject, Func<bool>? waitUntil, UiSkipOptions skip)
+        => InteractWith(gameObject, waitUntil, null, skip);
 
     public Task DismountNow() => Dismount();
 

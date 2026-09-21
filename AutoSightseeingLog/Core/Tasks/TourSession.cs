@@ -32,6 +32,11 @@ internal sealed class TourSession
 
     public bool Recorded { get; set; }
 
+    // Set when the tour ran out of vistas it can work; a Stop, a logout or a fault never sets it.
+    public bool EndedOnItsOwn { get; set; }
+
+    public bool AfterActionDispatched { get; set; }
+
     public bool DidNothing => VistasLogged == 0;
 
     public TimeSpan Elapsed => DateTime.UtcNow - StartedAt - TimeSpan.FromMilliseconds(PausedTotalMs);

@@ -10,7 +10,7 @@ internal sealed partial class TourController
 
     public bool Paused => PauseReason != PauseReason.None;
 
-    public bool CanPause => session is not null && Phase is not (TourPhase.Idle or TourPhase.Paused);
+    public bool CanPause => session is not null && Phase is not (TourPhase.Idle or TourPhase.Paused or TourPhase.Finishing);
 
     public void Pause(PauseReason reason)
     {

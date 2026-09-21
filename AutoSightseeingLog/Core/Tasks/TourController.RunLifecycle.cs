@@ -13,7 +13,49 @@ internal sealed partial class TourController
             return;
         }
 
-        ClearRun();
+        if (!TryRunAfterAction(owningSession))
+        {
+            ClearRun();
+        }
+    }
+
+    // The finished run stays on screen while its after-run action runs, and is cleared once that ends.
+    private bool TryRunAfterAction(TourSession ending)
+    {
+        if (ending.AfterActionDispatched)
+        {
+            return false;
+        }
+
+        if (!ending.EndedOnItsOwn)
+        {
+            Diag("Run ended before it ran out of vistas to work; no after-run action.");
+            return false;
+        }
+
+        ending.AfterActionDispatched = true;
+        var action = Plugin.Instance.Configuration.AfterRun;
+        if (action == AfterRunAction.StayLoggedIn)
+        {
+            Diag("Run ended on its own; the after-run action is StayLoggedIn, nothing to do.");
+            return false;
+        }
+
+        if (ending.DidNothing)
+        {
+            Diag($"Run ended on its own without logging a vista; skipping after-run action {action}.");
+            return false;
+        }
+
+        Diag($"Run ended on its own; starting after-run action {action}.");
+        progress.SetPhase(TourPhase.Finishing);
+        AutoCommon task = action == AfterRunAction.ReturnToInn ? new AutoReturnToInn() : new AutoAfterRun(action);
+        RunTask(task, () =>
+        {
+            Diag($"After-run action {action} finished.");
+            ClearRun();
+        });
+        return true;
     }
 
     // Idempotent through Recorded, so an explicit Stop and a finished task can both call it.

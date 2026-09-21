@@ -125,6 +125,7 @@
   "run.phase.travelling": "En route",
   "run.phase.waiting": "En attente du créneau",
   "run.phase.emoting": "Contemplation de la vue",
+  "run.phase.finishing": "Finalisation",
   "run.phase.standingBy": "En attente",
   "run.phase.ready": "Prêt",
   "run.phase.paused": "En pause",
