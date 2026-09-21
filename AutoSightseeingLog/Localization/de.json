@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "In den nächsten Tagen kein passendes Zeitfenster.",
   "library.tooltip.done": "Schon in deinem Tagebuch.",
   "library.tooltip.jumpPuzzle": "Nur über ein Sprungrätsel erreichbar, daher überlässt der Lauf ihn dir.",
+  "library.tooltip.jumpRoute": "Nur über ein Sprungrätsel erreichbar, das der Lauf für dich erklimmt. Verpatzte Sprünge werden wiederholt, daher kann es ein paar Minuten dauern.",
   "library.tooltip.npcGate": "Ein NPC öffnet den Weg zu diesem Ort.",
   "library.tooltip.indoors": "Das letzte Stück liegt drinnen und geht zu Fuß.",
   "library.tooltip.ledge": "Wird von einem Vorsprung neben der Markierung erkundet.",

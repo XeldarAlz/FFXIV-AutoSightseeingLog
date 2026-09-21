@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "No window in the next few days.",
   "library.tooltip.done": "Already in your log.",
   "library.tooltip.jumpPuzzle": "Reached by a jump puzzle, so the run leaves this one to you.",
+  "library.tooltip.jumpRoute": "Reached by a jump puzzle the run climbs for you. Missed jumps are retried, so it can take a few minutes.",
   "library.tooltip.npcGate": "An NPC opens the way to this spot.",
   "library.tooltip.indoors": "The last stretch is indoors, on foot.",
   "library.tooltip.ledge": "Recorded from a ledge next to the marker.",

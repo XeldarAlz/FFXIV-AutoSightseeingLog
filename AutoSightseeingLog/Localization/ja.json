@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "数日以内に条件がそろう時間はありません。",
   "library.tooltip.done": "手帳に記録済みです。",
   "library.tooltip.jumpPuzzle": "ジャンプで進む必要があるため、この地点はプレイヤーに任せます。",
+  "library.tooltip.jumpRoute": "ジャンプで進む必要がありますが、この地点は自動で登ります。失敗したジャンプはやり直すため、数分かかることがあります。",
   "library.tooltip.npcGate": "NPCに話しかけるとこの場所への道が開きます。",
   "library.tooltip.indoors": "最後の区間は屋内のため徒歩で進みます。",
   "library.tooltip.ledge": "目印の近くの足場から記録します。",

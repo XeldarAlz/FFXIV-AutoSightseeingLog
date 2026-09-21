@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "Nenhuma janela nos próximos dias.",
   "library.tooltip.done": "Já está no seu diário.",
   "library.tooltip.jumpPuzzle": "Só se chega por um desafio de saltos, então a sessão deixa este com você.",
+  "library.tooltip.jumpRoute": "Só se chega por um desafio de saltos, que a sessão sobe por você. Saltos perdidos são repetidos, então pode levar alguns minutos.",
   "library.tooltip.npcGate": "Um NPC abre o caminho até este lugar.",
   "library.tooltip.indoors": "O último trecho é em ambiente fechado, a pé.",
   "library.tooltip.ledge": "É registrado de uma saliência ao lado do marcador.",

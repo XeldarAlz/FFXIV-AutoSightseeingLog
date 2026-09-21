@@ -101,7 +101,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
         visits[number] = visits.GetValueOrDefault(number) + 1;
         progress.SetVista(number);
 
-        if (vista.Approach is VistaApproach.JumpPuzzle or VistaApproach.NpcGate)
+        if (vista.Approach == VistaApproach.NpcGate || (vista.Approach == VistaApproach.JumpPuzzle && !JumpRoutes.Has(number)))
         {
             Diag($"{scope}: {name} is reached {(vista.Approach == VistaApproach.JumpPuzzle ? "by a jump puzzle" : "through an NPC")}; leaving it to the player");
             leftToPlayer.Add(number);

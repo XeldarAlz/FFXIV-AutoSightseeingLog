@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "Aucun créneau dans les prochains jours.",
   "library.tooltip.done": "Déjà dans votre carnet.",
   "library.tooltip.jumpPuzzle": "Accessible par un parcours de sauts, la session vous le laisse donc.",
+  "library.tooltip.jumpRoute": "Accessible par un parcours de sauts que la session gravit pour vous. Les sauts manqués sont retentés, cela peut donc prendre quelques minutes.",
   "library.tooltip.npcGate": "Un PNJ ouvre le chemin vers cet endroit.",
   "library.tooltip.indoors": "Le dernier tronçon se fait en intérieur, à pied.",
   "library.tooltip.ledge": "Se consigne depuis une corniche près du marqueur.",

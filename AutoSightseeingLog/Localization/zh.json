@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "未来几天内没有合适的时间段。",
   "library.tooltip.done": "已记录在笔记中。",
   "library.tooltip.jumpPuzzle": "需要跳跳乐才能到达，所以运行会把它留给你。",
+  "library.tooltip.jumpRoute": "需要跳跳乐才能到达，运行会替你爬上去。跳空了会重试，所以可能要花几分钟。",
   "library.tooltip.npcGate": "需要与NPC对话才能前往此处。",
   "library.tooltip.indoors": "最后一段在室内，需要步行。",
   "library.tooltip.ledge": "从标记旁边的平台上记录。",

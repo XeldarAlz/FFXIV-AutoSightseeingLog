@@ -30,6 +30,7 @@ Lists every Sightseeing Log vista from A Realm Reborn through Dawntrail in one w
 - **Time and weather windows**: works out when each A Realm Reborn vista's Eorzean hour and weather line up, and counts down to when it opens or closes.
 - **Smart ordering**: visits open vistas before they close and lines up the rest for when their window opens.
 - **Travel**: teleports to the nearest aetheryte and flies or walks to the spot, including the vistas whose marker sits where you can't stand.
+- **Jump puzzles**: climbs the city jump puzzles it has a route for (Bokairo Inn and Shiokaze Hostelry in Kugane, Ruveydah Fibers Rooftop Garden in Radz-at-Han, Hunu'iliy in Tuliyollal), picks the climb back up after a missed jump, and leaves the puzzles it has no route for to you.
 - **The right emote**: performs /lookout, /pray, /comfort or whichever emote each vista asks for, and checks that the log recorded it.
 - **Pause & resume**: park a run without losing your progress, and auto-pause while you're in a duty.
 - **History**: every run recorded with the vistas logged and the zones visited.

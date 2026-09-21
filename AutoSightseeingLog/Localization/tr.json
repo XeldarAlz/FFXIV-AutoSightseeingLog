@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "Önümüzdeki birkaç gün uygun bir zaman yok.",
   "library.tooltip.done": "Zaten günlüğünüzde.",
   "library.tooltip.jumpPuzzle": "Bir zıplama bulmacasıyla ulaşılıyor, bu yüzden çalışma bunu size bırakır.",
+  "library.tooltip.jumpRoute": "Bir zıplama bulmacasıyla ulaşılıyor ve çalışma bunu sizin için tırmanır. Kaçan zıplamalar yeniden denenir, bu yüzden birkaç dakika sürebilir.",
   "library.tooltip.npcGate": "Bu noktanın yolunu bir NPC açar.",
   "library.tooltip.indoors": "Son kısım kapalı alanda, yürüyerek.",
   "library.tooltip.ledge": "İşaretin yanındaki bir çıkıntıdan kaydedilir.",

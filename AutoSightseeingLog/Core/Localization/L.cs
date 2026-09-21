@@ -113,6 +113,7 @@ internal static class L
         public static readonly LocString TooltipNoWindow = new("library.tooltip.noWindow", "No window in the next few days.");
         public static readonly LocString TooltipDone = new("library.tooltip.done", "Already in your log.");
         public static readonly LocString TooltipJumpPuzzle = new("library.tooltip.jumpPuzzle", "Reached by a jump puzzle, so the run leaves this one to you.");
+        public static readonly LocString TooltipJumpRoute = new("library.tooltip.jumpRoute", "Reached by a jump puzzle the run climbs for you. Missed jumps are retried, so it can take a few minutes.");
         public static readonly LocString TooltipNpcGate = new("library.tooltip.npcGate", "An NPC opens the way to this spot.");
         public static readonly LocString TooltipIndoors = new("library.tooltip.indoors", "The last stretch is indoors, on foot.");
         public static readonly LocString TooltipLedge = new("library.tooltip.ledge", "Recorded from a ledge next to the marker.");

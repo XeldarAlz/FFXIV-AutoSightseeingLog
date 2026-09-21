@@ -275,7 +275,7 @@ internal static class VistaLibrary
                 Tooltip.Text(line, color);
             }
 
-            var approach = ApproachLine(vista.Approach);
+            var approach = ApproachLine(vista);
             if (approach.Length > 0)
             {
                 Tooltip.Text(approach, Styling.AccentAmberSoft);
@@ -316,9 +316,9 @@ internal static class VistaLibrary
         _ => string.Empty,
     };
 
-    private static string ApproachLine(VistaApproach approach) => approach switch
+    private static string ApproachLine(in Vista vista) => vista.Approach switch
     {
-        VistaApproach.JumpPuzzle => Loc.T(L.Library.TooltipJumpPuzzle),
+        VistaApproach.JumpPuzzle => Loc.T(JumpRoutes.Has(vista.Number) ? L.Library.TooltipJumpRoute : L.Library.TooltipJumpPuzzle),
         VistaApproach.NpcGate    => Loc.T(L.Library.TooltipNpcGate),
         VistaApproach.Indoors    => Loc.T(L.Library.TooltipIndoors),
         VistaApproach.Ledge      => Loc.T(L.Library.TooltipLedge),

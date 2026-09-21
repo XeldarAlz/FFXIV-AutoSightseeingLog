@@ -94,6 +94,7 @@
   "library.tooltip.noWindow": "No hay ventana en los próximos días.",
   "library.tooltip.done": "Ya está en tu diario.",
   "library.tooltip.jumpPuzzle": "Se llega con un puzle de saltos, así que la sesión te lo deja a ti.",
+  "library.tooltip.jumpRoute": "Se llega con un puzle de saltos que la sesión sube por ti. Los saltos fallados se repiten, así que puede tardar unos minutos.",
   "library.tooltip.npcGate": "Un PNJ abre el camino a este lugar.",
   "library.tooltip.indoors": "El último tramo es en interiores, a pie.",
   "library.tooltip.ledge": "Se registra desde un saliente junto al marcador.",

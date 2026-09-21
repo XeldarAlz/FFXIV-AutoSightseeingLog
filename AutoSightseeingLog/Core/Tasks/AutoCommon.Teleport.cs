@@ -267,15 +267,10 @@ internal abstract partial class AutoCommon
         return false;
     }
 
-    private static unsafe void UseGeneralAction(uint generalActionId)
+    private static unsafe bool UseGeneralAction(uint generalActionId)
     {
         var actionManager = ActionManager.Instance();
-        if (actionManager is null)
-        {
-            return;
-        }
-
-        actionManager->UseAction(ActionType.GeneralAction, generalActionId);
+        return actionManager is not null && actionManager->UseAction(ActionType.GeneralAction, generalActionId);
     }
 
     // From the air the floor straight below is the landing; in the water the nearest reachable point is the way out.

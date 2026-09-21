@@ -96,8 +96,12 @@ internal static class VistaData
         [69] = VistaApproach.Indoors,
         [140] = VistaApproach.Indoors,
         [162] = VistaApproach.NpcGate,
+        [165] = VistaApproach.JumpPuzzle,
+        [168] = VistaApproach.JumpPuzzle,
         [212] = VistaApproach.JumpPuzzle,
+        [263] = VistaApproach.JumpPuzzle,
         [265] = VistaApproach.Indoors,
+        [300] = VistaApproach.JumpPuzzle,
     }.ToFrozenDictionary();
 
     public static uint WeatherMask(ushort number)
