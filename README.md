@@ -17,7 +17,9 @@
 
 ---
 
-> **Early development.** The first release is not out yet. The window, the vista picker, the live log reader with every vista's time and weather window, and a first version of the automation (travel to each vista, perform its emote, confirm the log recorded it) are in place. The automation is still being tested in game.
+<p align="center">
+  <img src="AutoSightseeingLog/Images/demo.gif" alt="Auto Sightseeing Log demo" />
+</p>
 
 ## What it does
 
@@ -32,6 +34,9 @@ Lists every Sightseeing Log vista from A Realm Reborn through Dawntrail in one w
 - **Travel**: teleports to the nearest aetheryte and flies or walks to the spot, including the vistas whose marker sits where you can't stand.
 - **Jump puzzles**: climbs the city jump puzzles it has a route for (Bokairo Inn and Shiokaze Hostelry in Kugane, Ruveydah Fibers Rooftop Garden in Radz-at-Han, Hunu'iliy in Tuliyollal), picks the climb back up after a missed jump, and leaves the puzzles it has no route for to you.
 - **The right emote**: performs /lookout, /pray, /comfort or whichever emote each vista asks for, and checks that the log recorded it.
+- **Hard spots**: when a vista sits on something the plugin cannot get onto by itself, it marks the spot in the world, flashes the game in your taskbar if you are in another window, and waits up to a minute for you to stand inside before carrying on. Turn it off in Settings for unattended runs.
+- **Recovery**: re-paths, jumps, side-steps, or teleports out when it gets stuck on the way, and waits out a fight before it emotes.
+- **After the run**: stay where you are, return to the inn, log out to title, or close the game once a run finishes by itself.
 - **Pause & resume**: park a run without losing your progress, and auto-pause while you're in a duty.
 - **History**: every run recorded with the vistas logged and the zones visited.
 
