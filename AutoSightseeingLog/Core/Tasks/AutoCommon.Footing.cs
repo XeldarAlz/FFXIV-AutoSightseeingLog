@@ -20,6 +20,7 @@ internal abstract partial class AutoCommon
     private const float HoverAcrossMaxMeters = 0.4f;
     private const float HoverVerticalSlackMeters = 1f;
     private const int HoverFlightWaitMs = 30_000;
+    private const int DropSettleWaitMs = 3_000;
     private const int PathIdleConfirmMs = 500;
     private const int MountWatchdogMs = 10_000;
     private const int PlayerFootingWaitMs = 60_000;
@@ -27,11 +28,12 @@ internal abstract partial class AutoCommon
 
     private async Task<bool> StandInside(Vista vista, VistaVolume volume, string name, string scope)
     {
-        var found = VistaFooting.TryFind(volume, out var footing);
+        var found = VistaFooting.TryFind(volume, out var footing, out var probe);
         Diag(found
             ? $"{scope}: footing at {FormatPrecise(footing.Point)}, {footing.Margin:F2}m inside the volume, {(footing.Walkable ? $"walkable from {FormatPrecise(footing.WalkFrom)}" : "off the walkable floor")}, {footing.Candidates} candidate(s)"
-            : $"{scope}: no standable surface inside the volume");
-        if (found)
+            : $"{scope}: no standable surface inside the volume ({probe.Rays} ray(s), {probe.Hits} hit(s), {probe.TooSteep} too steep, {probe.OutsideHeight} outside its height)");
+        var landable = found ? CanLandOn(vista) : TryLogPointFooting(vista, volume, scope, out footing);
+        if (found || landable)
         {
             VistaSpot.ShowFooting(footing.Point);
         }
@@ -40,7 +42,7 @@ internal abstract partial class AutoCommon
         {
             await WalkOnto(volume, footing, name, scope);
         }
-        else if (found && CanLandOn(vista))
+        else if (landable)
         {
             await LandOnto(volume, footing, name, scope);
         }
@@ -128,10 +130,13 @@ internal abstract partial class AutoCommon
         }
 
         Diag($"{scope}: hovering {GroundDistanceTo(footing.Point):F2}m across from the footing ({ConditionTag()})");
-        if (!await DescendAndDismount($"{scope}-descend"))
+        if (!await DescendAndDismount($"{scope}-descend", inPlace: true))
         {
             return;
         }
+
+        // The dismount drops the character the last stretch, and a character still falling does not count as standing.
+        await WaitUntilTimed(static () => !Svc.Condition[ConditionFlag.Jumping], DropSettleWaitMs, $"{scope}-drop", 1);
 
         await StepInto(volume, footing.Point, WantedMargin(footing.Margin), $"{scope}-land");
     }
@@ -245,6 +250,27 @@ internal abstract partial class AutoCommon
             notification.DismissNow();
             VistaSpot.SetAwaitingPlayer(false);
         }
+    }
+
+    // A roof or a rock face only flight reaches has no floor the pathfinder can walk to, and the search can come back
+    // empty there as well. The log point itself is then where to come down, unless the vista has its own approach point.
+    private bool TryLogPointFooting(in Vista vista, in VistaVolume volume, string scope, out Footing footing)
+    {
+        footing = default;
+        if (vista.Approach != VistaApproach.Open || vista.ApproachPoint != vista.Position || !FlightOps.UnlockedIn(vista.TerritoryId))
+        {
+            return false;
+        }
+
+        if (NavmeshIPC.Instance.NearestPointReachable(vista.Position, VistaFooting.WalkMaxAcrossMeters, VistaFooting.WalkMaxDropMeters) is { } floor)
+        {
+            Diag($"{scope}: the floor at {FormatPrecise(floor)} can be walked to; walking up to the log point");
+            return false;
+        }
+
+        Diag($"{scope}: no floor can be walked to within {VistaFooting.WalkMaxAcrossMeters:F0}m of the log point; landing on it from the air");
+        footing = new Footing(vista.Position, default, volume.HorizontalMargin(vista.Position), false, 0);
+        return true;
     }
 
     private static bool CanLandOn(in Vista vista)
