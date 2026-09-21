@@ -36,4 +36,6 @@ internal sealed class MoveOp(Func<MoveOp, Task> body) : TaskBase
         => UseAethernet(territoryId, destination);
 
     public Task DismountNow() => Dismount();
+
+    public Task MountNow() => Mount();
 }

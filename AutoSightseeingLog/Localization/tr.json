@@ -253,6 +253,8 @@
   "settings.general.behavior": "Davranış",
   "settings.general.autoPause": "İçerikte otomatik duraklat",
   "settings.general.autoPauseHelp": "Bir zindan, sınav, baskın ya da başka bir örneklenmiş içerikteyken çalışmayı duraklatır, dışarı çıkınca sürdürür. Planınız ve oturum istatistikleriniz korunur.",
+  "settings.general.askAtHardSpots": "Zor noktalarda bana sor",
+  "settings.general.askAtHardSpotsHelp": "Bazı manzaralar, karakterin üzerine zıplaması gereken küçük bir nesnenin üstündedir. Eklenti noktaya kendi başına çıkamadığında orayı dünyada işaretler ve içine girmeniz için bir dakikaya kadar bekler, sonra devam eder. Başında durmayacağınız çalıştırmalar için kapatın.",
   "plugin.commandHelp": "Auto Sightseeing Log penceresini açar/kapatır. /asl config | stats | deps | about | pause (oturumu duraklat ya da sürdür) | goto <numara> (bir manzaraya kaydetmeden git; goto stop iptal eder) | logdump (gezi günlüğü durumunu eklenti günlüğüne yaz).",
   "plugin.commandHelpAlias": "/asl için kısayol."
 }

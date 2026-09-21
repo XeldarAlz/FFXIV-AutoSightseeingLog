@@ -86,8 +86,10 @@ internal sealed class AutoGoto(ushort number) : AutoCommon
             }
 
             Status = "Arrived";
-            var fromLogPoint = Svc.Objects.LocalPlayer is { } player ? Vector3.Distance(player.Position, vista.Position) : float.NaN;
-            Svc.Chat.Print($"{AslConstants.LogPrefix} Goto: at #{number:000} {name}, {fromLogPoint:F1} yalms from its log point. The log asks for {GameNames.EmoteCommand(vista.EmoteId)}.");
+            var player = Svc.Objects.LocalPlayer;
+            var fromLogPoint = player is null ? float.NaN : Vector3.Distance(player.Position, vista.Position);
+            var placement = player is not null && VistaVolumes.Of(vista).Contains(player.Position) ? "inside" : "outside";
+            Svc.Chat.Print($"{AslConstants.LogPrefix} Goto: at #{number:000} {name}, {fromLogPoint:F1} yalms from its log point and {placement} its trigger volume. The log asks for {GameNames.EmoteCommand(vista.EmoteId)}.");
         }
         finally
         {

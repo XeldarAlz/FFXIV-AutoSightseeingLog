@@ -42,5 +42,11 @@ internal static class GeneralSettings
             SettingsControls.ToggleWidth,
             () => SettingsControls.DrawToggle(configuration, () => configuration.AutoPauseInContent, value => configuration.AutoPauseInContent = value, "##asl_general_autopause"),
             SettingsRow.ToggleHeight);
+
+        SettingsRow.Draw(Loc.T(L.Settings.AskAtHardSpots),
+            Loc.T(L.Settings.AskAtHardSpotsHelp),
+            SettingsControls.ToggleWidth,
+            () => SettingsControls.DrawToggle(configuration, () => configuration.AskAtHardSpots, value => configuration.AskAtHardSpots = value, "##asl_general_askathardspots"),
+            SettingsRow.ToggleHeight);
     }
 }

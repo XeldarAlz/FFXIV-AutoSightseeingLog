@@ -76,6 +76,7 @@ internal static class VistaRegistry
                 number,
                 expansion,
                 territoryId,
+                adventure.Level.RowId,
                 position,
                 approachPoint,
                 (ushort)adventure.Emote.RowId,

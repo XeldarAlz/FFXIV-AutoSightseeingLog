@@ -253,6 +253,8 @@
   "settings.general.behavior": "動作",
   "settings.general.autoPause": "コンテンツ中は自動で一時停止",
   "settings.general.autoPauseHelp": "コンテンツ、討滅戦、レイド、その他のインスタンスコンテンツ中は実行を一時停止し、外に戻ったら再開します。プランとセッション統計は保持されます。",
+  "settings.general.askAtHardSpots": "難しい場所では手伝いを求める",
+  "settings.general.askAtHardSpotsHelp": "一部の探検ポイントは、ジャンプして乗る必要がある小さな物の上にあります。プラグインが自力でたどり着けない場合は、その場所をワールド上に表示し、あなたがその中に立つまで最大1分間待ってから続行します。放置で実行する場合はオフにしてください。",
   "plugin.commandHelp": "Auto Sightseeing Log のウィンドウを開閉します。/asl config | stats | deps | about | pause（実行の一時停止／再開）| goto <番号>（記録せずに探検ポイントへ移動。goto stop で中止）| logdump（探検手帳の状態をプラグインログに出力）。",
   "plugin.commandHelpAlias": "/asl の別名です。"
 }

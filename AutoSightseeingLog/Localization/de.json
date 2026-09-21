@@ -253,6 +253,8 @@
   "settings.general.behavior": "Verhalten",
   "settings.general.autoPause": "Im Inhalt automatisch pausieren",
   "settings.general.autoPauseHelp": "Pausiert den Lauf, solange du in einem Dungeon, einer Prüfung, einem Raid oder anderem instanzierten Inhalt bist, und setzt ihn fort, sobald du wieder draußen bist. Dein Plan und deine Sitzungsstatistiken bleiben erhalten.",
+  "settings.general.askAtHardSpots": "Bei schwierigen Stellen nachfragen",
+  "settings.general.askAtHardSpotsHelp": "Manche Aussichtspunkte liegen auf einem kleinen Objekt, auf das der Charakter springen muss. Wenn das Plugin eine Stelle nicht selbst erreicht, markiert es sie in der Welt und wartet bis zu einer Minute darauf, dass du dich hineinstellst, und macht dann weiter. Für unbeaufsichtigte Läufe ausschalten.",
   "plugin.commandHelp": "Öffnet oder schließt das Auto-Sightseeing-Log-Fenster. /asl config | stats | deps | about | pause (Durchlauf pausieren oder fortsetzen) | goto <Nummer> (zu einem Aussichtspunkt reisen, ohne ihn einzutragen; goto stop bricht ab) | logdump (Stand des Erkundungstagebuchs ins Plugin-Log schreiben).",
   "plugin.commandHelpAlias": "Alias für /asl."
 }

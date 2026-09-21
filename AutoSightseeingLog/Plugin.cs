@@ -182,6 +182,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnDraw()
     {
+        WorldOverlay.Draw();
         WindowSystem.Draw();
         Configuration.FlushPendingSave();
     }

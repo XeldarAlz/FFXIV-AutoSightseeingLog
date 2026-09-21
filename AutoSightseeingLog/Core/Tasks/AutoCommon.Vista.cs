@@ -24,11 +24,11 @@ internal abstract partial class AutoCommon
 {
     private const float ApproachArriveMeters = 2.5f;
     private const float StandingToleranceMeters = 0.35f;
-    // Log points can have a radius under half a metre, and the pathfinder keeps a little off the mesh edge.
-    private const float OnPointMeters = 0.2f;
-    private const float StepOntoMaxMeters = 2f;
-    private const float StepOntoMaxRiseMeters = 1f;
-    private const int StepOntoWaitMs = 3_000;
+    private const float WantedMarginMeters = 0.25f;
+    private const float WantedMarginFraction = 0.5f;
+    private const float CentredMarginFraction = 0.9f;
+    private const float StepToleranceMeters = 0.05f;
+    private const int StepIntoWaitMs = 4_000;
     private const float DisplacedMeters = 20f;
     private const float WalkArrivedSlackMeters = 0.25f;
     // A walk that ends further out than this lost its path; nearer, the emote attempts step in the rest of the way.
@@ -49,35 +49,21 @@ internal abstract partial class AutoCommon
     private const int StandUpWaitMs = 3_000;
     private const int StandUpAttempts = 2;
 
-    // True once the character stands on foot at the vista's approach point, or at its log point when it has none.
     protected async Task<bool> ReachVista(Vista vista, string scope)
     {
         var name = VistaRegistry.Name(vista.Number);
+        var volume = VistaVolumes.Of(vista);
         var target = vista.ApproachPoint;
         var rideStop = vista.Approach == VistaApproach.Indoors ? IndoorsWalkMeters : ApproachArriveMeters;
-        Diag($"{scope}: heading to #{vista.Number:000} {name} ({vista.Approach}), approach point {FormatPosition(target)}, log point {FormatPosition(vista.Position)}");
+        VistaSpot.Clear();
+        Diag($"{scope}: heading to #{vista.Number:000} {name} ({vista.Approach}), approach point {FormatPosition(target)}, log point {FormatPosition(vista.Position)}, {DescribeVolume(volume)}");
         if (!await TravelTo(vista.TerritoryId, target, rideStop) || CancelToken.IsCancellationRequested)
         {
             return false;
         }
 
-        if (!await SafeDismount($"{scope}-dismount"))
-        {
-            Warn($"{scope}: could not dismount near {name} ({ConditionTag()})");
-            return false;
-        }
-
-        if (!await WalkUpTo(target, $"{scope}-walk", name))
-        {
-            return false;
-        }
-
-        if (vista.ApproachPoint == vista.Position)
-        {
-            await StepOnto(vista.Position, $"{scope}-walk");
-        }
-
-        return true;
+        VistaSpot.Show(volume, vista.TerritoryId);
+        return await StandInside(vista, volume, name, scope);
     }
 
     protected async Task<VistaOutcome> LogVista(Vista vista, string scope)
@@ -107,6 +93,7 @@ internal abstract partial class AutoCommon
                 return VistaOutcome.Displaced;
             }
 
+            var volume = VistaVolumes.Of(vista);
             var attemptScope = $"{scope}-emote#{attempt}";
             if (!await ReadyForEmote(attemptScope))
             {
@@ -122,7 +109,7 @@ internal abstract partial class AutoCommon
 
             Status = $"Taking in the view at {name}";
             EmoteOps.Execute(vista.EmoteId);
-            DescribeEmote(vista, attemptScope);
+            DescribeEmote(vista, volume, attemptScope);
             if (await WaitUntilTimed(() => VistaLog.CheckRecorded(vista.Number), EmoteRecordWaitMs, $"{attemptScope}-record", EmoteRecordPollFrames))
             {
                 if (EmoteOps.EntersPose(vista.EmoteId))
@@ -133,7 +120,7 @@ internal abstract partial class AutoCommon
                 return VistaOutcome.Recorded;
             }
 
-            await StepTowardLogPoint(vista, attemptScope);
+            await StepTowardLogPoint(vista, volume, attemptScope);
         }
 
         return VistaOutcome.NotRecorded;
@@ -199,7 +186,7 @@ internal abstract partial class AutoCommon
     }
 
     // Everything the log checks, as the game has it at the emote, next to the forecast the plan was built on.
-    private void DescribeEmote(in Vista vista, string scope)
+    private void DescribeEmote(in Vista vista, in VistaVolume volume, string scope)
     {
         var now = EorzeaTime.Now();
         var weather = WeatherOps.Current();
@@ -207,13 +194,20 @@ internal abstract partial class AutoCommon
         var weatherText = weather == forecast
             ? GameNames.Weather(weather)
             : $"{GameNames.Weather(weather)} (forecast {GameNames.Weather(forecast)})";
-        Diag($"{scope}: emote {vista.EmoteId} performed {DistanceTo(vista.Position):F2}m from the log point ({GroundDistanceTo(vista.Position):F2}m across) at {EorzeaTime.BellOf(now):00}:{EorzeaTime.MinuteOf(now):00} ET in {weatherText}");
+        Diag($"{scope}: emote {vista.EmoteId} performed {DistanceTo(vista.Position):F2}m from the log point ({GroundDistanceTo(vista.Position):F2}m across), {DescribeStanding(volume)}, at {EorzeaTime.BellOf(now):00}:{EorzeaTime.MinuteOf(now):00} ET in {weatherText}");
     }
 
     // The log does not always record a vista from where its point sits, so one that did not count is tried again from
     // the reachable floor closest to the log point, then from the point itself.
-    private async Task StepTowardLogPoint(Vista vista, string scope)
+    private async Task StepTowardLogPoint(Vista vista, VistaVolume volume, string scope)
     {
+        if (IsStandingInside(volume))
+        {
+            Diag($"{scope}: not recorded from inside the volume; stepping to its centre");
+            await StepInto(volume, vista.Position, volume.NarrowestHalfWidth * CentredMarginFraction, scope);
+            return;
+        }
+
         var closer = NavmeshIPC.Instance.NearestPointReachable(vista.Position, LogPointSearchMeters, LogPointSearchMeters) ?? vista.Position;
         if (DistanceTo(closer) > StandingToleranceMeters + WalkArrivedSlackMeters)
         {
@@ -221,29 +215,7 @@ internal abstract partial class AutoCommon
             await WalkTo(closer, StandingToleranceMeters, $"{scope}-closer", $"Stepping closer to {VistaRegistry.Name(vista.Number)}");
         }
 
-        await StepOnto(vista.Position, scope);
-    }
-
-    // The pathfinder stops short of its target and keeps off the mesh edge, so the last steps are walked straight at the
-    // point. Only from close by and nearly level, where a straight line cannot lead off a ledge.
-    private async Task StepOnto(Vector3 point, string scope)
-    {
-        if (Svc.Objects.LocalPlayer is not { } player)
-        {
-            return;
-        }
-
-        var across = GroundDistance.Between(player.Position, point);
-        if (across <= OnPointMeters || across > StepOntoMaxMeters || MathF.Abs(player.Position.Y - point.Y) > StepOntoMaxRiseMeters)
-        {
-            return;
-        }
-
-        var navmesh = NavmeshIPC.Instance;
-        navmesh.MoveAlong([point], false);
-        await WaitUntilTimed(() => GroundDistanceTo(point) <= OnPointMeters || !navmesh.IsRunning(), StepOntoWaitMs, $"{scope}-onto", 1);
-        navmesh.Stop();
-        Diag($"{scope}: stepped from {across:F2}m to {GroundDistanceTo(point):F2}m across from the log point");
+        await StepInto(volume, vista.Position, volume.NarrowestHalfWidth * CentredMarginFraction, scope);
     }
 
     // A teleport cast before a pause, or the player, can move the character away mid-visit.

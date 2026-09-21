@@ -7,6 +7,7 @@ namespace AutoSightseeingLog.Core.Ipc;
 internal sealed class NavmeshIPC
 {
     public const int WaypointsUnavailable = -1;
+    public const float DefaultToleranceMeters = 0.25f;
 
     private const float BuildIdle = -1f;
     private const string IsReadyFailed = AslConstants.LogPrefix + " Navmesh IsReady failed";
@@ -20,6 +21,9 @@ internal sealed class NavmeshIPC
     private const string ListWaypointsFailed = AslConstants.LogPrefix + " Navmesh ListWaypoints failed";
     private const string StopFailed = AslConstants.LogPrefix + " Navmesh Stop failed";
     private const string MoveToFailed = AslConstants.LogPrefix + " Navmesh Path.MoveTo failed";
+    private const string GetToleranceFailed = AslConstants.LogPrefix + " Navmesh Path.GetTolerance failed";
+    private const string SetToleranceFailed = AslConstants.LogPrefix + " Navmesh Path.SetTolerance failed";
+    private const string PathfindAndMoveToFailed = AslConstants.LogPrefix + " Navmesh SimpleMove.PathfindAndMoveTo failed";
 
     private static NavmeshIPC? instance;
 
@@ -34,6 +38,9 @@ internal sealed class NavmeshIPC
     private readonly ICallGateSubscriber<List<Vector3>, bool, object> pathMoveTo;
     private readonly ICallGateSubscriber<int> pathNumWaypoints;
     private readonly ICallGateSubscriber<List<Vector3>> pathListWaypoints;
+    private readonly ICallGateSubscriber<float> pathGetTolerance;
+    private readonly ICallGateSubscriber<float, object> pathSetTolerance;
+    private readonly ICallGateSubscriber<Vector3, bool, bool> simpleMovePathfindAndMoveTo;
 
     // Cached once so the per-frame stall checks do not allocate a delegate on every call.
     private readonly Func<bool> isRunningCall;
@@ -43,6 +50,7 @@ internal sealed class NavmeshIPC
     private readonly Func<float> buildProgressCall;
     private readonly Func<int> numWaypointsCall;
     private readonly Func<List<Vector3>?> listWaypointsCall;
+    private readonly Func<float> getToleranceCall;
     private readonly Action stopCall;
 
     private NavmeshIPC()
@@ -59,6 +67,9 @@ internal sealed class NavmeshIPC
         pathMoveTo = pluginInterface.GetIpcSubscriber<List<Vector3>, bool, object>("vnavmesh.Path.MoveTo");
         pathNumWaypoints = pluginInterface.GetIpcSubscriber<int>("vnavmesh.Path.NumWaypoints");
         pathListWaypoints = pluginInterface.GetIpcSubscriber<List<Vector3>>("vnavmesh.Path.ListWaypoints");
+        pathGetTolerance = pluginInterface.GetIpcSubscriber<float>("vnavmesh.Path.GetTolerance");
+        pathSetTolerance = pluginInterface.GetIpcSubscriber<float, object>("vnavmesh.Path.SetTolerance");
+        simpleMovePathfindAndMoveTo = pluginInterface.GetIpcSubscriber<Vector3, bool, bool>("vnavmesh.SimpleMove.PathfindAndMoveTo");
 
         isRunningCall = pathIsRunning.InvokeFunc;
         simpleMovePathfindInProgressCall = simpleMovePathfindInProgress.InvokeFunc;
@@ -67,6 +78,7 @@ internal sealed class NavmeshIPC
         buildProgressCall = navBuildProgress.InvokeFunc;
         numWaypointsCall = pathNumWaypoints.InvokeFunc;
         listWaypointsCall = pathListWaypoints.InvokeFunc;
+        getToleranceCall = pathGetTolerance.InvokeFunc;
         stopCall = pathStop.InvokeAction;
     }
 
@@ -117,6 +129,19 @@ internal sealed class NavmeshIPC
     // Registered as an action on the far side, so it is HasAction that says whether it can be called.
     public void Stop()
         => IpcGate.Run(pathStop.HasAction, stopCall, StopFailed);
+
+    public float Tolerance()
+        => IpcGate.Invoke(pathGetTolerance.HasFunction, getToleranceCall, DefaultToleranceMeters, GetToleranceFailed);
+
+    public void SetTolerance(float meters)
+        => IpcGate.Run(pathSetTolerance.HasAction, () => pathSetTolerance.InvokeAction(meters), SetToleranceFailed);
+
+    public bool PathfindAndMoveTo(Vector3 destination, bool fly)
+        => IpcGate.Invoke(
+            simpleMovePathfindAndMoveTo.HasFunction,
+            () => simpleMovePathfindAndMoveTo.InvokeFunc(destination, fly),
+            false,
+            PathfindAndMoveToFailed);
 
     // Follows the given waypoints as they are, with no path search, so the caller has to know the way is clear.
     public void MoveAlong(List<Vector3> waypoints, bool fly)

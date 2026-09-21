@@ -6,6 +6,7 @@ internal readonly record struct Vista(
     ushort Number,
     ExpansionKind Expansion,
     uint TerritoryId,
+    uint LevelId,
     Vector3 Position,
     Vector3 ApproachPoint,
     ushort EmoteId,

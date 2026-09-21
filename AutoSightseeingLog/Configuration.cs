@@ -25,6 +25,8 @@ public sealed class Configuration : IPluginConfiguration
 
     public bool AutoPauseInContent { get; set; } = true;
 
+    public bool AskAtHardSpots { get; set; } = true;
+
     public void Save()
     {
         savePending = false;
