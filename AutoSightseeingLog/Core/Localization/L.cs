@@ -313,6 +313,22 @@ internal static class L
         public static readonly LocString AutoPauseHelp = new("settings.general.autoPauseHelp", "Pause the run while you are inside a duty, trial, raid, or any other instanced content, then resume it once you are back outside. Your plan and session stats are kept.");
         public static readonly LocString AskAtHardSpots = new("settings.general.askAtHardSpots", "Ask me at hard spots");
         public static readonly LocString AskAtHardSpotsHelp = new("settings.general.askAtHardSpotsHelp", "Some vistas sit on a small object the character has to be jumped onto. When the plugin cannot get onto a spot by itself, it marks the spot in the world and waits up to a minute for you to stand inside it, then carries on. If the game is in the background, its taskbar button flashes to call you back. Turn this off for unattended runs.");
+
+        public static readonly LocString Markers = new("settings.markers.title", "Spot markers");
+        public static readonly LocString MarkerBox = new("settings.markers.box", "Show the box");
+        public static readonly LocString MarkerBoxHelp = new("settings.markers.boxHelp", "The outline drawn in the world around the spot a vista is logged from. It is as large as the spot itself, and turns green once your character stands inside it.");
+        public static readonly LocString MarkerArrow = new("settings.markers.arrow", "Show the arrow");
+        public static readonly LocString MarkerArrowHelp = new("settings.markers.arrowHelp", "The arrow above your character that points toward the spot, up and down included. It hides once your character stands inside the spot.");
+        public static readonly LocString MarkerArrowSize = new("settings.markers.arrowSize", "Arrow size");
+        public static readonly LocString MarkerArrowSizeHelp = new("settings.markers.arrowSizeHelp", "How large the arrow is drawn. A preview shows above your character while you adjust it.");
+        public static readonly LocString MarkerAlways = new("settings.markers.always", "Always");
+        public static readonly LocString MarkerAlwaysDetail = new("settings.markers.alwaysDetail", "From any distance, the whole way to a vista in your zone.");
+        public static readonly LocString MarkerNear = new("settings.markers.near", "Near the spot");
+        public static readonly LocString MarkerNearDetail = new("settings.markers.nearDetail", "Once your character is close to the spot, and whenever the plugin is waiting for you to stand in it.");
+        public static readonly LocString MarkerAsked = new("settings.markers.asked", "When it needs me");
+        public static readonly LocString MarkerAskedDetail = new("settings.markers.askedDetail", "Only while the plugin is waiting for you to stand in the spot.");
+        public static readonly LocString MarkerNever = new("settings.markers.never", "Never");
+        public static readonly LocString MarkerNeverDetail = new("settings.markers.neverDetail", "Not drawn at all.");
     }
 
     internal static class Plugin

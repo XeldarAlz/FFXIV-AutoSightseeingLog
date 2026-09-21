@@ -7,3 +7,11 @@ public enum AfterRunAction
     ReturnToInn,
     CloseGame,
 }
+
+public enum SpotMarkerVisibility
+{
+    Always,
+    NearSpot,
+    WhenAsked,
+    Never,
+}

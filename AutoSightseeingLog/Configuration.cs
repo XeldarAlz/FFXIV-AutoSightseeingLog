@@ -27,6 +27,12 @@ public sealed class Configuration : IPluginConfiguration
 
     public bool AskAtHardSpots { get; set; } = true;
 
+    public SpotMarkerVisibility BoxVisibility { get; set; } = SpotMarkerVisibility.Always;
+
+    public SpotMarkerVisibility ArrowVisibility { get; set; } = SpotMarkerVisibility.Always;
+
+    public int ArrowSizePercent { get; set; } = 200;
+
     public void Save()
     {
         savePending = false;

@@ -53,23 +53,21 @@ internal abstract partial class AutoCommon
     {
         var name = VistaRegistry.Name(vista.Number);
         var volume = VistaVolumes.Of(vista);
+        VistaSpot.Show(volume, vista.TerritoryId);
         if (JumpRoutes.TryGet(vista.Number, out var route))
         {
-            VistaSpot.Clear();
             Diag($"{scope}: heading to #{vista.Number:000} {name} by its {route.Length}-leg jump route from {FormatPosition(route[0].Point)}, log point {FormatPosition(vista.Position)}, {DescribeVolume(volume)}");
             return await ReachByJumpRoute(vista, volume, route, name, scope);
         }
 
         var target = vista.ApproachPoint;
         var rideStop = vista.Approach == VistaApproach.Indoors ? IndoorsWalkMeters : ApproachArriveMeters;
-        VistaSpot.Clear();
         Diag($"{scope}: heading to #{vista.Number:000} {name} ({vista.Approach}), approach point {FormatPosition(target)}, log point {FormatPosition(vista.Position)}, {DescribeVolume(volume)}");
         if (!await TravelTo(vista.TerritoryId, target, rideStop) || CancelToken.IsCancellationRequested)
         {
             return false;
         }
 
-        VistaSpot.Show(volume, vista.TerritoryId);
         return await StandInside(vista, volume, name, scope);
     }
 

@@ -49,7 +49,6 @@ internal abstract partial class AutoCommon
             Diag($"{scope}: already on the jump route, at leg {startLeg + 1}/{route.Length}");
         }
 
-        VistaSpot.Show(volume, vista.TerritoryId);
         if (!await ClimbJumpRoute(route, startLeg, name, scope))
         {
             return false;

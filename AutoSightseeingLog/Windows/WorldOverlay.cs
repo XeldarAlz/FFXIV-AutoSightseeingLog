@@ -1,5 +1,6 @@
 using AutoSightseeingLog.Core.Vistas;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Interface.Utility;
 using ECommons.DalamudServices;
 using System.Numerics;
@@ -14,6 +15,9 @@ internal static class WorldOverlay
     private const int RingSpokeEvery = 6;
     private const float EdgeThickness = 2f;
     private const float FootingDotRadius = 5f;
+    private const float PercentToFraction = 0.01f;
+    private const long ArrowPreviewMs = 1_200;
+    private const float PreviewRise = 0.6f;
 
     private static readonly (int From, int To)[] boxEdges =
     [
@@ -22,23 +26,69 @@ internal static class WorldOverlay
         (0, 4), (1, 5), (2, 6), (3, 7),
     ];
 
+    private static long arrowPreviewUntil;
+
+    public static void PreviewArrow() => arrowPreviewUntil = Environment.TickCount64 + ArrowPreviewMs;
+
     public static void Draw()
     {
-        if (!VistaSpot.Active
-            || Svc.ClientState.TerritoryType != VistaSpot.TerritoryId
-            || Svc.Objects.LocalPlayer is not { } player)
+        if (Svc.Objects.LocalPlayer is not { } player)
         {
             return;
         }
 
-        var volume = VistaSpot.Volume;
-        if (Vector3.Distance(player.Position, volume.Center) > DrawRangeMeters)
+        var configuration = Plugin.Instance.Configuration;
+        var arrowSize = configuration.ArrowSizePercent * PercentToFraction;
+        var arrowDrawn = VistaSpot.Active
+            && Svc.ClientState.TerritoryType == VistaSpot.TerritoryId
+            && DrawMarkers(configuration, player, arrowSize);
+        if (!arrowDrawn && Environment.TickCount64 < arrowPreviewUntil)
         {
-            return;
+            SpotArrow.Draw(ImGui.GetBackgroundDrawList(), player, PreviewTarget(player), Styling.AccentStar, arrowSize);
+        }
+    }
+
+    private static bool DrawMarkers(Configuration configuration, IGameObject player, float arrowSize)
+    {
+        var volume = VistaSpot.Volume;
+        var near = Vector3.Distance(player.Position, volume.Center) <= DrawRangeMeters;
+        var inside = volume.Contains(player.Position);
+        var showBox = IsShown(configuration.BoxVisibility, near);
+        var showArrow = !inside && IsShown(configuration.ArrowVisibility, near);
+        if (!showBox && !showArrow)
+        {
+            return false;
         }
 
         var drawList = ImGui.GetBackgroundDrawList();
-        var color = Paint.Col(EdgeColor(volume.Contains(player.Position)));
+        var edgeColor = EdgeColor(inside);
+        if (showBox)
+        {
+            DrawSpot(drawList, volume, Paint.Col(edgeColor));
+        }
+
+        if (showArrow)
+        {
+            SpotArrow.Draw(drawList, player, volume.Center, edgeColor, arrowSize);
+        }
+
+        return showArrow;
+    }
+
+    private static Vector3 PreviewTarget(IGameObject player)
+        => player.Position + new Vector3(MathF.Sin(player.Rotation), PreviewRise, MathF.Cos(player.Rotation));
+
+    private static bool IsShown(SpotMarkerVisibility visibility, bool near)
+        => visibility switch
+        {
+            SpotMarkerVisibility.Always => true,
+            SpotMarkerVisibility.NearSpot => near || VistaSpot.AwaitingPlayer,
+            SpotMarkerVisibility.WhenAsked => VistaSpot.AwaitingPlayer,
+            _ => false,
+        };
+
+    private static void DrawSpot(ImDrawListPtr drawList, in VistaVolume volume, uint color)
+    {
         if (volume.IsCylinder)
         {
             DrawCylinder(drawList, volume, color);

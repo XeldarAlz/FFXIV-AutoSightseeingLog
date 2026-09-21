@@ -70,9 +70,10 @@ internal sealed class AutoGoto(ushort number) : AutoCommon
 
         var name = VistaRegistry.Name(number);
         await HoldCombatMovementAndSettle("goto");
+        var arrived = false;
         try
         {
-            var arrived = await ReachVista(vista, $"goto#{number:000}");
+            arrived = await ReachVista(vista, $"goto#{number:000}");
             if (CancelToken.IsCancellationRequested)
             {
                 Diag("Goto: cancelled.");
@@ -95,6 +96,10 @@ internal sealed class AutoGoto(ushort number) : AutoCommon
         {
             NavmeshIPC.Instance.Stop();
             ReleaseCombatMovement("goto");
+            if (!arrived)
+            {
+                VistaSpot.Clear();
+            }
         }
     }
 }
