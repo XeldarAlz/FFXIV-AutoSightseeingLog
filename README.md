@@ -28,6 +28,7 @@ Lists every Sightseeing Log vista from A Realm Reborn through Dawntrail in one w
 ## Features
 
 - **The whole log**: all 340 vistas from A Realm Reborn through Dawntrail, grouped by zone, with the ones you haven't unlocked yet locked and what opens them one hover away.
+- **Fresh characters**: if your Sightseeing Log itself is still locked, the run has Questionable complete “A Sight to Behold” for you first, then carries on to the vistas.
 - **Live log progress**: reads which vistas you have logged straight from the game, so the window always matches your Sightseeing Log.
 - **Time and weather windows**: works out when each A Realm Reborn vista's Eorzean hour and weather line up, and counts down to when it opens or closes.
 - **Smart ordering**: visits open vistas before they close and lines up the rest for when their window opens.
@@ -50,7 +51,7 @@ https://raw.githubusercontent.com/XeldarAlz/DalamudPlugins/main/repo.json
 
 Tick **Enabled**, click **+**, then **Save and Close**. Open `/xlplugins` → **All Plugins**, search for **Auto Sightseeing Log**, and install.
 
-The plugin needs a helper for movement to be installed and loaded. Open `/asl deps` after install to see it and install it in one click.
+The plugin needs a helper for movement to be installed and loaded. Open `/asl deps` after install to see it and install it in one click. The same page offers Questionable as an optional helper: with it installed, a run on a character that has not unlocked the Sightseeing Log yet completes “A Sight to Behold” by itself before the tour.
 
 ## Commands
 

@@ -5,6 +5,7 @@ namespace AutoSightseeingLog.Core.External;
 public enum ExternalPlugin
 {
     Vnavmesh,
+    Questionable,
 }
 
 public sealed record ExternalPluginInfo(
@@ -18,7 +19,7 @@ public sealed record ExternalPluginInfo(
 
 public static class ExternalPlugins
 {
-    private static readonly ExternalPlugin[] all = [ExternalPlugin.Vnavmesh];
+    private static readonly ExternalPlugin[] all = [ExternalPlugin.Vnavmesh, ExternalPlugin.Questionable];
 
     public static readonly IReadOnlyDictionary<ExternalPlugin, ExternalPluginInfo> Catalog
         = new Dictionary<ExternalPlugin, ExternalPluginInfo>
@@ -29,6 +30,12 @@ public static class ExternalPlugins
             RepoUrl: "https://puni.sh/api/repository/veyn",
             Purpose: "Pathfinding, flying, and movement to every vista.",
             Required: true),
+        [ExternalPlugin.Questionable] = new(
+            InternalName: "Questionable",
+            DisplayName: "Questionable",
+            RepoUrl: "https://love.puni.sh/ment.json",
+            Purpose: "Completes the quest that unlocks the Sightseeing Log on a character that has not done it yet.",
+            Required: false),
     };
 
     public static IReadOnlyList<ExternalPlugin> All => all;

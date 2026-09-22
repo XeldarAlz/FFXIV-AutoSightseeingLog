@@ -16,6 +16,14 @@ internal static class VistaData
     public const uint SecondLogNpcId = 1009297;
     public const uint SecondLogTerritoryId = 133;
 
+    // "A Sight to Behold", from Naoh Gamduhla in New Gridania, hands over the Sightseeing Log; nothing records before it.
+    public const uint UnlockQuestId = 65698;
+    public const uint UnlockQuestNpcId = 1000384;
+    public const uint UnlockQuestTerritoryId = 132;
+
+    // "Sylph-management", the main scenario quest the log's quest waits on.
+    public const uint UnlockQuestPrerequisiteId = 66049;
+
     // Bits are Weather sheet row ids.
     private const uint Clear = 1u << 1;
     private const uint Fair = 1u << 2;

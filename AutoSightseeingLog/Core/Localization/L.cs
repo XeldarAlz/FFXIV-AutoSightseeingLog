@@ -30,6 +30,7 @@ internal static class L
         public static readonly LocString StatusLocked = new("shell.status.locked", "Locked");
         public static readonly LocString StatusOffline = new("shell.status.offline", "Not logged in");
         public static readonly LocString StatusSetupNeeded = new("shell.status.setupNeeded", "Setup needed");
+        public static readonly LocString StatusLogLocked = new("shell.status.logLocked", "Log locked");
         public static readonly LocString StatusIdle = new("shell.status.idle", "Idle");
         public static readonly LocString Minimize = new("shell.minimize", "Minimize to the title strip");
         public static readonly LocString Restore = new("shell.restore", "Restore the window");
@@ -52,6 +53,9 @@ internal static class L
         public static readonly LocString DetailAllDone = new("vistas.detail.allDone", "Every vista you picked is already in your log.");
         public static readonly LocString TitleLocked = new("vistas.title.locked", "Nothing unlocked yet");
         public static readonly LocString DetailLocked = new("vistas.detail.locked", "Every vista left in your plan is still locked. Hover one to see what opens it.");
+        public static readonly LocString TitleLogLocked = new("vistas.title.logLocked", "Sightseeing Log locked");
+        public static readonly LocString DetailLogLockedInstall = new("vistas.detail.logLockedInstall", "Complete “{0}” with {1} in {2}, or install Questionable and the run does it for you.");
+        public static readonly LocString DetailLogLockedQuestionable = new("vistas.detail.logLockedQuestionable", "The run starts by having Questionable complete “{0}” for you.");
         public static readonly LocString TitleReady = new("vistas.title.ready", "Ready to explore");
         public static readonly LocString DetailReady = new("vistas.detail.ready", "Everything's set. Press Start whenever you're ready.");
         public static readonly LocString TitleRunning = new("vistas.title.running", "Sightseeing");
@@ -139,6 +143,7 @@ internal static class L
         public static readonly LocString ReasonPick = new("tour.reason.pick", "pick at least one vista");
         public static readonly LocString ReasonAllDone = new("tour.reason.allDone", "every vista you picked is in your log");
         public static readonly LocString ReasonLocked = new("tour.reason.locked", "every vista left is still locked");
+        public static readonly LocString ReasonLogLocked = new("tour.reason.logLocked", "unlock your Sightseeing Log or install Questionable");
         public static readonly LocString StartSub = new("tour.startSub", "{0}  ·  {1}");
         public static readonly LocPlural OpenNow = new("tour.openNow", "{0} open now", "{0} open now");
         public static readonly LocString StateRunning = new("tour.state.running", "running");
@@ -153,6 +158,7 @@ internal static class L
         public static readonly LocString PhaseWaiting = new("run.phase.waiting", "Waiting for the window");
         public static readonly LocString PhaseEmoting = new("run.phase.emoting", "Taking in the view");
         public static readonly LocString PhaseFinishing = new("run.phase.finishing", "Finishing up");
+        public static readonly LocString PhaseUnlocking = new("run.phase.unlocking", "Unlocking your log");
         public static readonly LocString PhaseStandingBy = new("run.phase.standingBy", "Standing by");
         public static readonly LocString PhaseReady = new("run.phase.ready", "Ready");
         public static readonly LocString PhasePaused = new("run.phase.paused", "Paused");
@@ -211,6 +217,7 @@ internal static class L
         public static readonly LocString Footer = new("plugins.footer",
             "Install adds the plugin's source repository to Dalamud and queues an install. If one-click install fails (URL drift, network), right-click a plugin name to copy its repo URL and add it manually via /xlsettings -> Experimental -> Custom Plugin Repositories.");
         public static readonly LocString PurposeVnavmesh = new("plugins.purpose.vnavmesh", "Pathfinding, flying, and movement to every vista.");
+        public static readonly LocString PurposeQuestionable = new("plugins.purpose.questionable", "Completes the quest that unlocks the Sightseeing Log on a character that has not done it yet.");
     }
 
     internal static class About

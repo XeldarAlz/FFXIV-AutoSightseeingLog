@@ -48,8 +48,9 @@ internal sealed class PluginsPage
 
     private static string Purpose(ExternalPlugin plugin) => plugin switch
     {
-        ExternalPlugin.Vnavmesh => Loc.T(L.Plugins.PurposeVnavmesh),
-        _                       => ExternalPlugins.Catalog[plugin].Purpose,
+        ExternalPlugin.Vnavmesh     => Loc.T(L.Plugins.PurposeVnavmesh),
+        ExternalPlugin.Questionable => Loc.T(L.Plugins.PurposeQuestionable),
+        _                           => ExternalPlugins.Catalog[plugin].Purpose,
     };
 
     private static void DrawCard(ExternalPlugin plugin)

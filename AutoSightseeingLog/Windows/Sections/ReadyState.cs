@@ -1,6 +1,9 @@
+using AutoSightseeingLog.Core;
 using AutoSightseeingLog.Core.External;
 using AutoSightseeingLog.Core.Localization;
 using AutoSightseeingLog.Core.Tasks;
+using AutoSightseeingLog.Core.Travel;
+using AutoSightseeingLog.Core.Vistas;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using System.Numerics;
@@ -9,12 +12,14 @@ namespace AutoSightseeingLog.Windows.Sections;
 
 internal static class ReadyState
 {
-    public enum Kind { SetupNeeded, Offline, PickVistas, Locked, AllDone, Ready, Running, Paused }
+    public enum Kind { SetupNeeded, Offline, PickVistas, Locked, LogLocked, UnlockFirst, AllDone, Ready, Running, Paused }
 
     public readonly record struct Info(Kind Kind, Vector4 Accent, Vector4 AccentSoft, FontAwesomeIcon Icon, string Title, string Detail);
 
     private static int cachedFrame = -1;
     private static Info cached;
+    private static CachedText installDetail;
+    private static CachedText questionableDetail;
 
     public static Info Resolve(Configuration configuration, TourController controller)
     {
@@ -59,12 +64,23 @@ internal static class ReadyState
                 Loc.T(L.Vistas.TitlePick), Loc.T(L.Vistas.DetailPick)),
             TourLauncher.Readiness.Locked => new Info(Kind.Locked, Styling.AccentAmber, Styling.AccentAmberSoft, FontAwesomeIcon.Lock,
                 Loc.T(L.Vistas.TitleLocked), Loc.T(L.Vistas.DetailLocked)),
+            TourLauncher.Readiness.LogLocked => new Info(Kind.LogLocked, Styling.AccentAmber, Styling.AccentAmberSoft, FontAwesomeIcon.Lock,
+                Loc.T(L.Vistas.TitleLogLocked), InstallDetail()),
             TourLauncher.Readiness.AllDone => new Info(Kind.AllDone, Styling.AccentMint, Styling.AccentMintSoft, FontAwesomeIcon.CheckDouble,
                 Loc.T(L.Vistas.TitleAllDone), Loc.T(L.Vistas.DetailAllDone)),
+            _ when !VistaLog.LogUnlocked => new Info(Kind.UnlockFirst, Styling.AccentAmber, Styling.AccentAmberSoft, FontAwesomeIcon.Unlock,
+                Loc.T(L.Vistas.TitleLogLocked), QuestionableDetail()),
             _ => new Info(Kind.Ready, Styling.AccentMint, Styling.AccentMintSoft, FontAwesomeIcon.CheckCircle,
                 Loc.T(L.Vistas.TitleReady), Loc.T(L.Vistas.DetailReady)),
         };
     }
+
+    // Game names never change while the client runs, so each detail is built once per plugin language.
+    private static string InstallDetail() => installDetail.Get(0, static _ => Loc.T(L.Vistas.DetailLogLockedInstall,
+        GameNames.Quest(VistaData.UnlockQuestId), GameNames.Npc(VistaData.UnlockQuestNpcId), TerritoryNames.Of(VistaData.UnlockQuestTerritoryId)));
+
+    private static string QuestionableDetail() => questionableDetail.Get(0, static _ => Loc.T(L.Vistas.DetailLogLockedQuestionable,
+        GameNames.Quest(VistaData.UnlockQuestId)));
 
     public static string ShortLabel(Kind kind) => kind switch
     {
@@ -73,6 +89,7 @@ internal static class ReadyState
         Kind.Ready       => Loc.T(L.Shell.StatusReady),
         Kind.PickVistas  => Loc.T(L.Shell.StatusPickVistas),
         Kind.Locked      => Loc.T(L.Shell.StatusLocked),
+        Kind.LogLocked or Kind.UnlockFirst => Loc.T(L.Shell.StatusLogLocked),
         Kind.Offline     => Loc.T(L.Shell.StatusOffline),
         Kind.AllDone     => Loc.T(L.Shell.StatusAllDone),
         Kind.SetupNeeded => Loc.T(L.Shell.StatusSetupNeeded),
@@ -82,6 +99,7 @@ internal static class ReadyState
     public static string PhaseLabel(TourPhase phase) => phase switch
     {
         TourPhase.Reading    => Loc.T(L.Run.PhaseReading),
+        TourPhase.Unlocking  => Loc.T(L.Run.PhaseUnlocking),
         TourPhase.Travelling => Loc.T(L.Run.PhaseTravelling),
         TourPhase.Waiting    => Loc.T(L.Run.PhaseWaiting),
         TourPhase.Emoting    => Loc.T(L.Run.PhaseEmoting),

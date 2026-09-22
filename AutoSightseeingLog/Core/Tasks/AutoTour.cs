@@ -33,6 +33,15 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
         {
             // A teleport cast when the run was paused still lands, so the run starts from wherever it takes the character.
             await WaitUntilTimed(static () => !Svc.Condition[ConditionFlag.Casting] && !Svc.Condition[ConditionFlag.BetweenAreas], SettleWaitMs, "tour-settle");
+            if (!VistaLog.LogUnlocked)
+            {
+                progress.SetPhase(TourPhase.Unlocking);
+                if (!await UnlockSightseeingLog())
+                {
+                    return;
+                }
+            }
+
             await WorkPlan();
         }
         finally

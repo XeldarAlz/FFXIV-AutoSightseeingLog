@@ -38,6 +38,7 @@ internal static unsafe class VistaDumper
             Write($"{expansions[index]}: {VistaLog.CountRecorded(vistas)}/{vistas.Length} recorded");
         }
 
+        Write($"log unlocked={VistaLog.LogUnlocked}");
         Write($"first log recorded={VistaLog.FirstLogRecorded}");
         var gateQuests = VistaRegistry.GateQuests;
         var quests = Svc.Data.GetExcelSheet<Quest>();

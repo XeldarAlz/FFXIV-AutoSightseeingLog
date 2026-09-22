@@ -1,5 +1,7 @@
 using AutoSightseeingLog.Core.External;
 using AutoSightseeingLog.Core.Ipc;
+using AutoSightseeingLog.Core.Travel;
+using AutoSightseeingLog.Core.Vistas;
 using clib.Services;
 
 namespace AutoSightseeingLog.Core.Tasks;
@@ -40,7 +42,7 @@ internal sealed partial class TourController
             return;
         }
 
-        if (!RequiredPluginsReady())
+        if (!RequiredPluginsReady() || !SightseeingLogReady())
         {
             return;
         }
@@ -102,6 +104,22 @@ internal sealed partial class TourController
         return false;
     }
 
+    // The log records nothing before its quest. A run can hand that quest to the questing plugin, but not without it.
+    private static bool SightseeingLogReady()
+    {
+        VistaLog.Refresh();
+        if (VistaLog.LogUnlocked || ExternalPlugins.IsInstalled(ExternalPlugin.Questionable))
+        {
+            return true;
+        }
+
+        var questName = GameNames.Quest(VistaData.UnlockQuestId);
+        var zone = TerritoryNames.Of(VistaData.UnlockQuestTerritoryId);
+        Diag("Start aborted: the Sightseeing Log is locked and Questionable is not installed.");
+        ECommons.DalamudServices.Svc.Chat.PrintError($"{AslConstants.LogPrefix} Cannot start: your Sightseeing Log is locked. Complete “{questName}” in {zone}, or install Questionable and the run does it for you.");
+        return false;
+    }
+
     private void StartTour(TourSession owningSession)
     {
         progress.Reset();
@@ -141,4 +159,4 @@ internal sealed partial class TourController
     }
 }
 
-internal enum TourPhase { Idle, Reading, Travelling, Waiting, Emoting, Finishing, Paused }
+internal enum TourPhase { Idle, Reading, Unlocking, Travelling, Waiting, Emoting, Finishing, Paused }

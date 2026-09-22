@@ -18,12 +18,16 @@ internal static unsafe class VistaLog
     private static CachedWindow[] windows = [];
     private static long nextRefreshAtMs;
     private static bool firstLogRecorded;
+    private static bool logUnlocked;
 
     private readonly record struct CachedWindow(VistaWindow Window, bool Found, long ValidUntil);
 
     public static bool Loaded { get; private set; }
 
     public static bool FirstLogRecorded => firstLogRecorded;
+
+    // The log records nothing until "A Sight to Behold" is done.
+    public static bool LogUnlocked => logUnlocked;
 
     public static void Refresh(bool force = false)
     {
@@ -40,6 +44,7 @@ internal static unsafe class VistaLog
         Array.Clear(recorded);
         Array.Clear(questDone);
         firstLogRecorded = false;
+        logUnlocked = false;
 
         var playerState = PlayerState.Instance();
         Loaded = Svc.ClientState.IsLoggedIn && playerState != null;
@@ -58,12 +63,18 @@ internal static unsafe class VistaLog
 
         for (var gateIndex = 0; gateIndex < gateQuests.Length; gateIndex++)
         {
-            var questId = gateQuests[gateIndex];
-            questDone[gateIndex] = questId >= QuestRowBase && QuestManager.IsQuestComplete((ushort)(questId - QuestRowBase));
+            questDone[gateIndex] = QuestCompleted(gateQuests[gateIndex]);
         }
 
+        logUnlocked = QuestCompleted(VistaData.UnlockQuestId);
         firstLogRecorded = CountRecorded(1, VistaData.FirstLogCount) == VistaData.FirstLogCount;
     }
+
+    public static ushort QuestJournalId(uint questRowId) => (ushort)(questRowId - QuestRowBase);
+
+    // Asks the game directly, for the run watching a quest the questing plugin works on.
+    public static bool QuestCompleted(uint questRowId)
+        => questRowId >= QuestRowBase && QuestManager.IsQuestComplete(QuestJournalId(questRowId));
 
     // Asks the game directly, for the run waiting on an emote, and updates the kept bit to match.
     public static bool CheckRecorded(ushort number)

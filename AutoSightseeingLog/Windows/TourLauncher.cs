@@ -1,3 +1,4 @@
+using AutoSightseeingLog.Core.External;
 using AutoSightseeingLog.Core.Localization;
 using AutoSightseeingLog.Core.Time;
 using AutoSightseeingLog.Core.Vistas;
@@ -10,6 +11,7 @@ internal static class TourLauncher
     public enum Readiness : byte
     {
         Offline,
+        LogLocked,
         NothingPicked,
         AllDone,
         Locked,
@@ -73,6 +75,7 @@ internal static class TourLauncher
     {
         Readiness.Ready         => string.Empty,
         Readiness.Offline       => Loc.T(L.Tour.ReasonOffline),
+        Readiness.LogLocked     => Loc.T(L.Tour.ReasonLogLocked),
         Readiness.NothingPicked => Loc.T(L.Tour.ReasonPick),
         Readiness.Locked        => Loc.T(L.Tour.ReasonLocked),
         _                       => Loc.T(L.Tour.ReasonAllDone),
@@ -87,6 +90,11 @@ internal static class TourLauncher
         }
 
         var workload = VistaSelection.Measure(configuration.SelectedVistas, EorzeaTime.Now());
+        if (!VistaLog.LogUnlocked && !ExternalPlugins.IsInstalled(ExternalPlugin.Questionable))
+        {
+            return new Plan(Readiness.LogLocked, workload);
+        }
+
         var readiness = workload.Selected == 0 ? Readiness.NothingPicked
             : workload.Pending > 0 ? Readiness.Ready
             : workload.Locked > 0 ? Readiness.Locked

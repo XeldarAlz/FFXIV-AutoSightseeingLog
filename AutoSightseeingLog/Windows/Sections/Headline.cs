@@ -76,12 +76,12 @@ internal static class Headline
         var scale = ImGuiHelpers.GlobalScale;
         openPlugins = false;
 
-        if (info.Kind == ReadyState.Kind.SetupNeeded)
+        if (info.Kind is ReadyState.Kind.SetupNeeded or ReadyState.Kind.LogLocked)
         {
             var label = Loc.T(L.Vistas.OpenPlugins);
             var buttonWidth = PillButton.Width(label, FontAwesomeIcon.Plug);
             ImGui.SetCursorScreenPos(new Vector2(rightX - buttonWidth, midY - PluginsButtonHeight * scale * 0.5f));
-            openPlugins = PillButton.Draw("##asl_open_plugins", label, Styling.AccentRose, PillButton.Emphasis.Tinted, FontAwesomeIcon.Plug, height: PluginsButtonHeight);
+            openPlugins = PillButton.Draw("##asl_open_plugins", label, info.Accent, PillButton.Emphasis.Tinted, FontAwesomeIcon.Plug, height: PluginsButtonHeight);
             return buttonWidth;
         }
 
