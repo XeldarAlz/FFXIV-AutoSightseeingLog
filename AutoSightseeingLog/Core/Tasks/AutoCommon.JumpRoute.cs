@@ -15,7 +15,10 @@ internal abstract partial class AutoCommon
     private const int NotOnRoute = -1;
     private const int MaxRouteMisses = 8;
     private const int MaxMissesOnOneLeg = 3;
-    private const float JumpRefused = -1f;
+    private const int MaxRunUpRetries = 2;
+    private const float RunUpStartLatencySeconds = 0.05f;
+    private const float RunUpMetersPerSecond = 3.7f;
+    private const float RunUpSlackMeters = 0.15f;
     private const int MaxWalksBackOntoRoute = 3;
     private const int JumpLegWatchdogMs = 20_000;
     private const int JumpLegSettleMs = 500;
@@ -160,22 +163,43 @@ internal abstract partial class AutoCommon
         }
 
         var navmesh = NavmeshIPC.Instance;
-        var stall = new MoveStallTracker();
         var from = player.Position;
-        var startedAt = Stopwatch.GetTimestamp();
-        navmesh.MoveAlong([step.Point], false);
-        var ranUp = step.Jumps ? await JumpAfterRunUp(step.RunUpSeconds, startedAt, from) : 0f;
-        if (ranUp == JumpRefused)
+        var ranUp = 0f;
+        for (var attempt = 0; ; attempt++)
         {
-            navmesh.Stop();
-            if (!CancelToken.IsCancellationRequested)
+            var attemptFrom = player.Position;
+            var startedAt = Stopwatch.GetTimestamp();
+            navmesh.MoveAlong([step.Point], false);
+            if (!step.Jumps)
             {
-                Diag($"{scope}: the game refused the jump to {FormatPrecise(step.Point)} ({ConditionTag()})");
+                break;
             }
 
-            return false;
+            ranUp = await RunUp(step.RunUpSeconds, startedAt, attemptFrom);
+            if (CancelToken.IsCancellationRequested)
+            {
+                navmesh.Stop();
+                return false;
+            }
+
+            if (ranUp <= MaxRunUpMeters(step.RunUpSeconds) || attempt == MaxRunUpRetries)
+            {
+                if (UseGeneralAction(JumpGeneralActionId))
+                {
+                    break;
+                }
+
+                navmesh.Stop();
+                Diag($"{scope}: the game refused the jump to {FormatPrecise(step.Point)} ({ConditionTag()})");
+                return false;
+            }
+
+            navmesh.Stop();
+            Diag($"{scope}: ran {ranUp:F2}m in the {step.RunUpSeconds:F2}s run-up, too far to jump from; stepping back to {FormatPrecise(from)}");
+            await StepBackTo(from, step.Point, scope);
         }
 
+        var stall = new MoveStallTracker();
         await WaitUntilTimed(() => (!navmesh.IsRunning() && !IsAirborne()) || stall.Check() != StallKind.None, JumpLegWatchdogMs, scope, 1);
         navmesh.Stop();
         await DelayMs(JumpLegSettleMs);
@@ -185,21 +209,35 @@ internal abstract partial class AutoCommon
         return landed;
     }
 
-    private async Task<float> JumpAfterRunUp(float runUpSeconds, long startedAt, Vector3 from)
+    private async Task<float> RunUp(float runUpSeconds, long startedAt, Vector3 from)
     {
         while (Stopwatch.GetElapsedTime(startedAt).TotalSeconds < runUpSeconds)
         {
             if (CancelToken.IsCancellationRequested)
             {
-                return JumpRefused;
+                return 0f;
             }
 
             await NextFrame(1);
         }
 
-        var ranUp = DistanceTo(from);
-        return UseGeneralAction(JumpGeneralActionId) ? ranUp : JumpRefused;
+        return DistanceTo(from);
     }
+
+    private async Task StepBackTo(Vector3 from, Vector3 target, string scope)
+    {
+        var navmesh = NavmeshIPC.Instance;
+        var away = new Vector3(from.X - target.X, 0f, from.Z - target.Z);
+        var back = away == Vector3.Zero ? from : from + Vector3.Normalize(away) * NavmeshIPC.DefaultToleranceMeters;
+        var stall = new MoveStallTracker();
+        navmesh.MoveAlong([back], false);
+        await WaitUntilTimed(() => !navmesh.IsRunning() || stall.Check() != StallKind.None, JumpLegWatchdogMs, $"{scope}-stepback", 1);
+        navmesh.Stop();
+        await DelayMs(JumpLegSettleMs);
+    }
+
+    private static float MaxRunUpMeters(float runUpSeconds)
+        => MathF.Max(0f, (runUpSeconds - RunUpStartLatencySeconds) * RunUpMetersPerSecond) + RunUpSlackMeters;
 
     private async Task<int> FindWayBackOnto(JumpStep[] route, int missedLeg, string name, string scope)
     {
@@ -226,9 +264,9 @@ internal abstract partial class AutoCommon
             }
 
             walks++;
+            Status = label;
             Diag($"{backScope}: fell to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking to leg {leg + 1}/{route.Length} on this level");
-            await WalkTo(route[leg].Point, StandingToleranceMeters, backScope, label);
-            if (HasLandedOn(route[leg].Point))
+            if (await RunLeg(JumpStep.Walk(route[leg].Point), backScope))
             {
                 return leg;
             }
