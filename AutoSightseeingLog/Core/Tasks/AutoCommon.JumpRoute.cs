@@ -21,7 +21,7 @@ internal abstract partial class AutoCommon
     private const int JumpLegSettleMs = 500;
     private const float LandedAcrossMeters = 1f;
     private const float LandedBelowMeters = 0.6f;
-    private const float OnRouteAcrossMeters = 0.75f;
+    private const float OnRouteAcrossMeters = 2f;
     private const float OnRouteRiseMeters = 0.5f;
     private const float SameLevelMeters = 1.5f;
 
@@ -285,7 +285,10 @@ internal abstract partial class AutoCommon
     }
 
     private static bool HasLandedOn(Vector3 point)
-        => GroundDistanceTo(point) <= LandedAcrossMeters && HeightAbove(point) >= -LandedBelowMeters;
+        => (GroundDistanceTo(point) <= LandedAcrossMeters && HeightAbove(point) >= -LandedBelowMeters) || IsOnLevelWith(point);
+
+    private static bool IsOnLevelWith(Vector3 point)
+        => GroundDistanceTo(point) <= OnRouteAcrossMeters && MathF.Abs(HeightAbove(point)) <= OnRouteRiseMeters;
 
     private static float HeightAbove(Vector3 point)
         => Svc.Objects.LocalPlayer is { } player ? player.Position.Y - point.Y : float.MinValue;
