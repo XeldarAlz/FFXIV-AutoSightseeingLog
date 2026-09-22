@@ -4,6 +4,7 @@ using AutoSightseeingLog.Core.Travel;
 using AutoSightseeingLog.Core.Vistas;
 using Dalamud.Game.ClientState.Conditions;
 using ECommons.DalamudServices;
+using ECommons.MathHelpers;
 using System.Diagnostics;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -250,6 +251,17 @@ internal abstract partial class AutoCommon
 
         var backScope = $"{scope}-back";
         var label = $"Getting back onto the way up to {name}";
+        var nextLeg = missedLeg + 1;
+        if (nextLeg < route.Length && OvershotJump(route, missedLeg) && IsWalkOnThisLevel(route[nextLeg]))
+        {
+            Status = label;
+            Diag($"{backScope}: overshot to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking on to leg {nextLeg + 1}/{route.Length} on this level");
+            if (await RunLeg(JumpStep.Walk(route[nextLeg].Point), backScope))
+            {
+                return nextLeg;
+            }
+        }
+
         var walks = 0;
         for (var leg = missedLeg - 1; leg > 0 && walks < MaxWalksBackOntoRoute; leg--)
         {
@@ -258,7 +270,7 @@ internal abstract partial class AutoCommon
                 return NotOnRoute;
             }
 
-            if (route[leg].Jumps || MathF.Abs(HeightAbove(route[leg].Point)) > SameLevelMeters)
+            if (!IsWalkOnThisLevel(route[leg]))
             {
                 continue;
             }
@@ -274,6 +286,22 @@ internal abstract partial class AutoCommon
 
         Diag($"{backScope}: walking back to the foot of the route");
         return await WalkUpTo(route[0].Point, backScope, name) ? 0 : NotOnRoute;
+    }
+
+    private static bool IsWalkOnThisLevel(JumpStep step)
+        => !step.Jumps && MathF.Abs(HeightAbove(step.Point)) <= SameLevelMeters;
+
+    private static bool OvershotJump(JumpStep[] route, int leg)
+    {
+        if (leg == 0 || !route[leg].Jumps || Svc.Objects.LocalPlayer is not { } player)
+        {
+            return false;
+        }
+
+        var from = route[leg - 1].Point;
+        var along = (route[leg].Point - from).ToVector2();
+        var travelled = (player.Position - from).ToVector2();
+        return Vector2.Dot(travelled, along) > along.LengthSquared();
     }
 
     private async Task WalkStraightInto(VistaVolume volume, Vector3 logPoint, string scope)
