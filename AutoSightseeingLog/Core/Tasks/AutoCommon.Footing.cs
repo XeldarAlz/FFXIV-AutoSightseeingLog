@@ -65,6 +65,7 @@ internal abstract partial class AutoCommon
         Diag($"{scope}: the approach ended {DescribeStanding(volume)}");
         if (await AwaitPlayerFooting(vista, volume, name, scope))
         {
+            Diag($"{scope}: the player stood {DescribeStanding(volume)}");
             return true;
         }
 
@@ -306,7 +307,7 @@ internal abstract partial class AutoCommon
         }
 
         var local = volume.ToLocal(player.Position);
-        return $"{(volume.Contains(player.Position) ? "inside" : "outside")} the volume at local ({local.X:F2}, {local.Y:F2}, {local.Z:F2}), margins {volume.HorizontalMargin(player.Position):F2}m across and {volume.VerticalMargin(player.Position):F2}m high";
+        return $"{(volume.Contains(player.Position) ? "inside" : "outside")} the volume at {FormatPrecise(player.Position)}, local ({local.X:F2}, {local.Y:F2}, {local.Z:F2}), margins {volume.HorizontalMargin(player.Position):F2}m across and {volume.VerticalMargin(player.Position):F2}m high";
     }
 
     private static string FormatPrecise(Vector3 position)

@@ -97,7 +97,7 @@ internal static class VistaFooting
             }
 
             probe.Hits++;
-            if (!(hit.Normal.Y >= WalkableNormalY))
+            if (SlopeUpOf(hit) < WalkableNormalY)
             {
                 probe.TooSteep++;
             }
@@ -114,6 +114,14 @@ internal static class VistaFooting
         }
 
         return count;
+    }
+
+    // The game leaves the hit's own normal unusable, so the slope comes from the triangle the ray struck.
+    private static float SlopeUpOf(in RaycastHit hit)
+    {
+        var normal = Vector3.Cross(hit.V2 - hit.V1, hit.V3 - hit.V1);
+        var length = normal.Length();
+        return length > 0f ? MathF.Abs(normal.Y) / length : 0f;
     }
 
     private static Footing? PickWalkable(Span<Candidate> candidates)
