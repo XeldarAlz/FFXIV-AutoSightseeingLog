@@ -240,6 +240,8 @@
   "changelog.r1700.1": "Konsole hinzugefügt, um die Protokolle des Plugins anzusehen, zu filtern und zu kopieren",
   "changelog.r1700.2": "Dieses Änderungsprotokoll hinzugefügt, mit einem Hinweis, sobald ein Update Neues bringt",
   "changelog.r1700.3": "Die Info-Seite komplett überarbeitet, mit dem neuen Discord-Link",
+  "changelog.r1800.1": "Beim Aufstieg zur Shiokaze-Herberge in Kugane werden lange Sprünge jetzt mit kurzem Anlauf zur nächsten Kante genommen, statt kurz nach dem Start abzustürzen",
+  "changelog.r1800.2": "Sprungrätsel protokollieren jetzt, wo jeder Sprung aufkommt, und nach einem verpatzten Sprung läuft die Figur nicht mehr auf dem Boden darunter weiter",
   "about.support.title": "Mit Liebe und Sorgfalt gemacht",
   "about.support.body": "Dieses Plugin ist ein Ein-Personen-Projekt, entstanden in meiner Freizeit, weil ich dieses Spiel und seine Community liebe. Es aktuell zu halten, kostet viele dieser Stunden. Wenn es dir geholfen hat, sorgt deine Unterstützung auf Patreon dafür, dass ich ihm diese Zeit weiter schenken kann. Danke, dass du hier bist.",
   "about.support.button": "Auf Patreon unterstützen",

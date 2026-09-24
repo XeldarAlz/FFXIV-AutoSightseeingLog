@@ -240,6 +240,8 @@
   "changelog.r1700.1": "Añadida la página Consola para ver, filtrar y copiar los registros del plugin",
   "changelog.r1700.2": "Añadido este registro de cambios, con un aviso cada vez que una actualización trae novedades",
   "changelog.r1700.3": "Renovada por completo la página Acerca de, con el enlace de Discord actualizado",
+  "changelog.r1800.1": "La subida a la Posada Shiokaze de Kugane ahora hace sus saltos largos con una breve carrera hacia la siguiente cornisa, donde antes se caía al poco de empezar",
+  "changelog.r1800.2": "Los puzles de saltos ahora registran dónde cae cada salto, y tras un salto fallado el personaje ya no sigue caminando por el suelo de abajo",
   "about.support.title": "Hecho con amor y cariño",
   "about.support.body": "Este plugin es un proyecto de una sola persona, hecho en mi tiempo libre porque me encantan este juego y su comunidad. Mantenerlo al día me lleva muchas de esas horas. Si te ha ayudado, apoyarme en Patreon me permite seguir dedicándole ese tiempo. Gracias por estar aquí.",
   "about.support.button": "Apoyar en Patreon",

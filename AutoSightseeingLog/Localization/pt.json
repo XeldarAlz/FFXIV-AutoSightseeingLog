@@ -240,6 +240,8 @@
   "changelog.r1700.1": "Adicionada a página Console para ver, filtrar e copiar os logs do plugin",
   "changelog.r1700.2": "Adicionado este registro de mudanças, com um aviso sempre que uma atualização trouxer novidades",
   "changelog.r1700.3": "Página Sobre totalmente reformulada, com o link do Discord atualizado",
+  "changelog.r1800.1": "A subida da Hospedaria Shiokaze em Kugane agora faz os saltos longos com uma pequena corrida de frente para a próxima borda, onde antes caía logo no início",
+  "changelog.r1800.2": "Os desafios de saltos agora registram onde cada salto caiu, e um salto perdido não faz mais o personagem seguir andando no chão de baixo",
   "about.support.title": "Feito com amor e carinho",
   "about.support.body": "Este plugin é um projeto de uma pessoa só, feito no meu tempo livre porque eu amo este jogo e a sua comunidade. Mantê-lo atualizado leva muitas dessas horas. Se ele te ajudou, apoiar no Patreon permite que eu continue dedicando esse tempo a ele. Obrigado por estar aqui.",
   "about.support.button": "Apoiar no Patreon",

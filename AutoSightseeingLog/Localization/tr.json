@@ -240,6 +240,8 @@
   "changelog.r1700.1": "Eklentinin günlüklerini görüntülemek, filtrelemek ve kopyalamak için Konsol sayfası eklendi",
   "changelog.r1700.2": "Bu değişiklik günlüğü eklendi; bir güncelleme yenilik getirdiğinde rozetle bildirir",
   "changelog.r1700.3": "Hakkında sayfası baştan yenilendi, Discord bağlantısı güncellendi",
+  "changelog.r1800.1": "Kugane'deki Shiokaze Hostelry tırmanışı artık uzun zıplamaları bir sonraki çıkıntıya dönük kısa bir koşuyla yapıyor; eskiden başlangıçta düşüyordu",
+  "changelog.r1800.2": "Zıplama bulmacası tırmanışları artık her zıplamanın nereye indiğini günlüğe yazıyor ve kaçan bir zıplamadan sonra karakter alttaki zeminde yürümeye devam etmiyor",
   "about.support.title": "Sevgi ve özenle yapıldı",
   "about.support.body": "Bu eklenti, bu oyunu ve topluluğunu sevdiğim için boş zamanlarımda tek başıma geliştirdiğim bir proje. Onu güncel tutmak o saatlerin çoğunu alıyor. Size yardımcı olduysa, Patreon'da destek olmanız ona bu zamanı ayırmaya devam etmemi sağlar. Burada olduğunuz için teşekkürler.",
   "about.support.button": "Patreon'da destekle",
