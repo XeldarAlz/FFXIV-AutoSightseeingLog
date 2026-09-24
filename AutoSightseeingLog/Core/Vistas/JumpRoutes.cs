@@ -61,7 +61,7 @@ internal static class JumpRoutes
         Jump(-39.36f, 17.2f, -38.42f, 0.05f),
         Walk(-39.3f, 17.2f, -37.9f),
         Jump(-36.97f, 17.41f, -39.1f, 0f),
-        Walk(-36.92f, 17.41f, -39.15f),
+        Walk(-36.6f, 17.41f, -39.3f),
         Jump(-33.76f, 19.21f, -38.91f, 0.08f),
         Jump(-30.42f, 20.91f, -38.71f, 0.08f),
         Jump(-32.01f, 22.85f, -40.35f, 0.1f),
