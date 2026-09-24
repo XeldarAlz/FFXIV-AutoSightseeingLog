@@ -23,6 +23,7 @@ internal static class L
         public static readonly LocString NavPlugins = new("shell.nav.plugins", "Plugins");
         public static readonly LocString NavConsole = new("shell.nav.console", "Console");
         public static readonly LocString NavAbout = new("shell.nav.about", "About");
+        public static readonly LocString NavChangelog = new("shell.nav.changelog", "Changelog");
         public static readonly LocString StatusRunning = new("shell.status.running", "Running");
         public static readonly LocString StatusPaused = new("shell.status.paused", "Paused");
         public static readonly LocString StatusReady = new("shell.status.ready", "Ready");
@@ -260,6 +261,22 @@ internal static class L
         public static readonly LocString HasDetails = new("console.hasDetails", "Has a stack trace. Select the line to read it.");
     }
 
+    internal static class Changelog
+    {
+        public static readonly LocString Title = new("changelog.title", "What's new");
+        public static readonly LocString Subtitle = new("changelog.subtitle", "Every update, newest first.");
+        public static readonly LocString Version = new("changelog.version", "Version {0}");
+        public static readonly LocString Latest = new("changelog.latest", "Latest");
+        public static readonly LocString New = new("changelog.new", "New");
+        public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
+
+        public static readonly LocString[] Release1700 =
+        [
+            new("changelog.r1700.1", "Added the Console page to view, filter and copy the plugin's logs"),
+            new("changelog.r1700.2", "Added this changelog, with a badge whenever an update brings something new"),
+        ];
+    }
+
     internal static class About
     {
         public static readonly LocString Connect = new("about.connect", "Connect");
@@ -380,7 +397,7 @@ internal static class L
 
     internal static class Plugin
     {
-        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | console (open the plugin console) | pause (pause or resume the run) | goto <number> (travel to a vista without logging it; goto stop cancels) | logdump (write the Sightseeing Log state to the plugin log).");
+        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | console (open the plugin console) | changelog (open the changelog) | pause (pause or resume the run) | goto <number> (travel to a vista without logging it; goto stop cancels) | logdump (write the Sightseeing Log state to the plugin log).");
         public static readonly LocString CommandHelpAlias = new("plugin.commandHelpAlias", "Alias for /asl.");
     }
 }

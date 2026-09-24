@@ -23,6 +23,7 @@ internal static class NavRail
         new(AppWindow.Page.History,  FontAwesomeIcon.ChartLine,  "##asl_nav_history",  L.Shell.NavHistory),
         new(AppWindow.Page.Plugins,  FontAwesomeIcon.Plug,       "##asl_nav_plugins",  L.Shell.NavPlugins),
         new(AppWindow.Page.Console,  FontAwesomeIcon.Terminal,   "##asl_nav_console",  L.Shell.NavConsole),
+        new(AppWindow.Page.Changelog, FontAwesomeIcon.Newspaper, "##asl_nav_changelog", L.Shell.NavChangelog),
         new(AppWindow.Page.About,    FontAwesomeIcon.InfoCircle, "##asl_nav_about",    L.Shell.NavAbout),
     ];
 
@@ -109,6 +110,11 @@ internal static class NavRail
         {
             dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
             dl.AddCircleFilled(badgeCenter, radius, Paint.Col(Styling.PulseColor(Styling.AccentBlue, Styling.AccentBlueSoft, Styling.PulseMedium)));
+        }
+        else if (page == AppWindow.Page.Changelog && current != AppWindow.Page.Changelog && Plugin.Instance.Configuration.HasUnseenChangelog)
+        {
+            dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
+            dl.AddCircleFilled(badgeCenter, radius, Paint.Col(Styling.PulseColor(Styling.AccentStar, Styling.AccentStarSoft, Styling.PulseMedium)));
         }
         else if (page == AppWindow.Page.Console && current != AppWindow.Page.Console && RunLog.Unseen is { } unseen)
         {

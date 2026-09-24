@@ -123,6 +123,8 @@ public sealed class Plugin : IDalamudPlugin
 
     public void ToggleConsoleUi() => appWindow.TogglePage(AppWindow.Page.Console);
 
+    public void ToggleChangelogUi() => appWindow.TogglePage(AppWindow.Page.Changelog);
+
     private void OnCommand(string command, string args)
     {
         var trimmed = args.Trim();
@@ -145,6 +147,10 @@ public sealed class Plugin : IDalamudPlugin
         else if (trimmed.Equals("console", StringComparison.OrdinalIgnoreCase))
         {
             ToggleConsoleUi();
+        }
+        else if (trimmed.Equals("changelog", StringComparison.OrdinalIgnoreCase))
+        {
+            ToggleChangelogUi();
         }
         else if (trimmed.Equals("pause", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("resume", StringComparison.OrdinalIgnoreCase))
         {

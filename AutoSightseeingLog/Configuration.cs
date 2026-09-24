@@ -1,4 +1,5 @@
 using AutoSightseeingLog.Core;
+using AutoSightseeingLog.Core.Changelog;
 using Dalamud.Configuration;
 using ECommons.Throttlers;
 using Newtonsoft.Json;
@@ -32,6 +33,22 @@ public sealed class Configuration : IPluginConfiguration
     public SpotMarkerVisibility ArrowVisibility { get; set; } = SpotMarkerVisibility.Always;
 
     public int ArrowSizePercent { get; set; } = 200;
+
+    public string LastSeenChangelogVersion { get; set; } = string.Empty;
+
+    [JsonIgnore]
+    public bool HasUnseenChangelog => !string.Equals(LastSeenChangelogVersion, ChangelogData.LatestVersion, StringComparison.Ordinal);
+
+    public void MarkChangelogSeen()
+    {
+        if (!HasUnseenChangelog)
+        {
+            return;
+        }
+
+        LastSeenChangelogVersion = ChangelogData.LatestVersion;
+        Save();
+    }
 
     public void Save()
     {
