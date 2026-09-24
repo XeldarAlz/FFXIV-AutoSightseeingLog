@@ -18,9 +18,6 @@ internal abstract partial class AutoCommon
     private const int MaxMissesOnOneLeg = 3;
     private const int MaxRunUpRetries = 2;
     private const float RunUpSlackMeters = 0.15f;
-    private const float LongStandingJumpMeters = 2f;
-    private const float DistanceRunUpMeters = 0.1f;
-    private const float DistanceRunUpCapSeconds = 0.25f;
     private const int MaxWalksBackOntoRoute = 3;
     private const int JumpLegWatchdogMs = 20_000;
     private const int JumpLegSettleMs = 500;
@@ -148,8 +145,7 @@ internal abstract partial class AutoCommon
             }
 
             var step = leg == startLeg ? JumpStep.Walk(route[leg].Point) : route[leg];
-            var runsUpByDistance = leg > startLeg && IsLongStandingJump(route[leg - 1].Point, step);
-            if (!await RunLeg(step, runsUpByDistance, $"{scope}-leg{leg + 1}"))
+            if (!await RunLeg(step, $"{scope}-leg{leg + 1}"))
             {
                 return leg;
             }
@@ -158,7 +154,7 @@ internal abstract partial class AutoCommon
         return route.Length;
     }
 
-    private async Task<bool> RunLeg(JumpStep step, bool runsUpByDistance, string scope)
+    private async Task<bool> RunLeg(JumpStep step, string scope)
     {
         if (Svc.Objects.LocalPlayer is not { } player)
         {
@@ -169,7 +165,6 @@ internal abstract partial class AutoCommon
         var from = player.Position;
         var jumpFrom = from;
         var ranUp = 0f;
-        var runUpLimit = runsUpByDistance ? DistanceRunUpMeters + RunUpSlackMeters : MaxRunUpMeters(step.RunUpSeconds);
         for (var attempt = 0; ; attempt++)
         {
             if (step.Jumps)
@@ -186,14 +181,14 @@ internal abstract partial class AutoCommon
                 break;
             }
 
-            ranUp = runsUpByDistance ? await DistanceRunUp(startedAt, jumpFrom) : await RunUp(step.RunUpSeconds, startedAt, jumpFrom);
+            ranUp = await RunUp(step.RunUpSeconds, startedAt, jumpFrom);
             if (CancelToken.IsCancellationRequested)
             {
                 navmesh.Stop();
                 return false;
             }
 
-            if (ranUp <= runUpLimit || attempt == MaxRunUpRetries)
+            if (ranUp <= MaxRunUpMeters(step.RunUpSeconds) || attempt == MaxRunUpRetries)
             {
                 if (UseGeneralAction(JumpGeneralActionId))
                 {
@@ -206,7 +201,7 @@ internal abstract partial class AutoCommon
             }
 
             navmesh.Stop();
-            Diag($"{scope}: ran {ranUp:F2}m in the {DescribeRunUp(step, runsUpByDistance)}, too far to jump from; stepping back to {FormatPrecise(from)}");
+            Diag($"{scope}: ran {ranUp:F2}m in the {step.RunUpSeconds:F2}s run-up, too far to jump from; stepping back to {FormatPrecise(from)}");
             await StepBackTo(from, step.Point, scope);
         }
 
@@ -217,7 +212,7 @@ internal abstract partial class AutoCommon
         await DelayMs(JumpLegSettleMs);
 
         var landed = HasLandedOn(step.Point);
-        Diag($"{scope}: {(step.Jumps ? $"jump after a {DescribeRunUp(step, runsUpByDistance)} of {ranUp:F2}m" : "walk")} to {FormatPrecise(step.Point)} {(landed ? "landed" : "MISSED")} {GroundDistanceTo(step.Point):F2}m across and {HeightAbove(step.Point):+0.00;-0.00}m high");
+        Diag($"{scope}: {(step.Jumps ? $"jump after a {step.RunUpSeconds:F2}s run-up of {ranUp:F2}m" : "walk")} to {FormatPrecise(step.Point)} {(landed ? "landed" : "MISSED")} {GroundDistanceTo(step.Point):F2}m across and {HeightAbove(step.Point):+0.00;-0.00}m high");
         if (step.Jumps)
         {
             Diag($"{scope}: {DescribeTouchdown(touchdown.Position, jumpFrom, step.Point)}");
@@ -225,12 +220,6 @@ internal abstract partial class AutoCommon
 
         return landed;
     }
-
-    private static bool IsLongStandingJump(Vector3 legStart, JumpStep step)
-        => step.Jumps && step.RunUpSeconds == 0f && GroundDistance.Between(legStart, step.Point) > LongStandingJumpMeters;
-
-    private static string DescribeRunUp(JumpStep step, bool runsUpByDistance)
-        => runsUpByDistance ? "distance run-up" : $"{step.RunUpSeconds:F2}s run-up";
 
     private static string DescribeTouchdown(Vector3? touchdown, Vector3 jumpFrom, Vector3 target)
     {
@@ -257,21 +246,6 @@ internal abstract partial class AutoCommon
 
         var direction = point - player.Position;
         ((ClientGameObject*)player.Address)->SetRotation(MathF.Atan2(direction.X, direction.Z));
-    }
-
-    private async Task<float> DistanceRunUp(long startedAt, Vector3 from)
-    {
-        while (DistanceTo(from) < DistanceRunUpMeters && Stopwatch.GetElapsedTime(startedAt).TotalSeconds < DistanceRunUpCapSeconds)
-        {
-            if (CancelToken.IsCancellationRequested)
-            {
-                return 0f;
-            }
-
-            await NextFrame(1);
-        }
-
-        return DistanceTo(from);
     }
 
     private async Task<float> RunUp(float runUpSeconds, long startedAt, Vector3 from)
@@ -320,7 +294,7 @@ internal abstract partial class AutoCommon
         {
             Status = label;
             Diag($"{backScope}: overshot to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking on to leg {nextLeg + 1}/{route.Length} on this level");
-            if (await RunLeg(JumpStep.Walk(route[nextLeg].Point), false, backScope))
+            if (await RunLeg(JumpStep.Walk(route[nextLeg].Point), backScope))
             {
                 return nextLeg;
             }
@@ -342,7 +316,7 @@ internal abstract partial class AutoCommon
             walks++;
             Status = label;
             Diag($"{backScope}: fell to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking to leg {leg + 1}/{route.Length} on this level");
-            if (await RunLeg(JumpStep.Walk(route[leg].Point), false, backScope))
+            if (await RunLeg(JumpStep.Walk(route[leg].Point), backScope))
             {
                 return leg;
             }

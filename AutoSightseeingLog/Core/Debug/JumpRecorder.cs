@@ -18,7 +18,7 @@ internal static class JumpRecorder
     private const float SameSpotMeters = 0.15f;
     private const float WaypointMinimumMeters = 0.75f;
     private const float WaypointTurnDegrees = 25f;
-    private const float StandingRunUpMeters = 0.02f;
+    private const float StandingRunUpMeters = 0.05f;
     private const float DegreesPerRadian = 180f / MathF.PI;
 
     private static readonly List<JumpStep> steps = [];
