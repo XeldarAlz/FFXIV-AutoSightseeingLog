@@ -7,10 +7,10 @@ namespace AutoSightseeingLog.Core.Ipc;
 // its automatic movement is touched here. Both editions register the same call gates, and a missing one is a no-op.
 internal sealed class BossModIPC
 {
-    private const string PauseMovementFailed = AslConstants.LogPrefix + " BossMod AI.PauseMovement failed";
-    private const string IsNavigatingFailed = AslConstants.LogPrefix + " BossMod AI.IsNavigating failed";
-    private const string IsMovingFailed = AslConstants.LogPrefix + " BossMod Movement.IsMoving failed";
-    private const string ConfigurationFailed = AslConstants.LogPrefix + " BossMod Configuration failed";
+    private const string PauseMovementFailed = "BossMod AI.PauseMovement failed";
+    private const string IsNavigatingFailed = "BossMod AI.IsNavigating failed";
+    private const string IsMovingFailed = "BossMod Movement.IsMoving failed";
+    private const string ConfigurationFailed = "BossMod Configuration failed";
     private const string MovementConfigType = "AIConfig";
     private const string MovementForbiddenField = "ForbidMovement";
 

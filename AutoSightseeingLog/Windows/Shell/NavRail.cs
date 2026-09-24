@@ -1,3 +1,4 @@
+using AutoSightseeingLog.Core;
 using AutoSightseeingLog.Core.External;
 using AutoSightseeingLog.Core.Localization;
 using AutoSightseeingLog.Windows.Components;
@@ -21,6 +22,7 @@ internal static class NavRail
         new(AppWindow.Page.Settings, FontAwesomeIcon.SlidersH,   "##asl_nav_settings", L.Shell.NavSettings),
         new(AppWindow.Page.History,  FontAwesomeIcon.ChartLine,  "##asl_nav_history",  L.Shell.NavHistory),
         new(AppWindow.Page.Plugins,  FontAwesomeIcon.Plug,       "##asl_nav_plugins",  L.Shell.NavPlugins),
+        new(AppWindow.Page.Console,  FontAwesomeIcon.Terminal,   "##asl_nav_console",  L.Shell.NavConsole),
         new(AppWindow.Page.About,    FontAwesomeIcon.InfoCircle, "##asl_nav_about",    L.Shell.NavAbout),
     ];
 
@@ -74,7 +76,7 @@ internal static class NavRail
             var color = selected ? Styling.TextStrong : Vector4.Lerp(Styling.TextDim, Styling.TextSecondary, hover);
             TextDraw.IconCentered(entry.Icon, center, color);
 
-            DrawBadge(dl, entry.Page, center, button, missingPlugins, running);
+            DrawBadge(dl, entry.Page, current, center, button, missingPlugins, running);
 
             if (hit.Hovered)
             {
@@ -92,7 +94,7 @@ internal static class NavRail
         return clicked;
     }
 
-    private static void DrawBadge(ImDrawListPtr dl, AppWindow.Page page, Vector2 center, float button, bool missingPlugins, bool running)
+    private static void DrawBadge(ImDrawListPtr dl, AppWindow.Page page, AppWindow.Page current, Vector2 center, float button, bool missingPlugins, bool running)
     {
         var scale = ImGuiHelpers.GlobalScale;
         var badgeCenter = center + new Vector2(button * 0.30f, -button * 0.30f);
@@ -107,6 +109,11 @@ internal static class NavRail
         {
             dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
             dl.AddCircleFilled(badgeCenter, radius, Paint.Col(Styling.PulseColor(Styling.AccentBlue, Styling.AccentBlueSoft, Styling.PulseMedium)));
+        }
+        else if (page == AppWindow.Page.Console && current != AppWindow.Page.Console && RunLog.Unseen is { } unseen)
+        {
+            dl.AddCircleFilled(badgeCenter, radius + 1.5f * scale, Paint.Col(Styling.WindowBg));
+            dl.AddCircleFilled(badgeCenter, radius, Paint.Col(unseen == RunLogLevel.Error ? Styling.AccentRose : Styling.AccentAmber));
         }
     }
 }

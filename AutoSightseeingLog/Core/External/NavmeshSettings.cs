@@ -48,7 +48,7 @@ internal static class NavmeshSettings
         }
         catch (Exception exception)
         {
-            Svc.Log.Debug($"{AslConstants.LogPrefix} Could not read the vnavmesh settings: {exception.Message}");
+            RunLog.Debug($"Could not read the vnavmesh settings: {exception.Message}");
             return false;
         }
     }

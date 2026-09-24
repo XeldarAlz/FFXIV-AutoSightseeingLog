@@ -9,7 +9,7 @@ namespace AutoSightseeingLog.Windows.Shell;
 
 public sealed class AppWindow : Window, IDisposable
 {
-    public enum Page { Vistas, Settings, History, Plugins, About }
+    public enum Page { Vistas, Settings, History, Plugins, Console, About }
 
     private const float PageRevealMs = 260f;
     private const float PageSlide = 12f;
@@ -38,6 +38,7 @@ public sealed class AppWindow : Window, IDisposable
     private readonly SettingsPage settingsPage = new();
     private readonly HistoryPage historyPage = new();
     private readonly PluginsPage pluginsPage = new();
+    private readonly ConsolePage consolePage = new();
     private readonly AboutPage aboutPage = new();
 
     private Page page = Page.Vistas;
@@ -249,6 +250,7 @@ public sealed class AppWindow : Window, IDisposable
             case Page.Settings: settingsPage.Draw(plugin); break;
             case Page.History: historyPage.Draw(plugin); break;
             case Page.Plugins: pluginsPage.Draw(); break;
+            case Page.Console: consolePage.Draw(); break;
             case Page.About: aboutPage.Draw(pageShownTick); break;
         }
     }

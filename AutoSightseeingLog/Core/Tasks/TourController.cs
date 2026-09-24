@@ -32,7 +32,7 @@ internal sealed partial class TourController
     public TourSession? SessionSnapshot => session;
 
     private static void Diag(string message)
-        => ECommons.DalamudServices.Svc.Log.Info($"{AslConstants.LogPrefix} {message}");
+        => RunLog.Info(message);
 
     public void Start(ushort[] plan)
     {

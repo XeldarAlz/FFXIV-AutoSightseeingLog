@@ -121,6 +121,8 @@ public sealed class Plugin : IDalamudPlugin
 
     public void ToggleHistoryUi() => appWindow.TogglePage(AppWindow.Page.History);
 
+    public void ToggleConsoleUi() => appWindow.TogglePage(AppWindow.Page.Console);
+
     private void OnCommand(string command, string args)
     {
         var trimmed = args.Trim();
@@ -139,6 +141,10 @@ public sealed class Plugin : IDalamudPlugin
         else if (trimmed.Equals("stats", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("history", StringComparison.OrdinalIgnoreCase))
         {
             ToggleHistoryUi();
+        }
+        else if (trimmed.Equals("console", StringComparison.OrdinalIgnoreCase))
+        {
+            ToggleConsoleUi();
         }
         else if (trimmed.Equals("pause", StringComparison.OrdinalIgnoreCase) || trimmed.Equals("resume", StringComparison.OrdinalIgnoreCase))
         {
@@ -177,7 +183,7 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         eventArgs.SetObserved();
-        Svc.Log.Debug($"{AslConstants.LogPrefix} Observed a navmesh IPC task fault: {eventArgs.Exception.GetBaseException().Message}");
+        RunLog.Debug($"Observed a navmesh IPC task fault: {eventArgs.Exception.GetBaseException().Message}");
     }
 
     private void OnDraw()

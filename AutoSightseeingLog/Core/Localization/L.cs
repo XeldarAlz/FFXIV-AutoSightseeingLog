@@ -21,6 +21,7 @@ internal static class L
         public static readonly LocString NavSettings = new("shell.nav.settings", "Settings");
         public static readonly LocString NavHistory = new("shell.nav.history", "History");
         public static readonly LocString NavPlugins = new("shell.nav.plugins", "Plugins");
+        public static readonly LocString NavConsole = new("shell.nav.console", "Console");
         public static readonly LocString NavAbout = new("shell.nav.about", "About");
         public static readonly LocString StatusRunning = new("shell.status.running", "Running");
         public static readonly LocString StatusPaused = new("shell.status.paused", "Paused");
@@ -220,6 +221,45 @@ internal static class L
         public static readonly LocString PurposeQuestionable = new("plugins.purpose.questionable", "Completes the quest that unlocks the Sightseeing Log on a character that has not done it yet.");
     }
 
+    internal static class Console
+    {
+        public static readonly LocString Title = new("console.title", "Console");
+        public static readonly LocPlural Entries = new("console.entries", "{0} line in the buffer", "{0} lines in the buffer");
+        public static readonly LocString Empty = new("console.empty", "Nothing logged yet. Start a run and every step the plugin takes shows up here.");
+        public static readonly LocString NoMatches = new("console.noMatches", "No lines match the current filters.");
+        public static readonly LocString Footer = new("console.footer", "Every line also goes to the Dalamud log (/xllog) with the {0} prefix. When reporting a bug, press Copy log and paste the result into the issue.");
+        public static readonly LocString SearchHint = new("console.searchHint", "Search messages and sources");
+        public static readonly LocString CopyAll = new("console.copyAll", "Copy log");
+        public static readonly LocPlural CopyFiltered = new("console.copyFiltered", "Copy {0} line", "Copy {0} lines");
+        public static readonly LocString CopyTooltip = new("console.copyTooltip", "Copies the lines shown below with a header naming the plugin version, Dalamud version and zone, ready to paste into a bug report.");
+        public static readonly LocString Copied = new("console.copied", "Copied");
+        public static readonly LocPlural CopiedLines = new("console.copiedLines", "Copied {0} line to the clipboard", "Copied {0} lines to the clipboard");
+        public static readonly LocString Clear = new("console.clear", "Clear");
+        public static readonly LocString ConfirmClear = new("console.confirmClear", "Click again to clear");
+        public static readonly LocString Close = new("console.close", "Close");
+        public static readonly LocString LevelVerbose = new("console.level.verbose", "Verbose");
+        public static readonly LocString LevelDebug = new("console.level.debug", "Debug");
+        public static readonly LocString LevelInfo = new("console.level.info", "Info");
+        public static readonly LocString LevelWarning = new("console.level.warning", "Warnings");
+        public static readonly LocString LevelError = new("console.level.error", "Errors");
+        public static readonly LocString LevelTooltip = new("console.levelTooltip", "Click to show or hide these lines. Shift-click to show only this level.");
+        public static readonly LocString SourceChip = new("console.sourceChip", "Source: {0}");
+        public static readonly LocString SourceChipTooltip = new("console.sourceChipTooltip", "Click to stop filtering by source.");
+        public static readonly LocString JumpLatest = new("console.jumpLatest", "Jump to latest");
+        public static readonly LocPlural NewLines = new("console.newLines", "{0} new line", "{0} new lines");
+        public static readonly LocString Showing = new("console.showing", "Showing {0} of {1}");
+        public static readonly LocString ResetFilters = new("console.resetFilters", "Reset filters");
+        public static readonly LocString Shortcuts = new("console.shortcuts", "Ctrl+F search · Ctrl+C copy · Shift-click selects a range · Double-click copies a line");
+        public static readonly LocPlural Selected = new("console.selected", "{0} line selected", "{0} lines selected");
+        public static readonly LocString CopySelection = new("console.copySelection", "Copy selection");
+        public static readonly LocString ClearSelection = new("console.clearSelection", "Clear selection");
+        public static readonly LocString CopyLine = new("console.copyLine", "Copy line");
+        public static readonly LocString CopyToEnd = new("console.copyToEnd", "Copy from here to the end");
+        public static readonly LocString OnlySource = new("console.onlySource", "Show only {0}");
+        public static readonly LocString Repeated = new("console.repeated", "Repeated {0} times in a row");
+        public static readonly LocString HasDetails = new("console.hasDetails", "Has a stack trace. Select the line to read it.");
+    }
+
     internal static class About
     {
         public static readonly LocString Connect = new("about.connect", "Connect");
@@ -340,7 +380,7 @@ internal static class L
 
     internal static class Plugin
     {
-        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | pause (pause or resume the run) | goto <number> (travel to a vista without logging it; goto stop cancels) | logdump (write the Sightseeing Log state to the plugin log).");
+        public static readonly LocString CommandHelp = new("plugin.commandHelp", "Toggle the Auto Sightseeing Log window. /asl config | stats | deps | about | console (open the plugin console) | pause (pause or resume the run) | goto <number> (travel to a vista without logging it; goto stop cancels) | logdump (write the Sightseeing Log state to the plugin log).");
         public static readonly LocString CommandHelpAlias = new("plugin.commandHelpAlias", "Alias for /asl.");
     }
 }

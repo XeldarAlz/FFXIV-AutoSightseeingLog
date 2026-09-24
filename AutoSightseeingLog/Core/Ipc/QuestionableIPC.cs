@@ -17,12 +17,12 @@ internal enum QuestStart : byte
 // while this plugin's own movement is idle. A build without a gate falls back to the plugin's chat commands.
 internal sealed class QuestionableIPC
 {
-    private const string IsRunningFailed = AslConstants.LogPrefix + " Questionable IsRunning failed";
-    private const string CurrentQuestFailed = AslConstants.LogPrefix + " Questionable GetCurrentQuestId failed";
-    private const string IsQuestLockedFailed = AslConstants.LogPrefix + " Questionable IsQuestLocked failed";
-    private const string StartSingleQuestFailed = AslConstants.LogPrefix + " Questionable StartSingleQuest failed";
-    private const string StartQuestFailed = AslConstants.LogPrefix + " Questionable StartQuest failed";
-    private const string StopFailed = AslConstants.LogPrefix + " Questionable Stop failed";
+    private const string IsRunningFailed = "Questionable IsRunning failed";
+    private const string CurrentQuestFailed = "Questionable GetCurrentQuestId failed";
+    private const string IsQuestLockedFailed = "Questionable IsQuestLocked failed";
+    private const string StartSingleQuestFailed = "Questionable StartSingleQuest failed";
+    private const string StartQuestFailed = "Questionable StartQuest failed";
+    private const string StopFailed = "Questionable Stop failed";
     private const string NextQuestCommand = "/qst next ";
     private const string StartCommand = "/qst start";
     private const string StopCommand = "/qst stop";

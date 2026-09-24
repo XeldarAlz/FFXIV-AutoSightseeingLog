@@ -98,6 +98,7 @@ body:
       description: |
         **If you can provide any of these, it turns guesswork into a fix.**
 
+        - **Plugin console**: open `/asl console`, press *Copy log* and paste the result into the console field below. It already includes the plugin version, Dalamud version and zone. Running `/asl logdump` first adds the plugin's view of your Sightseeing Log to it.
         - **Dalamud log**: open `/xllog`, click the *Open log folder* button at the bottom-right, attach `dalamud.log`. Filter by `[AutoSightseeingLog]` if you want to trim it down. Running `/asl logdump` first adds the plugin's view of your log to it.
         - **Screenshots / short clip** if the issue is visual (a wrong status, a stuck spot, a wrong tooltip, etc.)
         - **Other plugins active** that touch movement, teleport, emotes, or input, which helps rule out conflicts.
@@ -105,9 +106,9 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: Inline log excerpt (optional)
+      label: Console output (optional)
       description: |
-        Short snippets (chat-log tail, Dalamud error text) belong here. For full log files, use **Attachments** above; don't paste them inline.
+        Paste what *Copy log* on the plugin's Console page (`/asl console`) put on your clipboard. Short snippets (chat-log tail, Dalamud error text) also belong here; attach full `dalamud.log` files under **Attachments** above.
       render: text
 
   - type: textarea

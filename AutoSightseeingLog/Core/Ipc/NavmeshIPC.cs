@@ -10,20 +10,20 @@ internal sealed class NavmeshIPC
     public const float DefaultToleranceMeters = 0.25f;
 
     private const float BuildIdle = -1f;
-    private const string IsReadyFailed = AslConstants.LogPrefix + " Navmesh IsReady failed";
-    private const string BuildProgressFailed = AslConstants.LogPrefix + " Navmesh BuildProgress failed";
-    private const string IsRunningFailed = AslConstants.LogPrefix + " Navmesh IsRunning failed";
-    private const string SimpleMovePathfindFailed = AslConstants.LogPrefix + " Navmesh SimpleMove.PathfindInProgress failed";
-    private const string NavPathfindFailed = AslConstants.LogPrefix + " Navmesh Nav.PathfindInProgress failed";
-    private const string NearestPointReachableFailed = AslConstants.LogPrefix + " Navmesh NearestPointReachable failed";
-    private const string PointOnFloorFailed = AslConstants.LogPrefix + " Navmesh PointOnFloor failed";
-    private const string NumWaypointsFailed = AslConstants.LogPrefix + " Navmesh NumWaypoints failed";
-    private const string ListWaypointsFailed = AslConstants.LogPrefix + " Navmesh ListWaypoints failed";
-    private const string StopFailed = AslConstants.LogPrefix + " Navmesh Stop failed";
-    private const string MoveToFailed = AslConstants.LogPrefix + " Navmesh Path.MoveTo failed";
-    private const string GetToleranceFailed = AslConstants.LogPrefix + " Navmesh Path.GetTolerance failed";
-    private const string SetToleranceFailed = AslConstants.LogPrefix + " Navmesh Path.SetTolerance failed";
-    private const string PathfindAndMoveToFailed = AslConstants.LogPrefix + " Navmesh SimpleMove.PathfindAndMoveTo failed";
+    private const string IsReadyFailed = "Navmesh IsReady failed";
+    private const string BuildProgressFailed = "Navmesh BuildProgress failed";
+    private const string IsRunningFailed = "Navmesh IsRunning failed";
+    private const string SimpleMovePathfindFailed = "Navmesh SimpleMove.PathfindInProgress failed";
+    private const string NavPathfindFailed = "Navmesh Nav.PathfindInProgress failed";
+    private const string NearestPointReachableFailed = "Navmesh NearestPointReachable failed";
+    private const string PointOnFloorFailed = "Navmesh PointOnFloor failed";
+    private const string NumWaypointsFailed = "Navmesh NumWaypoints failed";
+    private const string ListWaypointsFailed = "Navmesh ListWaypoints failed";
+    private const string StopFailed = "Navmesh Stop failed";
+    private const string MoveToFailed = "Navmesh Path.MoveTo failed";
+    private const string GetToleranceFailed = "Navmesh Path.GetTolerance failed";
+    private const string SetToleranceFailed = "Navmesh Path.SetTolerance failed";
+    private const string PathfindAndMoveToFailed = "Navmesh SimpleMove.PathfindAndMoveTo failed";
 
     private static NavmeshIPC? instance;
 

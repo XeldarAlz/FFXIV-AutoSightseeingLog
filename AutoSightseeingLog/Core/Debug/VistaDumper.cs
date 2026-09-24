@@ -73,5 +73,5 @@ internal static unsafe class VistaDumper
         }
     }
 
-    private static void Write(string line) => Svc.Log.Info($"{AslConstants.LogPrefix} [Dump] {line}");
+    private static void Write(string line) => RunLog.Info(line);
 }

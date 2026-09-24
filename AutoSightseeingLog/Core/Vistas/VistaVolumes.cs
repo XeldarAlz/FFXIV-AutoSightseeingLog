@@ -50,7 +50,7 @@ internal static class VistaVolumes
         }
         catch (Exception exception)
         {
-            Svc.Log.Warning($"{AslConstants.LogPrefix} Could not read the vista volumes from {path}: {exception.Message}");
+            RunLog.Warning($"Could not read the vista volumes from {path}: {exception.Message}");
         }
 
         return volumes;
