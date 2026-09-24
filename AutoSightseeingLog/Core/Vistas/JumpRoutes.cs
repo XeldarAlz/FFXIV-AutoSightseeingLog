@@ -300,15 +300,15 @@ internal static class JumpRoutes
         Jump(257.28f, 144.21f, -390.92f, 0.1f),
     ];
 
-    private static readonly FrozenDictionary<ushort, JumpStep[]> routes = new Dictionary<ushort, JumpStep[]>
+    private static readonly FrozenDictionary<ushort, JumpRoute> routes = new Dictionary<ushort, JumpRoute>
     {
-        [165] = bokairoInn,
-        [168] = shiokazeHostelry,
-        [263] = ruveydahFibersRooftopGarden,
-        [300] = hunuiliy,
+        [165] = new(bokairoInn, Recorded: false),
+        [168] = new(shiokazeHostelry, Recorded: true),
+        [263] = new(ruveydahFibersRooftopGarden, Recorded: false),
+        [300] = new(hunuiliy, Recorded: false),
     }.ToFrozenDictionary();
 
     public static bool Has(ushort number) => routes.ContainsKey(number);
 
-    public static bool TryGet(ushort number, out JumpStep[] route) => routes.TryGetValue(number, out route!);
+    public static bool TryGet(ushort number, out JumpRoute route) => routes.TryGetValue(number, out route);
 }

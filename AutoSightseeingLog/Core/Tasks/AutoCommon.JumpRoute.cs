@@ -26,8 +26,9 @@ internal abstract partial class AutoCommon
     private const float OnRouteAcrossMeters = 2f;
     private const float OnRouteRiseMeters = 0.5f;
     private const float SameLevelMeters = 1.5f;
+    private const float SettleAcrossMeters = 0.2f;
 
-    private async Task<bool> ReachByJumpRoute(Vista vista, VistaVolume volume, JumpStep[] route, string name, string scope)
+    private async Task<bool> ReachByJumpRoute(Vista vista, VistaVolume volume, JumpRoute route, string name, string scope)
     {
         var inZone = Svc.ClientState.TerritoryType == vista.TerritoryId;
         if (inZone && IsStandingInside(volume))
@@ -76,12 +77,12 @@ internal abstract partial class AutoCommon
         return await WalkUpTo(start, $"{scope}-walk", name);
     }
 
-    private async Task<bool> ClimbJumpRoute(JumpStep[] route, int startLeg, string name, string scope)
+    private async Task<bool> ClimbJumpRoute(JumpRoute route, int startLeg, string name, string scope)
     {
         var navmesh = NavmeshIPC.Instance;
         var tolerance = navmesh.Tolerance();
         var wasWalking = WalkModeOps.IsWalking();
-        navmesh.SetTolerance(NavmeshIPC.DefaultToleranceMeters);
+        navmesh.SetTolerance(route.ArriveMeters);
         WalkModeOps.SetWalking(false);
         try
         {
@@ -135,7 +136,7 @@ internal abstract partial class AutoCommon
         }
     }
 
-    private async Task<int> RunLegs(JumpStep[] route, int startLeg, string scope)
+    private async Task<int> RunLegs(JumpRoute route, int startLeg, string scope)
     {
         for (var leg = startLeg; leg < route.Length; leg++)
         {
@@ -145,7 +146,7 @@ internal abstract partial class AutoCommon
             }
 
             var step = leg == startLeg ? JumpStep.Walk(route[leg].Point) : route[leg];
-            if (!await RunLeg(step, $"{scope}-leg{leg + 1}"))
+            if (!await RunLeg(step, route.Recorded, $"{scope}-leg{leg + 1}"))
             {
                 return leg;
             }
@@ -154,7 +155,7 @@ internal abstract partial class AutoCommon
         return route.Length;
     }
 
-    private async Task<bool> RunLeg(JumpStep step, string scope)
+    private async Task<bool> RunLeg(JumpStep step, bool settlesOnPoint, string scope)
     {
         if (Svc.Objects.LocalPlayer is not { } player)
         {
@@ -213,9 +214,16 @@ internal abstract partial class AutoCommon
 
         var landed = HasLandedOn(step.Point);
         Diag($"{scope}: {(step.Jumps ? $"jump after a {step.RunUpSeconds:F2}s run-up of {ranUp:F2}m" : "walk")} to {FormatPrecise(step.Point)} {(landed ? "landed" : "MISSED")} {GroundDistanceTo(step.Point):F2}m across and {HeightAbove(step.Point):+0.00;-0.00}m high");
-        if (step.Jumps)
+        if (!step.Jumps)
         {
-            Diag($"{scope}: {DescribeTouchdown(touchdown.Position, jumpFrom, step.Point)}");
+            return landed;
+        }
+
+        Diag($"{scope}: {DescribeTouchdown(touchdown.Position, jumpFrom, step.Point)}");
+        if (landed && settlesOnPoint && GroundDistanceTo(step.Point) > SettleAcrossMeters)
+        {
+            await WalkDirectlyTo(step.Point, $"{scope}-settle");
+            Diag($"{scope}: walked back onto the landing point, now {GroundDistanceTo(step.Point):F2}m across");
         }
 
         return landed;
@@ -265,12 +273,17 @@ internal abstract partial class AutoCommon
 
     private async Task StepBackTo(Vector3 from, Vector3 target, string scope)
     {
-        var navmesh = NavmeshIPC.Instance;
         var away = new Vector3(from.X - target.X, 0f, from.Z - target.Z);
         var back = away == Vector3.Zero ? from : from + Vector3.Normalize(away) * NavmeshIPC.DefaultToleranceMeters;
+        await WalkDirectlyTo(back, $"{scope}-stepback");
+    }
+
+    private async Task WalkDirectlyTo(Vector3 point, string scope)
+    {
+        var navmesh = NavmeshIPC.Instance;
         var stall = new MoveStallTracker();
-        navmesh.MoveAlong([back], false);
-        await WaitUntilTimed(() => !navmesh.IsRunning() || stall.Check() != StallKind.None, JumpLegWatchdogMs, $"{scope}-stepback", 1);
+        navmesh.MoveAlong([point], false);
+        await WaitUntilTimed(() => !navmesh.IsRunning() || stall.Check() != StallKind.None, JumpLegWatchdogMs, scope, 1);
         navmesh.Stop();
         await DelayMs(JumpLegSettleMs);
     }
@@ -278,7 +291,7 @@ internal abstract partial class AutoCommon
     private static float MaxRunUpMeters(float runUpSeconds)
         => JumpPhysics.RunUpMeters(runUpSeconds) + RunUpSlackMeters;
 
-    private async Task<int> FindWayBackOnto(JumpStep[] route, int missedLeg, string name, string scope)
+    private async Task<int> FindWayBackOnto(JumpRoute route, int missedLeg, string name, string scope)
     {
         var stoodOn = NearestLegStoodOn(route);
         if (stoodOn != NotOnRoute)
@@ -294,7 +307,7 @@ internal abstract partial class AutoCommon
         {
             Status = label;
             Diag($"{backScope}: overshot to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking on to leg {nextLeg + 1}/{route.Length} on this level");
-            if (await RunLeg(JumpStep.Walk(route[nextLeg].Point), backScope))
+            if (await RunLeg(JumpStep.Walk(route[nextLeg].Point), false, backScope))
             {
                 return nextLeg;
             }
@@ -316,7 +329,7 @@ internal abstract partial class AutoCommon
             walks++;
             Status = label;
             Diag($"{backScope}: fell to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking to leg {leg + 1}/{route.Length} on this level");
-            if (await RunLeg(JumpStep.Walk(route[leg].Point), backScope))
+            if (await RunLeg(JumpStep.Walk(route[leg].Point), false, backScope))
             {
                 return leg;
             }
@@ -329,7 +342,7 @@ internal abstract partial class AutoCommon
     private static bool IsWalkOnThisLevel(JumpStep step)
         => !step.Jumps && MathF.Abs(HeightAbove(step.Point)) <= SameLevelMeters;
 
-    private static bool OvershotJump(JumpStep[] route, int leg)
+    private static bool OvershotJump(JumpRoute route, int leg)
     {
         if (leg == 0 || !route[leg].Jumps || Svc.Objects.LocalPlayer is not { } player)
         {
@@ -359,7 +372,7 @@ internal abstract partial class AutoCommon
         Diag($"{scope}: walked straight at the log point from {startedFrom:F1}m out and ended {DescribeStanding(volume)}");
     }
 
-    private static int NearestLegStoodOn(JumpStep[] route)
+    private static int NearestLegStoodOn(JumpRoute route)
     {
         if (Svc.Objects.LocalPlayer is not { } player)
         {
