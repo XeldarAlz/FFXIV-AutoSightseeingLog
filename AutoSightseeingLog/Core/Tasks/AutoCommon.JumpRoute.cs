@@ -2,7 +2,6 @@ using AutoSightseeingLog.Core.Game.Ops;
 using AutoSightseeingLog.Core.Ipc;
 using AutoSightseeingLog.Core.Travel;
 using AutoSightseeingLog.Core.Vistas;
-using Dalamud.Game.ClientState.Conditions;
 using ECommons.DalamudServices;
 using ECommons.MathHelpers;
 using System.Diagnostics;
@@ -18,8 +17,6 @@ internal abstract partial class AutoCommon
     private const int MaxRouteMisses = 8;
     private const int MaxMissesOnOneLeg = 3;
     private const int MaxRunUpRetries = 2;
-    private const float RunUpStartLatencySeconds = 0.05f;
-    private const float RunUpMetersPerSecond = 3.7f;
     private const float RunUpSlackMeters = 0.15f;
     private const float LongStandingJumpMeters = 2f;
     private const float DistanceRunUpMeters = 0.1f;
@@ -215,7 +212,7 @@ internal abstract partial class AutoCommon
 
         var stall = new MoveStallTracker();
         var touchdown = new JumpTouchdown();
-        await WaitUntilTimed(() => (step.Jumps && touchdown.Check(IsAirborne()) && HeightAbove(step.Point) < -SameLevelMeters) || (!navmesh.IsRunning() && !IsAirborne()) || stall.Check() != StallKind.None, JumpLegWatchdogMs, scope, 1);
+        await WaitUntilTimed(() => (step.Jumps && touchdown.Check(JumpPhysics.IsAirborne()) && HeightAbove(step.Point) < -SameLevelMeters) || (!navmesh.IsRunning() && !JumpPhysics.IsAirborne()) || stall.Check() != StallKind.None, JumpLegWatchdogMs, scope, 1);
         navmesh.Stop();
         await DelayMs(JumpLegSettleMs);
 
@@ -305,7 +302,7 @@ internal abstract partial class AutoCommon
     }
 
     private static float MaxRunUpMeters(float runUpSeconds)
-        => MathF.Max(0f, (runUpSeconds - RunUpStartLatencySeconds) * RunUpMetersPerSecond) + RunUpSlackMeters;
+        => JumpPhysics.RunUpMeters(runUpSeconds) + RunUpSlackMeters;
 
     private async Task<int> FindWayBackOnto(JumpStep[] route, int missedLeg, string name, string scope)
     {
@@ -425,7 +422,4 @@ internal abstract partial class AutoCommon
 
     private static float HeightAbove(Vector3 point)
         => Svc.Objects.LocalPlayer is { } player ? player.Position.Y - point.Y : float.MinValue;
-
-    private static bool IsAirborne()
-        => Svc.Condition[ConditionFlag.Jumping] || Svc.Condition[ConditionFlag.Jumping61];
 }

@@ -23,6 +23,7 @@ namespace AutoSightseeingLog;
 public sealed class Plugin : IDalamudPlugin
 {
     private const string GotoSubcommand = "goto";
+    private const string RecordSubcommand = "record";
     private const string NavmeshIpcProviderMarker = "Navmesh.IPCProvider";
 
     [PluginService]
@@ -160,9 +161,13 @@ public sealed class Plugin : IDalamudPlugin
         {
             VistaDumper.Dump();
         }
-        else if (IsGotoCommand(trimmed))
+        else if (IsSubcommand(trimmed, GotoSubcommand))
         {
             AutoGoto.HandleCommand(trimmed[GotoSubcommand.Length..].Trim(), Controller.Running);
+        }
+        else if (IsSubcommand(trimmed, RecordSubcommand))
+        {
+            JumpRecorder.HandleCommand(trimmed[RecordSubcommand.Length..].Trim());
         }
         else
         {
@@ -170,9 +175,9 @@ public sealed class Plugin : IDalamudPlugin
         }
     }
 
-    private static bool IsGotoCommand(string arguments)
-        => arguments.StartsWith(GotoSubcommand, StringComparison.OrdinalIgnoreCase)
-        && (arguments.Length == GotoSubcommand.Length || char.IsWhiteSpace(arguments[GotoSubcommand.Length]));
+    private static bool IsSubcommand(string arguments, string subcommand)
+        => arguments.StartsWith(subcommand, StringComparison.OrdinalIgnoreCase)
+        && (arguments.Length == subcommand.Length || char.IsWhiteSpace(arguments[subcommand.Length]));
 
     // The navmesh plugin answers pathfind IPC on fire-and-forget tasks this plugin never gets a handle to. When one
     // faults, typically a query issued while the zone mesh is still building, the finalizer would rethrow it as noise.
@@ -199,7 +204,11 @@ public sealed class Plugin : IDalamudPlugin
         Configuration.FlushPendingSave();
     }
 
-    private void OnFrameworkUpdate(IFramework framework) => Controller.Tick();
+    private void OnFrameworkUpdate(IFramework framework)
+    {
+        Controller.Tick();
+        JumpRecorder.Tick();
+    }
 
     private void InitializeLocalization()
     {
