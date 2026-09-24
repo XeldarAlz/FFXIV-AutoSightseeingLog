@@ -5,6 +5,7 @@
 <h1 align="center">Auto Sightseeing Log</h1>
 
 <p align="center">
+  <a href="https://discord.gg/hppkAvdBEE"><img alt="Discord" src="https://img.shields.io/badge/Discord-join-5865F2?style=flat-square&logo=discord&logoColor=white"></a>
   <a href="https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/XeldarAlz/FFXIV-AutoSightseeingLog?style=flat-square&color=blue"></a>
   <a href="https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/XeldarAlz/FFXIV-AutoSightseeingLog/total?style=flat-square&color=blue&cacheSeconds=300"></a>
   <a href="https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog/actions/workflows/release.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/XeldarAlz/FFXIV-AutoSightseeingLog/release.yml?style=flat-square"></a>
@@ -63,6 +64,7 @@ The plugin needs a helper for movement to be installed and loaded. Open `/asl de
 | `/asl stats` | Open the History page |
 | `/asl deps` | Open the Plugins page |
 | `/asl about` | Open the About page |
+| `/asl changelog` | Open the Changelog page |
 | `/asl pause` | Pause or resume the current run |
 | `/asl goto <number>` | Travel to a vista without logging it (debug helper); `/asl goto stop` cancels |
 | `/asl logdump` | Write the Sightseeing Log state to the plugin log (debug helper) |
@@ -72,6 +74,12 @@ The plugin needs a helper for movement to be installed and loaded. Open `/asl de
 The windows are available in English, Deutsch, Français, Español, Português (Brasil), Русский, Türkçe, 日本語, and 中文. The plugin picks a language from your Dalamud and game client settings on first launch; change it any time under Settings, General, Language. Game data such as zone, vista, emote, and weather names always follows the game client.
 
 Spotted a wrong or awkward translation? Open a [translation issue](https://github.com/XeldarAlz/FFXIV-AutoSightseeingLog/issues/new?template=translation_report.yml) and tell me what it should say instead.
+
+## Community
+
+Questions, ideas, or just want to hang out with other players? Come say hi on Discord.
+
+→ [Join our Discord](https://discord.gg/hppkAvdBEE)
 
 ## More from me
 
