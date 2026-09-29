@@ -270,6 +270,13 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release1900 =
+        [
+            new("changelog.r1900.1", "Kugane's Shiokaze Hostelry climb now follows a route recorded in game and steps back onto each takeoff spot when a landing drifts, fixing falls from the railing, the awning and the eighth roof tier"),
+            new("changelog.r1900.2", "Every jump in a climb now turns to face its target before taking off, fixing jumps missed while the character was still turning"),
+            new("changelog.r1900.3", "Added a Buy Me a Coffee button under Patreon on the About page"),
+        ];
+
         public static readonly LocString[] Release1800 =
         [
             new("changelog.r1800.1", "Kugane's Shiokaze Hostelry climb now takes its long jumps with a short run-up facing the next ledge, where it used to fall near the start"),
