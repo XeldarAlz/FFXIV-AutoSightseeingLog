@@ -35,7 +35,8 @@ public static class ExternalPlugins
             DisplayName: "Questionable",
             RepoUrl: "https://love.puni.sh/ment.json",
             Purpose: "Completes the quest that unlocks the Sightseeing Log on a character that has not done it yet.",
-            Required: false),
+            Required: false,
+            Aliases: ["WigglyQuest"]),
     };
 
     public static IReadOnlyList<ExternalPlugin> All => all;

@@ -15,6 +15,8 @@ internal enum QuestStart : byte
 
 // The questing plugin drives the character through the same pathfinder this plugin uses, so it is only asked to run
 // while this plugin's own movement is idle. A build without a gate falls back to the plugin's chat commands.
+// WigglyQuest is a Questionable fork that answers the same calls under its own prefix and has no Stop call; it is the
+// one asked when both are loaded.
 internal sealed class QuestionableIPC
 {
     private const string IsRunningFailed = "Questionable IsRunning failed";
@@ -23,75 +25,103 @@ internal sealed class QuestionableIPC
     private const string StartSingleQuestFailed = "Questionable StartSingleQuest failed";
     private const string StartQuestFailed = "Questionable StartQuest failed";
     private const string StopFailed = "Questionable Stop failed";
-    private const string NextQuestCommand = "/qst next ";
-    private const string StartCommand = "/qst start";
-    private const string StopCommand = "/qst stop";
 
     private static QuestionableIPC? instance;
 
-    private readonly ICallGateSubscriber<bool> isRunning;
-    private readonly ICallGateSubscriber<string?> currentQuestId;
-    private readonly ICallGateSubscriber<string, bool> isQuestLocked;
-    private readonly ICallGateSubscriber<string, bool> startSingleQuest;
-    private readonly ICallGateSubscriber<string, bool> startQuest;
-    private readonly ICallGateSubscriber<string, bool> stop;
-
-    // Cached once so the per-second watch does not allocate a delegate on every call.
-    private readonly Func<bool> isRunningCall;
-    private readonly Func<string?> currentQuestIdCall;
+    private readonly QuestingPlugin wigglyQuest = new("WigglyQuest", "/wqst");
+    private readonly QuestingPlugin questionable = new("Questionable", "/qst");
 
     private QuestionableIPC()
     {
-        var pluginInterface = Svc.PluginInterface;
-        isRunning = pluginInterface.GetIpcSubscriber<bool>("Questionable.IsRunning");
-        currentQuestId = pluginInterface.GetIpcSubscriber<string?>("Questionable.GetCurrentQuestId");
-        isQuestLocked = pluginInterface.GetIpcSubscriber<string, bool>("Questionable.IsQuestLocked");
-        startSingleQuest = pluginInterface.GetIpcSubscriber<string, bool>("Questionable.StartSingleQuest");
-        startQuest = pluginInterface.GetIpcSubscriber<string, bool>("Questionable.StartQuest");
-        stop = pluginInterface.GetIpcSubscriber<string, bool>("Questionable.Stop");
-
-        isRunningCall = isRunning.InvokeFunc;
-        currentQuestIdCall = currentQuestId.InvokeFunc;
     }
 
     public static QuestionableIPC Instance => instance ??= new QuestionableIPC();
 
+    private QuestingPlugin Active => wigglyQuest.IsRunning.HasFunction ? wigglyQuest : questionable;
+
     public bool IsRunning()
-        => IpcGate.Invoke(isRunning.HasFunction, isRunningCall, false, IsRunningFailed);
+    {
+        var active = Active;
+        return IpcGate.Invoke(active.IsRunning.HasFunction, active.IsRunningCall, false, IsRunningFailed);
+    }
 
     public string? CurrentQuestId()
-        => IpcGate.Invoke(currentQuestId.HasFunction, currentQuestIdCall, null, CurrentQuestFailed);
+    {
+        var active = Active;
+        return IpcGate.Invoke(active.CurrentQuestId.HasFunction, active.CurrentQuestIdCall, null, CurrentQuestFailed);
+    }
 
     // The far side answers true for a quest whose prerequisites are not met and for one it has no route for. A build
     // without the gate cannot say, so the quest is treated as open and the start itself is what fails.
     public bool IsQuestLocked(string questId)
-        => IpcGate.Invoke(isQuestLocked.HasFunction, () => isQuestLocked.InvokeFunc(questId), false, IsQuestLockedFailed);
+    {
+        var active = Active;
+        return IpcGate.Invoke(active.IsQuestLocked.HasFunction, () => active.IsQuestLocked.InvokeFunc(questId), false, IsQuestLockedFailed);
+    }
 
     public QuestStart Start(string questId)
     {
-        if (startSingleQuest.HasFunction)
+        var active = Active;
+        if (active.StartSingleQuest.HasFunction)
         {
-            return IpcGate.Invoke(true, () => startSingleQuest.InvokeFunc(questId), false, StartSingleQuestFailed) ? QuestStart.Single : QuestStart.Refused;
+            return IpcGate.Invoke(true, () => active.StartSingleQuest.InvokeFunc(questId), false, StartSingleQuestFailed) ? QuestStart.Single : QuestStart.Refused;
         }
 
-        if (startQuest.HasFunction)
+        if (active.StartQuest.HasFunction)
         {
-            return IpcGate.Invoke(true, () => startQuest.InvokeFunc(questId), false, StartQuestFailed) ? QuestStart.Continuous : QuestStart.Refused;
+            return IpcGate.Invoke(true, () => active.StartQuest.InvokeFunc(questId), false, StartQuestFailed) ? QuestStart.Continuous : QuestStart.Refused;
         }
 
-        Chat.ExecuteCommand(string.Concat(NextQuestCommand, questId));
-        Chat.ExecuteCommand(StartCommand);
+        Chat.ExecuteCommand(string.Concat(active.NextQuestCommand, questId));
+        Chat.ExecuteCommand(active.StartCommand);
         return QuestStart.Continuous;
     }
 
     public void Stop(string reason)
     {
-        if (stop.HasFunction)
+        var active = Active;
+        if (active.Stop.HasFunction)
         {
-            IpcGate.Run(true, () => stop.InvokeFunc(reason), StopFailed);
+            IpcGate.Run(true, () => active.Stop.InvokeFunc(reason), StopFailed);
             return;
         }
 
-        Chat.ExecuteCommand(StopCommand);
+        Chat.ExecuteCommand(active.StopCommand);
+    }
+
+    private sealed class QuestingPlugin
+    {
+        public QuestingPlugin(string ipcPrefix, string command)
+        {
+            var pluginInterface = Svc.PluginInterface;
+            IsRunning = pluginInterface.GetIpcSubscriber<bool>(ipcPrefix + ".IsRunning");
+            CurrentQuestId = pluginInterface.GetIpcSubscriber<string?>(ipcPrefix + ".GetCurrentQuestId");
+            IsQuestLocked = pluginInterface.GetIpcSubscriber<string, bool>(ipcPrefix + ".IsQuestLocked");
+            StartSingleQuest = pluginInterface.GetIpcSubscriber<string, bool>(ipcPrefix + ".StartSingleQuest");
+            StartQuest = pluginInterface.GetIpcSubscriber<string, bool>(ipcPrefix + ".StartQuest");
+            Stop = pluginInterface.GetIpcSubscriber<string, bool>(ipcPrefix + ".Stop");
+
+            IsRunningCall = IsRunning.InvokeFunc;
+            CurrentQuestIdCall = CurrentQuestId.InvokeFunc;
+
+            NextQuestCommand = command + " next ";
+            StartCommand = command + " start";
+            StopCommand = command + " stop";
+        }
+
+        public ICallGateSubscriber<bool> IsRunning { get; }
+        public ICallGateSubscriber<string?> CurrentQuestId { get; }
+        public ICallGateSubscriber<string, bool> IsQuestLocked { get; }
+        public ICallGateSubscriber<string, bool> StartSingleQuest { get; }
+        public ICallGateSubscriber<string, bool> StartQuest { get; }
+        public ICallGateSubscriber<string, bool> Stop { get; }
+
+        // Cached once so the per-second watch does not allocate a delegate on every call.
+        public Func<bool> IsRunningCall { get; }
+        public Func<string?> CurrentQuestIdCall { get; }
+
+        public string NextQuestCommand { get; }
+        public string StartCommand { get; }
+        public string StopCommand { get; }
     }
 }
