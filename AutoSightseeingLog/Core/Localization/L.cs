@@ -276,6 +276,7 @@ internal static class L
             new("changelog.r11000.2", "Fixed a fall off a jump route ending the run when the walk back to the foot stalled; the plugin now travels back the way it arrived and retries the climb"),
             new("changelog.r11000.3", "Fixed vistas on raised decks, such as Kugane's Rakuza District and Tenkonto, being written off when the navigator stopped short; travel now recovers sooner, finishes the last metres on foot, or asks you to step onto the spot"),
             new("changelog.r11000.4", "Added Wait for a window up to under Settings > General > Behavior: how long a tour waits for a vista's window before leaving it for a later run, 1 to 720 minutes, 20 by default"),
+            new("changelog.r11000.5", "Fixed a crash after hours of touring (Unable to find memory location to fit MemoryBuffer): travel no longer installs movement hooks for every leg"),
         ];
 
         public static readonly LocString[] Release1900 =

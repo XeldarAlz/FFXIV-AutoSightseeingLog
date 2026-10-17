@@ -241,6 +241,7 @@
   "changelog.r11000.2": "Düzeltildi: Sıçrama rotasından düşüş, rotanın başına yürüyüş takılınca çalışmayı bitiriyordu; eklenti artık geldiği yoldan geri döner ve tırmanışı yeniden dener",
   "changelog.r11000.3": "Düzeltildi: Kugane'deki Rakuza District ve Tenkonto gibi yüksek platformlardaki manzara noktaları, yön bulma erken durunca vazgeçiliyordu; seyahat artık daha erken toparlanır, son metreleri yürüyerek tamamlar veya noktaya basmanızı ister",
   "changelog.r11000.4": "Eklendi: Ayarlar > Genel > Davranış altında Zaman penceresini en fazla şu kadar bekle: turun bir manzara noktasının zaman penceresini sonraki çalışmaya bırakmadan önce ne kadar beklediği, 1 ile 720 dakika, varsayılan 20",
+  "changelog.r11000.5": "Düzeltildi: Saatler süren turlardan sonra çökme (Unable to find memory location to fit MemoryBuffer); seyahat artık her etap için hareket kancası kurmuyor",
   "changelog.r1900.1": "Kugane'deki Shiokaze Hostelry tırmanışı artık oyun içinde kaydedilmiş bir rotayı izliyor ve iniş kaydığında sıçrama noktasına geri dönüyor; korkuluktan, sundurmadan ve sekizinci çatı katından düşmeler düzeltildi",
   "changelog.r1900.2": "Tırmanıştaki her zıplama artık kalkıştan önce karakteri hedefine döndürüyor; karakter hâlâ dönerken kaçan zıplamalar düzeltildi",
   "changelog.r1900.3": "Hakkında sayfasında Patreon'un altına Buy Me a Coffee düğmesi eklendi",

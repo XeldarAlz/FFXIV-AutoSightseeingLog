@@ -241,6 +241,7 @@
   "changelog.r11000.2": "Fixed a fall off a jump route ending the run when the walk back to the foot stalled; the plugin now travels back the way it arrived and retries the climb",
   "changelog.r11000.3": "Fixed vistas on raised decks, such as Kugane's Rakuza District and Tenkonto, being written off when the navigator stopped short; travel now recovers sooner, finishes the last metres on foot, or asks you to step onto the spot",
   "changelog.r11000.4": "Added Wait for a window up to under Settings > General > Behavior: how long a tour waits for a vista's window before leaving it for a later run, 1 to 720 minutes, 20 by default",
+  "changelog.r11000.5": "Fixed a crash after hours of touring (Unable to find memory location to fit MemoryBuffer): travel no longer installs movement hooks for every leg",
   "changelog.r1900.1": "Kugane's Shiokaze Hostelry climb now follows a route recorded in game and steps back onto each takeoff spot when a landing drifts, fixing falls from the railing, the awning and the eighth roof tier",
   "changelog.r1900.2": "Every jump in a climb now turns to face its target before taking off, fixing jumps missed while the character was still turning",
   "changelog.r1900.3": "Added a Buy Me a Coffee button under Patreon on the About page",

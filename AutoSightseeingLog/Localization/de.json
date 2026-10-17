@@ -241,6 +241,7 @@
   "changelog.r11000.2": "Behoben: Ein Sturz von einer Sprungroute beendete den Lauf, wenn der Rückweg zum Fuß der Route hängen blieb; das Plugin reist jetzt auf dem Hinweg zurück und versucht den Aufstieg erneut",
   "changelog.r11000.3": "Behoben: Aussichtspunkte auf erhöhten Plattformen wie Rakuza District und Tenkonto in Kugane wurden aufgegeben, wenn die Navigation zu früh stehen blieb; die Reise erholt sich jetzt früher, legt die letzten Meter zu Fuß zurück oder bittet dich, auf den Punkt zu treten",
   "changelog.r11000.4": "Hinzugefügt: Auf ein Zeitfenster warten bis zu unter Einstellungen > Allgemein > Verhalten: wie lange eine Tour auf das Zeitfenster eines Aussichtspunkts wartet, bevor sie ihn einem späteren Lauf überlässt, 1 bis 720 Minuten, standardmäßig 20",
+  "changelog.r11000.5": "Behoben: Absturz nach stundenlangen Touren (Unable to find memory location to fit MemoryBuffer); die Reise installiert nicht mehr für jede Etappe Bewegungs-Hooks",
   "changelog.r1900.1": "Der Aufstieg zur Shiokaze-Herberge in Kugane folgt jetzt einer im Spiel aufgezeichneten Route und tritt nach einer verrutschten Landung zurück auf den Absprungpunkt, was Stürze vom Geländer, vom Vordach und von der achten Dachstufe behebt",
   "changelog.r1900.2": "Jeder Sprung eines Aufstiegs dreht die Figur jetzt vor dem Absprung zum Ziel, was Fehlsprünge behebt, bei denen sie sich noch drehte",
   "changelog.r1900.3": "Button für Buy Me a Coffee unter Patreon auf der Über-Seite hinzugefügt",

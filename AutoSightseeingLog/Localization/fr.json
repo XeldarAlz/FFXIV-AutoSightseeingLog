@@ -241,6 +241,7 @@
   "changelog.r11000.2": "Correction d'une chute depuis un parcours de sauts qui mettait fin à la session quand le retour au pied du parcours se bloquait ; le plugin revient désormais par où il est arrivé et retente l'ascension",
   "changelog.r11000.3": "Correction des panoramas sur des plateformes surélevées, comme Rakuza District et Tenkonto à Kugane, abandonnés quand la navigation s'arrêtait trop tôt ; le trajet se rattrape désormais plus vite, finit les derniers mètres à pied ou vous demande de vous placer sur le point",
   "changelog.r11000.4": "Ajout de Attendre une fenêtre jusqu'à dans Paramètres > Général > Comportement : combien de temps une tournée attend la fenêtre d'un panorama avant de le laisser à une prochaine session, de 1 à 720 minutes, 20 par défaut",
+  "changelog.r11000.5": "Correction d'un plantage après des heures de tournée (Unable to find memory location to fit MemoryBuffer) : le trajet n'installe plus de hooks de déplacement à chaque étape",
   "changelog.r1900.1": "L'ascension de l'auberge Shiokaze à Kugane suit désormais un parcours enregistré en jeu et revient sur chaque point d'appel quand un atterrissage dérive, ce qui corrige les chutes depuis la rambarde, l'auvent et le huitième niveau de toit",
   "changelog.r1900.2": "Chaque saut d'une ascension tourne désormais le personnage vers sa cible avant l'appel, ce qui corrige les sauts manqués pendant qu'il tournait encore",
   "changelog.r1900.3": "Ajout d'un bouton Buy Me a Coffee sous Patreon sur la page À propos",
