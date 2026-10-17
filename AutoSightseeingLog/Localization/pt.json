@@ -240,6 +240,7 @@
   "changelog.r11000.1": "Corrigidos os saltos que iam longe demais em máquinas onde o personagem arranca mais cedo: as corridas agora seguem a distância gravada em vez do relógio, corrigindo a queda no toldo na subida da Hospedaria Shiokaze",
   "changelog.r11000.2": "Corrigida a queda de uma rota de saltos que encerrava a sessão quando a volta ao pé da rota travava; o plugin agora volta pelo caminho de chegada e tenta a subida de novo",
   "changelog.r11000.3": "Corrigidas as vistas em plataformas elevadas, como Rakuza District e Tenkonto em Kugane, que eram descartadas quando o navegador parava antes; a viagem agora se recupera mais cedo, termina os últimos metros a pé ou pede que você pise no local",
+  "changelog.r11000.4": "Adicionado Esperar por uma janela até em Configurações > Geral > Comportamento: quanto tempo um passeio espera pela janela de uma vista antes de deixá-la para uma sessão posterior, de 1 a 720 minutos, 20 por padrão",
   "changelog.r1900.1": "A subida da Hospedaria Shiokaze em Kugane agora segue uma rota gravada no jogo e volta ao ponto de salto quando uma aterrissagem sai do lugar, corrigindo quedas do corrimão, do toldo e do oitavo nível do telhado",
   "changelog.r1900.2": "Cada salto de uma subida agora vira o personagem para o alvo antes de saltar, corrigindo saltos perdidos enquanto ele ainda estava virando",
   "changelog.r1900.3": "Adicionado um botão do Buy Me a Coffee abaixo do Patreon na página Sobre",

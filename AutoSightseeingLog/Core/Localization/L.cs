@@ -275,6 +275,7 @@ internal static class L
             new("changelog.r11000.1", "Fixed jumps flying too far on machines where the character gets moving sooner: run-ups now go by the recorded distance instead of the clock, fixing the Shiokaze Hostelry climb falling onto the awning"),
             new("changelog.r11000.2", "Fixed a fall off a jump route ending the run when the walk back to the foot stalled; the plugin now travels back the way it arrived and retries the climb"),
             new("changelog.r11000.3", "Fixed vistas on raised decks, such as Kugane's Rakuza District and Tenkonto, being written off when the navigator stopped short; travel now recovers sooner, finishes the last metres on foot, or asks you to step onto the spot"),
+            new("changelog.r11000.4", "Added Wait for a window up to under Settings > General > Behavior: how long a tour waits for a vista's window before leaving it for a later run, 1 to 720 minutes, 20 by default"),
         ];
 
         public static readonly LocString[] Release1900 =
