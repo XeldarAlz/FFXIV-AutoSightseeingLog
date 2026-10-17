@@ -270,6 +270,13 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release11000 =
+        [
+            new("changelog.r11000.1", "Fixed jumps flying too far on machines where the character gets moving sooner: run-ups now go by the recorded distance instead of the clock, fixing the Shiokaze Hostelry climb falling onto the awning"),
+            new("changelog.r11000.2", "Fixed a fall off a jump route ending the run when the walk back to the foot stalled; the plugin now travels back the way it arrived and retries the climb"),
+            new("changelog.r11000.3", "Fixed vistas on raised decks, such as Kugane's Rakuza District and Tenkonto, being written off when the navigator stopped short; travel now recovers sooner, finishes the last metres on foot, or asks you to step onto the spot"),
+        ];
+
         public static readonly LocString[] Release1900 =
         [
             new("changelog.r1900.1", "Kugane's Shiokaze Hostelry climb now follows a route recorded in game and steps back onto each takeoff spot when a landing drifts, fixing falls from the railing, the awning and the eighth roof tier"),
