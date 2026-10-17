@@ -28,6 +28,9 @@ public sealed class Configuration : IPluginConfiguration
 
     public bool AskAtHardSpots { get; set; } = true;
 
+    // How long the tour waits on the spot for a vista's window; a window further out is left for a later run.
+    public int WindowWaitMinutes { get; set; } = 20;
+
     public SpotMarkerVisibility BoxVisibility { get; set; } = SpotMarkerVisibility.Always;
 
     public SpotMarkerVisibility ArrowVisibility { get; set; } = SpotMarkerVisibility.Always;

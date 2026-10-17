@@ -324,6 +324,8 @@
   "settings.general.autoPauseHelp": "在副本、讨伐战、团队副本或其他实例化内容中时暂停运行，回到外面后继续。你的计划和本次统计会保留。",
   "settings.general.askAtHardSpots": "在困难地点请我帮忙",
   "settings.general.askAtHardSpotsHelp": "有些探索点位于需要跳上去的小物体上。当插件无法自行到达时，它会在游戏世界中标出该位置，并等待最多一分钟让你站进去，然后继续。如果游戏处于后台，任务栏按钮会闪烁以提醒你。无人值守运行时请关闭。",
+  "settings.general.windowWait": "等待时间窗最多",
+  "settings.general.windowWaitHelp": "插件在原地等待景点的时刻与天气对上的最长时间。时间窗晚于此的景点会留到下次运行，巡游随即结束。想不管等多久都一次完成某个景点时，请调高。",
   "settings.markers.title": "位置标记",
   "settings.markers.box": "显示方框",
   "settings.markers.boxHelp": "在游戏世界中围绕探索点记录位置绘制的轮廓。它与该位置本身一样大，当你的角色站在里面时会变成绿色。",

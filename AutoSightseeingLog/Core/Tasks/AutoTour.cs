@@ -12,8 +12,10 @@ namespace AutoSightseeingLog.Core.Tasks;
 // window opens soonest, waited out on the spot.
 internal sealed class AutoTour(TourSession session, TourProgress progress) : AutoCommon
 {
-    // A window further out than this is left for a later run; waiting on the spot longer rarely beats coming back.
-    private const long WindowWaitLimitSeconds = 20 * TimeUnits.SecondsPerMinute;
+    // A window further out than the configured wait is left for a later run; the default of 20 minutes rarely loses to
+    // coming back, and a longer wait is the player's call for a vista they want done in one sitting.
+    public const int MinWindowWaitMinutes = 1;
+    public const int MaxWindowWaitMinutes = 720;
     private const int WindowPollMs = 1_000;
     private const int MaxVisitsPerVista = 3;
     private const int SettleWaitMs = 15_000;
@@ -70,7 +72,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
             if (ordered.Length == 0
                 || !VistaRegistry.TryGet(ordered[0], out var next)
                 || !VistaLog.TryGetWindow(next, now, out var window)
-                || (!window.IsOpenAt(now) && window.Start - now > WindowWaitLimitSeconds))
+                || (!window.IsOpenAt(now) && window.Start - now > WindowWaitLimitSeconds()))
             {
                 session.EndedOnItsOwn = true;
                 Report(ordered, now);
@@ -167,7 +169,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
             }
 
             var wait = window.Start - now;
-            if (wait > WindowWaitLimitSeconds)
+            if (wait > WindowWaitLimitSeconds())
             {
                 Diag($"{scope}: {name}'s next window opens in {TimeSpan.FromSeconds(wait)}; leaving it for later");
                 return false;
@@ -187,6 +189,9 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
 
         return false;
     }
+
+    private static long WindowWaitLimitSeconds()
+        => Math.Clamp(Plugin.Instance.Configuration.WindowWaitMinutes, MinWindowWaitMinutes, MaxWindowWaitMinutes) * TimeUnits.SecondsPerMinute;
 
     private void Report(ushort[] waiting, long now)
     {

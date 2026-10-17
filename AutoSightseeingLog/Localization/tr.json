@@ -324,6 +324,8 @@
   "settings.general.autoPauseHelp": "Bir zindan, sınav, baskın ya da başka bir örneklenmiş içerikteyken çalışmayı duraklatır, dışarı çıkınca sürdürür. Planınız ve oturum istatistikleriniz korunur.",
   "settings.general.askAtHardSpots": "Zor noktalarda bana sor",
   "settings.general.askAtHardSpotsHelp": "Bazı manzaralar, karakterin üzerine zıplaması gereken küçük bir nesnenin üstündedir. Eklenti noktaya kendi başına çıkamadığında orayı dünyada işaretler ve içine girmeniz için bir dakikaya kadar bekler, sonra devam eder. Oyun arka plandaysa görev çubuğundaki düğmesi sizi geri çağırmak için yanıp söner. Başında durmayacağınız çalıştırmalar için kapatın.",
+  "settings.general.windowWait": "Zaman penceresini en fazla şu kadar bekle",
+  "settings.general.windowWaitHelp": "Eklentinin bir manzaranın saati ve havası denk gelsin diye yerinde ne kadar beklediği. Penceresi bundan daha geç açılan manzara sonraki çalışmaya bırakılır ve tur biter. Bir manzarayı penceresi ne kadar sürse de tek seferde bitirmek istiyorsanız yükseltin.",
   "settings.markers.title": "Nokta işaretleri",
   "settings.markers.box": "Kutuyu göster",
   "settings.markers.boxHelp": "Bir manzaranın kaydedildiği noktanın çevresine dünyada çizilen çerçeve. Noktanın kendisi kadar büyüktür ve karakteriniz içine girdiğinde yeşile döner.",

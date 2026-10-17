@@ -32,7 +32,7 @@ Lists every Sightseeing Log vista from A Realm Reborn through Dawntrail in one w
 - **Fresh characters**: if your Sightseeing Log itself is still locked, the run has Questionable complete “A Sight to Behold” for you first, then carries on to the vistas.
 - **Live log progress**: reads which vistas you have logged straight from the game, so the window always matches your Sightseeing Log.
 - **Time and weather windows**: works out when each A Realm Reborn vista's Eorzean hour and weather line up, and counts down to when it opens or closes.
-- **Smart ordering**: visits open vistas before they close and lines up the rest for when their window opens.
+- **Smart ordering**: visits open vistas before they close and lines up the rest for when their window opens. Settings has how long to wait on the spot for a window (20 minutes by default); a vista further out is left for a later run.
 - **Travel**: teleports to the nearest aetheryte and flies or walks to the spot, including the vistas whose marker sits where you can't stand.
 - **Jump puzzles**: climbs the city jump puzzles it has a route for (Bokairo Inn and Shiokaze Hostelry in Kugane, Ruveydah Fibers Rooftop Garden in Radz-at-Han, Hunu'iliy in Tuliyollal), picks the climb back up after a missed jump, and leaves the puzzles it has no route for to you.
 - **The right emote**: performs /lookout, /pray, /comfort or whichever emote each vista asks for, and checks that the log recorded it.

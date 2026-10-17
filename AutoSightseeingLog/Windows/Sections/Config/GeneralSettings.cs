@@ -1,4 +1,5 @@
 using AutoSightseeingLog.Core.Localization;
+using AutoSightseeingLog.Core.Tasks;
 using AutoSightseeingLog.Windows.Components;
 using Dalamud.Bindings.ImGui;
 
@@ -9,6 +10,7 @@ internal static class GeneralSettings
     private const int ArrowSizeMinPercent = 50;
     private const int ArrowSizeMaxPercent = 200;
     private const string PercentFormat = "%d%%";
+    private const string MinutesFormat = "%d min";
 
     // Ordered like SpotMarkerVisibility, because the enum value indexes this array.
     private static readonly SettingsControls.Choices.Choice[] markerVisibilityChoices =
@@ -63,6 +65,12 @@ internal static class GeneralSettings
             SettingsControls.ToggleWidth,
             () => SettingsControls.DrawToggle(configuration, () => configuration.AskAtHardSpots, value => configuration.AskAtHardSpots = value, "##asl_general_askathardspots"),
             SettingsRow.ToggleHeight);
+
+        SettingsRow.Draw(Loc.T(L.Settings.WindowWait),
+            Loc.T(L.Settings.WindowWaitHelp),
+            SettingsControls.RowSliderWidth,
+            () => SettingsControls.DrawIntSlider(configuration, "##asl_general_windowwait", () => configuration.WindowWaitMinutes, value => configuration.WindowWaitMinutes = value,
+                AutoTour.MinWindowWaitMinutes, AutoTour.MaxWindowWaitMinutes, MinutesFormat));
     }
 
     private static void DrawMarkersGroup(Configuration configuration)

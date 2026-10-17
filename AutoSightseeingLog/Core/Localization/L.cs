@@ -398,6 +398,8 @@ internal static class L
         public static readonly LocString AutoPauseHelp = new("settings.general.autoPauseHelp", "Pause the run while you are inside a duty, trial, raid, or any other instanced content, then resume it once you are back outside. Your plan and session stats are kept.");
         public static readonly LocString AskAtHardSpots = new("settings.general.askAtHardSpots", "Ask me at hard spots");
         public static readonly LocString AskAtHardSpotsHelp = new("settings.general.askAtHardSpotsHelp", "Some vistas sit on a small object the character has to be jumped onto. When the plugin cannot get onto a spot by itself, it marks the spot in the world and waits up to a minute for you to stand inside it, then carries on. If the game is in the background, its taskbar button flashes to call you back. Turn this off for unattended runs.");
+        public static readonly LocString WindowWait = new("settings.general.windowWait", "Wait for a window up to");
+        public static readonly LocString WindowWaitHelp = new("settings.general.windowWaitHelp", "How long the plugin waits on the spot for a vista's hour and weather to line up. A vista whose window opens later than this is left for a later run and the tour ends. Raise it when you want one vista done in a single sitting however long its window takes.");
 
         public static readonly LocString Markers = new("settings.markers.title", "Spot markers");
         public static readonly LocString MarkerBox = new("settings.markers.box", "Show the box");

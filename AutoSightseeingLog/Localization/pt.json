@@ -324,6 +324,8 @@
   "settings.general.autoPauseHelp": "Pausa a sessão enquanto você está em uma masmorra, provação, raide ou outro conteúdo instanciado, e retoma quando você volta. Seu plano e suas estatísticas são mantidos.",
   "settings.general.askAtHardSpots": "Pedir minha ajuda em pontos difíceis",
   "settings.general.askAtHardSpotsHelp": "Alguns mirantes ficam sobre um objeto pequeno no qual o personagem precisa pular. Quando o plugin não consegue chegar ao ponto sozinho, ele o marca no mundo e espera até um minuto para você ficar dentro dele, e então continua. Se o jogo estiver em segundo plano, o botão dele na barra de tarefas pisca para chamar você de volta. Desative para execuções sem supervisão.",
+  "settings.general.windowWait": "Esperar por uma janela até",
+  "settings.general.windowWaitHelp": "Quanto tempo o plugin espera no local até a hora e o clima de uma vista coincidirem. Uma vista cuja janela abre depois disso fica para outra sessão e o passeio termina. Aumente quando quiser concluir uma vista de uma vez só, por mais que a janela demore.",
   "settings.markers.title": "Marcadores do ponto",
   "settings.markers.box": "Mostrar a caixa",
   "settings.markers.boxHelp": "O contorno desenhado no mundo em volta do ponto de onde um mirante é registrado. Ele tem o tamanho do próprio ponto e fica verde quando seu personagem está dentro dele.",
