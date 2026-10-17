@@ -237,6 +237,7 @@
   "changelog.new": "New",
   "changelog.changes.one": "{0} change",
   "changelog.changes.other": "{0} changes",
+  "changelog.r11100.1": "Shiokaze Hostelry (#168) is now climbed all the way to the log point at the top of the tower, from a recording of the full climb",
   "changelog.r11000.1": "Fixed jumps flying too far on machines where the character gets moving sooner: run-ups now go by the recorded distance instead of the clock, fixing the Shiokaze Hostelry climb falling onto the awning",
   "changelog.r11000.2": "Fixed a fall off a jump route ending the run when the walk back to the foot stalled; the plugin now travels back the way it arrived and retries the climb",
   "changelog.r11000.3": "Fixed vistas on raised decks, such as Kugane's Rakuza District and Tenkonto, being written off when the navigator stopped short; travel now recovers sooner, finishes the last metres on foot, or asks you to step onto the spot",

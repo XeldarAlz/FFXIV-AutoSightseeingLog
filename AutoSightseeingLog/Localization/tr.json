@@ -237,6 +237,7 @@
   "changelog.new": "Yeni",
   "changelog.changes.one": "{0} değişiklik",
   "changelog.changes.other": "{0} değişiklik",
+  "changelog.r11100.1": "Shiokaze Hostelry (#168) artık kulenin tepesindeki kayıt noktasına kadar tırmanılıyor; tam tırmanışın kaydından alındı",
   "changelog.r11000.1": "Düzeltildi: Karakterin daha çabuk harekete geçtiği makinelerde sıçramalar fazla uzağa gidiyordu; koşu mesafesi artık saat yerine kaydedilen mesafeyle ölçülür, bu da Shiokaze Hostelry tırmanışında sundurmaya düşmeyi düzeltir",
   "changelog.r11000.2": "Düzeltildi: Sıçrama rotasından düşüş, rotanın başına yürüyüş takılınca çalışmayı bitiriyordu; eklenti artık geldiği yoldan geri döner ve tırmanışı yeniden dener",
   "changelog.r11000.3": "Düzeltildi: Kugane'deki Rakuza District ve Tenkonto gibi yüksek platformlardaki manzara noktaları, yön bulma erken durunca vazgeçiliyordu; seyahat artık daha erken toparlanır, son metreleri yürüyerek tamamlar veya noktaya basmanızı ister",

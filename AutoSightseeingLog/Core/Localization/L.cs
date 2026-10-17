@@ -270,6 +270,11 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release11100 =
+        [
+            new("changelog.r11100.1", "Shiokaze Hostelry (#168) is now climbed all the way to the log point at the top of the tower, from a recording of the full climb"),
+        ];
+
         public static readonly LocString[] Release11000 =
         [
             new("changelog.r11000.1", "Fixed jumps flying too far on machines where the character gets moving sooner: run-ups now go by the recorded distance instead of the clock, fixing the Shiokaze Hostelry climb falling onto the awning"),

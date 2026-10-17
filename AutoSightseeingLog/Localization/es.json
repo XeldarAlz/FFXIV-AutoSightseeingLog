@@ -237,6 +237,7 @@
   "changelog.new": "Nuevo",
   "changelog.changes.one": "{0} cambio",
   "changelog.changes.other": "{0} cambios",
+  "changelog.r11100.1": "Shiokaze Hostelry (#168) ahora se escala hasta el punto de registro en lo alto de la torre, a partir de una grabación de la subida completa",
   "changelog.r11000.1": "Corregido que los saltos volaran demasiado lejos en equipos donde el personaje arranca antes: las carrerillas ahora se miden por la distancia grabada y no por el reloj, lo que corrige la caída al toldo en la subida a la Posada Shiokaze",
   "changelog.r11000.2": "Corregido que una caída de una ruta de saltos terminara la sesión si la vuelta al pie de la ruta se atascaba; el plugin ahora regresa por donde llegó y reintenta la subida",
   "changelog.r11000.3": "Corregido que las vistas en plataformas elevadas, como Rakuza District y Tenkonto en Kugane, se descartaran cuando el navegador se quedaba corto; el viaje ahora se recupera antes, termina los últimos metros a pie o te pide que te coloques en el punto",

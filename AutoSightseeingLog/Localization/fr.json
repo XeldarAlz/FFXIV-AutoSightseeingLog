@@ -237,6 +237,7 @@
   "changelog.new": "Nouveau",
   "changelog.changes.one": "{0} changement",
   "changelog.changes.other": "{0} changements",
+  "changelog.r11100.1": "Shiokaze Hostelry (#168) est désormais grimpé jusqu'au point de carnet au sommet de la tour, d'après un enregistrement de l'ascension complète",
   "changelog.r11000.1": "Correction des sauts trop longs sur les machines où le personnage démarre plus vite : les élans se mesurent désormais à la distance enregistrée et non à l'horloge, ce qui corrige la chute sur l'auvent lors de l'ascension de l'auberge Shiokaze",
   "changelog.r11000.2": "Correction d'une chute depuis un parcours de sauts qui mettait fin à la session quand le retour au pied du parcours se bloquait ; le plugin revient désormais par où il est arrivé et retente l'ascension",
   "changelog.r11000.3": "Correction des panoramas sur des plateformes surélevées, comme Rakuza District et Tenkonto à Kugane, abandonnés quand la navigation s'arrêtait trop tôt ; le trajet se rattrape désormais plus vite, finit les derniers mètres à pied ou vous demande de vous placer sur le point",
