@@ -18,6 +18,7 @@ internal abstract partial class AutoCommon
     private const int MaxMissesOnOneLeg = 3;
     private const int MaxRunUpRetries = 2;
     private const float RunUpSlackMeters = 0.15f;
+    private const float RunUpCapSlackSeconds = 0.5f;
     private const int MaxWalksBackOntoRoute = 3;
     private const int JumpLegWatchdogMs = 20_000;
     private const int JumpLegSettleMs = 500;
@@ -256,9 +257,15 @@ internal abstract partial class AutoCommon
         ((ClientGameObject*)player.Address)->SetRotation(MathF.Atan2(direction.X, direction.Z));
     }
 
+    // The recorder measured each run-up as a distance and stored it as seconds through the fit. Waiting that long
+    // left the takeoff speed to the navigator's start latency, which differs by machine: a 0.09 s run-up covered
+    // 0.27 m instead of 0.15 m and the jump flew twice as far (issue #7). Moving the recorded distance instead puts
+    // every machine at the same point of the speed ramp; the time only caps a character that cannot move at all.
     private async Task<float> RunUp(float runUpSeconds, long startedAt, Vector3 from)
     {
-        while (Stopwatch.GetElapsedTime(startedAt).TotalSeconds < runUpSeconds)
+        var runUpMeters = JumpPhysics.RunUpMeters(runUpSeconds);
+        var capSeconds = runUpSeconds + RunUpCapSlackSeconds;
+        while (DistanceTo(from) < runUpMeters && Stopwatch.GetElapsedTime(startedAt).TotalSeconds < capSeconds)
         {
             if (CancelToken.IsCancellationRequested)
             {
@@ -336,7 +343,15 @@ internal abstract partial class AutoCommon
         }
 
         Diag($"{backScope}: walking back to the foot of the route");
-        return await WalkUpTo(route[0].Point, backScope, name) ? 0 : NotOnRoute;
+        if (await WalkUpTo(route[0].Point, backScope, name))
+        {
+            return 0;
+        }
+
+        // A fall often ends off the mesh (an awning, a ledge below the street), where the single walk stalls within
+        // seconds; the travel that reached the foot in the first place snaps to the floor and re-paths (issue #7).
+        Diag($"{backScope}: travelling back to the foot of the route instead");
+        return await WalkToRouteStart(Svc.ClientState.TerritoryType, route[0].Point, name, backScope) ? 0 : NotOnRoute;
     }
 
     private static bool IsWalkOnThisLevel(JumpStep step)

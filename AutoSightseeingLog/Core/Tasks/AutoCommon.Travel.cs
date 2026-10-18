@@ -19,6 +19,10 @@ internal abstract partial class AutoCommon
     // The slowest plausible pace, on foot and around obstacles; it sizes a trip's time budget from its straight-line length.
     private const float TravelMinSpeedMetersPerSecond = 3f;
     private const int TravelProgressLogMs = 15_000;
+    // A leg the navigator keeps retrying on its own never returns, so without a cap one leg swallows the whole budget
+    // before the stall ladder below gets a turn (issue #13). A leg cut by the cap while still closing in carries on.
+    private const int TravelLegWatchdogMs = 30_000;
+    private const float TravelLegProgressMeters = 5f;
     private const int MaxZoneEntries = 2;
     private const int MaxTravelStalls = 5;
     private const int StallsBeforeUnstick = 2;
@@ -179,9 +183,17 @@ internal abstract partial class AutoCommon
             }
 
             var scope = $"travel-leg#{leg}";
-            var outcome = await RunTravelLeg(target, arriveWithin, mountingAllowed, (int)remainingMs, scope, zoneName);
+            var distanceBefore = DistanceTo(target);
+            var outcome = await RunTravelLeg(target, arriveWithin, mountingAllowed, (int)Math.Min(remainingMs, TravelLegWatchdogMs), scope, zoneName);
             if (outcome == LegOutcome.Remount || CancelToken.IsCancellationRequested || Arrived(target, destination, arriveWithin))
             {
+                continue;
+            }
+
+            var gainedMeters = distanceBefore - DistanceTo(target);
+            if ((outcome is LegOutcome.Stalled or LegOutcome.EndedShort) && gainedMeters >= TravelLegProgressMeters)
+            {
+                Diag($"{scope}: {gainedMeters:F0}m closer to the spot; carrying on from here");
                 continue;
             }
 

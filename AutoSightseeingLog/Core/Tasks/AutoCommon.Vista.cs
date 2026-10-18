@@ -48,6 +48,9 @@ internal abstract partial class AutoCommon
     private const int PoseSettleMs = 1_500;
     private const int StandUpWaitMs = 3_000;
     private const int StandUpAttempts = 2;
+    // Travel that ends this close to an open spot has run out of navmesh, not of distance: the footing steps and the
+    // player prompt still get their turn instead of the vista being written off (issue #13).
+    private const float OpenApproachFallbackMeters = 20f;
 
     protected async Task<bool> ReachVista(Vista vista, string scope)
     {
@@ -63,9 +66,20 @@ internal abstract partial class AutoCommon
         var target = vista.ApproachPoint;
         var rideStop = vista.Approach == VistaApproach.Indoors ? IndoorsWalkMeters : ApproachArriveMeters;
         Diag($"{scope}: heading to #{vista.Number:000} {name} ({vista.Approach}), approach point {FormatPosition(target)}, log point {FormatPosition(vista.Position)}, {DescribeVolume(volume)}");
-        if (!await TravelTo(vista.TerritoryId, target, rideStop) || CancelToken.IsCancellationRequested)
+        var travelled = await TravelTo(vista.TerritoryId, target, rideStop);
+        if (CancelToken.IsCancellationRequested)
         {
             return false;
+        }
+
+        if (!travelled)
+        {
+            if (Svc.ClientState.TerritoryType != vista.TerritoryId || DistanceTo(target) > OpenApproachFallbackMeters)
+            {
+                return false;
+            }
+
+            Diag($"{scope}: travel ended {DistanceTo(target):F0}m short of the approach point; trying the footing steps from here");
         }
 
         return await StandInside(vista, volume, name, scope);

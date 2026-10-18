@@ -153,6 +153,18 @@ internal static class JumpRoutes
         Jump(-36.94f, 92.81f, -67f, 0.1f),
         Jump(-37.46f, 94.6f, -65.43f, 0f),
         Jump(-38.51f, 95.38f, -65.56f, 0f),
+        Walk(-45.27f, 100.97f, -61.27f),
+        Walk(-46.5f, 102.45f, -59.9f),
+        Walk(-46.53f, 102.48f, -52.86f),
+        Jump(-46.4f, 103.67f, -52.4f, 0f),
+        Jump(-46.9f, 104.53f, -52.47f, 0f),
+        Walk(-48.4f, 104.58f, -52.22f),
+        Walk(-48.92f, 104.51f, -52.8f),
+        Walk(-49.06f, 104.51f, -53.48f),
+        Walk(-49.27f, 104.51f, -55.08f),
+        Jump(-49.26f, 105.81f, -56.67f, 0f),
+        Jump(-48.52f, 107.6f, -57.59f, 0f),
+        Walk(-48.33f, 107.6f, -58.36f),
     ];
 
     private static readonly JumpStep[] ruveydahFibersRooftopGarden =

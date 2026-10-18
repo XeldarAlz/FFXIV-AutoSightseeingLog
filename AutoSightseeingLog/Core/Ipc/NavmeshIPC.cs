@@ -24,6 +24,7 @@ internal sealed class NavmeshIPC
     private const string GetToleranceFailed = "Navmesh Path.GetTolerance failed";
     private const string SetToleranceFailed = "Navmesh Path.SetTolerance failed";
     private const string PathfindAndMoveToFailed = "Navmesh SimpleMove.PathfindAndMoveTo failed";
+    private const string PathfindAndMoveCloseToFailed = "Navmesh SimpleMove.PathfindAndMoveCloseTo failed";
 
     private static NavmeshIPC? instance;
 
@@ -41,6 +42,7 @@ internal sealed class NavmeshIPC
     private readonly ICallGateSubscriber<float> pathGetTolerance;
     private readonly ICallGateSubscriber<float, object> pathSetTolerance;
     private readonly ICallGateSubscriber<Vector3, bool, bool> simpleMovePathfindAndMoveTo;
+    private readonly ICallGateSubscriber<Vector3, bool, float, bool> simpleMovePathfindAndMoveCloseTo;
 
     // Cached once so the per-frame stall checks do not allocate a delegate on every call.
     private readonly Func<bool> isRunningCall;
@@ -70,6 +72,7 @@ internal sealed class NavmeshIPC
         pathGetTolerance = pluginInterface.GetIpcSubscriber<float>("vnavmesh.Path.GetTolerance");
         pathSetTolerance = pluginInterface.GetIpcSubscriber<float, object>("vnavmesh.Path.SetTolerance");
         simpleMovePathfindAndMoveTo = pluginInterface.GetIpcSubscriber<Vector3, bool, bool>("vnavmesh.SimpleMove.PathfindAndMoveTo");
+        simpleMovePathfindAndMoveCloseTo = pluginInterface.GetIpcSubscriber<Vector3, bool, float, bool>("vnavmesh.SimpleMove.PathfindAndMoveCloseTo");
 
         isRunningCall = pathIsRunning.InvokeFunc;
         simpleMovePathfindInProgressCall = simpleMovePathfindInProgress.InvokeFunc;
@@ -142,6 +145,14 @@ internal sealed class NavmeshIPC
             () => simpleMovePathfindAndMoveTo.InvokeFunc(destination, fly),
             false,
             PathfindAndMoveToFailed);
+
+    // Stops arriveWithin metres short of the destination, which is how the movement library parks beside a point.
+    public bool PathfindAndMoveCloseTo(Vector3 destination, bool fly, float arriveWithin)
+        => IpcGate.Invoke(
+            simpleMovePathfindAndMoveCloseTo.HasFunction,
+            () => simpleMovePathfindAndMoveCloseTo.InvokeFunc(destination, fly, arriveWithin),
+            false,
+            PathfindAndMoveCloseToFailed);
 
     // Follows the given waypoints as they are, with no path search, so the caller has to know the way is clear.
     public void MoveAlong(List<Vector3> waypoints, bool fly)

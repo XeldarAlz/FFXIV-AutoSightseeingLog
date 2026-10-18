@@ -270,6 +270,27 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release11100 =
+        [
+            new("changelog.r11100.1", "Shiokaze Hostelry (#168) is now climbed all the way to the log point at the top of the tower, from a recording of the full climb"),
+        ];
+
+        public static readonly LocString[] Release11000 =
+        [
+            new("changelog.r11000.1", "Fixed jumps flying too far on machines where the character gets moving sooner: run-ups now go by the recorded distance instead of the clock, fixing the Shiokaze Hostelry climb falling onto the awning"),
+            new("changelog.r11000.2", "Fixed a fall off a jump route ending the run when the walk back to the foot stalled; the plugin now travels back the way it arrived and retries the climb"),
+            new("changelog.r11000.3", "Fixed vistas on raised decks, such as Kugane's Rakuza District and Tenkonto, being written off when the navigator stopped short; travel now recovers sooner, finishes the last metres on foot, or asks you to step onto the spot"),
+            new("changelog.r11000.4", "Added Wait for a window up to under Settings > General > Behavior: how long a tour waits for a vista's window before leaving it for a later run, 1 to 720 minutes, 20 by default"),
+            new("changelog.r11000.5", "Fixed a crash after hours of touring (Unable to find memory location to fit MemoryBuffer): travel no longer installs movement hooks for every leg"),
+        ];
+
+        public static readonly LocString[] Release1900 =
+        [
+            new("changelog.r1900.1", "Kugane's Shiokaze Hostelry climb now follows a route recorded in game and steps back onto each takeoff spot when a landing drifts, fixing falls from the railing, the awning and the eighth roof tier"),
+            new("changelog.r1900.2", "Every jump in a climb now turns to face its target before taking off, fixing jumps missed while the character was still turning"),
+            new("changelog.r1900.3", "Added a Buy Me a Coffee button under Patreon on the About page"),
+        ];
+
         public static readonly LocString[] Release1800 =
         [
             new("changelog.r1800.1", "Kugane's Shiokaze Hostelry climb now takes its long jumps with a short run-up facing the next ledge, where it used to fall near the start"),
@@ -287,9 +308,11 @@ internal static class L
     internal static class About
     {
         public static readonly LocString SupportTitle = new("about.support.title", "Made with love and care");
-        public static readonly LocString SupportBody = new("about.support.body", "This plugin is a one-person project, built in my free time because I love this game and its community. Keeping it updated takes a lot of those hours. If it has helped you, supporting me on Patreon means I can keep giving it that time. Thank you for being here.");
+        public static readonly LocString SupportBody = new("about.support.body", "This plugin is a one-person project, built in my free time because I love this game and its community. Keeping it updated takes a lot of those hours. If it has helped you, supporting me on Patreon or buying me a coffee means I can keep giving it that time. Thank you for being here.");
         public static readonly LocString SupportButton = new("about.support.button", "Support on Patreon");
         public static readonly LocString PatreonHint = new("about.support.hint", "Open Patreon · right-click to copy");
+        public static readonly LocString CoffeeButton = new("about.support.coffeeButton", "Buy me a coffee");
+        public static readonly LocString CoffeeHint = new("about.support.coffeeHint", "Open Buy Me a Coffee · right-click to copy");
         public static readonly LocString LinkHint = new("about.linkHint", "Click to open · right-click to copy");
         public static readonly LocString MadeBy = new("about.madeBy", "Made by {0}");
         public static readonly LocString Version = new("about.version", "v {0}");
@@ -382,6 +405,8 @@ internal static class L
         public static readonly LocString AutoPauseHelp = new("settings.general.autoPauseHelp", "Pause the run while you are inside a duty, trial, raid, or any other instanced content, then resume it once you are back outside. Your plan and session stats are kept.");
         public static readonly LocString AskAtHardSpots = new("settings.general.askAtHardSpots", "Ask me at hard spots");
         public static readonly LocString AskAtHardSpotsHelp = new("settings.general.askAtHardSpotsHelp", "Some vistas sit on a small object the character has to be jumped onto. When the plugin cannot get onto a spot by itself, it marks the spot in the world and waits up to a minute for you to stand inside it, then carries on. If the game is in the background, its taskbar button flashes to call you back. Turn this off for unattended runs.");
+        public static readonly LocString WindowWait = new("settings.general.windowWait", "Wait for a window up to");
+        public static readonly LocString WindowWaitHelp = new("settings.general.windowWaitHelp", "How long the plugin waits on the spot for a vista's hour and weather to line up. A vista whose window opens later than this is left for a later run and the tour ends. Raise it when you want one vista done in a single sitting however long its window takes.");
 
         public static readonly LocString Markers = new("settings.markers.title", "Spot markers");
         public static readonly LocString MarkerBox = new("settings.markers.box", "Show the box");
