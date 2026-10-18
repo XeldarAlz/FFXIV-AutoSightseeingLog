@@ -14,6 +14,8 @@ You need the .NET 10 SDK. The plugin requires Dalamud at runtime; CI pulls a Dal
 
 Load the built plugin via `/xlsettings` -> **Experimental** -> **Dev Plugin Locations**, pointing at `AutoSightseeingLog/bin/Release/AutoSightseeingLog.dll`.
 
+Run the jump controller regression checks with `dotnet run --project tests/JumpController.Tests -c Release`. They compile the production decision and trajectory code without Dalamud, replay Kugane movement traces, and exercise missed takeoffs, falls, guarded landing corrections, recovery bounds and calibrated launches at different frame rates. Held-out overshoot traces check range predictions learned from earlier jumps, including the first roof miss after observing a capped-speed jump. Recorded upper-roof flights check downhill startup, run-up reversals and exclusion of failed manual attempts from the route. The leg 44 regression checks the failed startup, rejection of the lower lip as a correction target, precise takeoff alignment and teleport destination checks. Roof recovery tests use synthetic collision surfaces to check slopes, gaps, obstacles, stacked floors and checkpoint selection. These checks do not simulate the game's collision geometry or execute teleports; a full in-game climb is still required.
+
 ## Project layout
 
 - `AutoSightseeingLog/Core/`: vista data, the log reader, Eorzea time and weather, the automation state machine.

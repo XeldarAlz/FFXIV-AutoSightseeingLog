@@ -1,13 +1,9 @@
 using AutoSightseeingLog.Core.Game.Ops;
 using AutoSightseeingLog.Core.Ipc;
-using AutoSightseeingLog.Core.Travel;
 using AutoSightseeingLog.Core.Vistas;
 using ECommons.DalamudServices;
-using ECommons.MathHelpers;
-using System.Diagnostics;
 using System.Numerics;
 using System.Threading.Tasks;
-using ClientGameObject = FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject;
 
 namespace AutoSightseeingLog.Core.Tasks;
 
@@ -16,18 +12,7 @@ internal abstract partial class AutoCommon
     private const int NotOnRoute = -1;
     private const int MaxRouteMisses = 8;
     private const int MaxMissesOnOneLeg = 3;
-    private const int MaxRunUpRetries = 2;
-    private const float RunUpSlackMeters = 0.15f;
-    private const float RunUpCapSlackSeconds = 0.5f;
     private const int MaxWalksBackOntoRoute = 3;
-    private const int JumpLegWatchdogMs = 20_000;
-    private const int JumpLegSettleMs = 500;
-    private const float LandedAcrossMeters = 1f;
-    private const float LandedBelowMeters = 0.6f;
-    private const float OnRouteAcrossMeters = 2f;
-    private const float OnRouteRiseMeters = 0.5f;
-    private const float SameLevelMeters = 1.5f;
-    private const float SettleAcrossMeters = 0.2f;
 
     private async Task<bool> ReachByJumpRoute(Vista vista, VistaVolume volume, JumpRoute route, string name, string scope)
     {
@@ -39,6 +24,34 @@ internal abstract partial class AutoCommon
         }
 
         var startLeg = inZone ? NearestLegStoodOn(route) : NotOnRoute;
+        if (startLeg == NotOnRoute && inZone && Svc.Objects.LocalPlayer is { } player
+            && !JumpLanding.IsAtRouteGroundLevel(player.Position, route[0].Point)
+            && JumpRecoveryPath.Checkpoints(route, route.Length - 1).Any(leg =>
+                Vector3.Distance(player.Position, route[leg].Point) <= JumpRecoveryPath.MaxDistance))
+        {
+            NavmeshIPC.Instance.Stop();
+            if (!await WaitForJumpGrounding(scope) || CancelToken.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            // Starting automation during a fall may end on a known ledge or back at street level.
+            startLeg = NearestLegStoodOn(route);
+            if (startLeg == NotOnRoute && Svc.Objects.LocalPlayer is { } grounded
+                && !JumpLanding.IsAtRouteGroundLevel(grounded.Position, route[0].Point))
+            {
+                startLeg = await ReturnToRoofTakeoff(route, route.Length - 1, $"{scope}-resume");
+                if (startLeg == NotOnRoute)
+                {
+                    startLeg = await RestartJumpRoute(route, name, $"{scope}-resume");
+                    if (startLeg == NotOnRoute)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
         if (startLeg == NotOnRoute)
         {
             if (!await WalkToRouteStart(vista.TerritoryId, route[0].Point, name, scope))
@@ -87,14 +100,15 @@ internal abstract partial class AutoCommon
         WalkModeOps.SetWalking(false);
         try
         {
+            Diag($"{scope}: jump controller checks precise takeoffs, verifies roof returns and teleports to retry when stranded");
             var leg = startLeg;
-            var lastMissedLeg = NotOnRoute;
-            var missesOnThatLeg = 0;
+            var missesByLeg = new int[route.Length];
+            var trajectory = new JumpTrajectory();
             for (var misses = 0; misses < MaxRouteMisses; misses++)
             {
                 Status = $"Climbing to {name}";
                 Diag($"{scope}: climbing from leg {leg + 1}/{route.Length} after {misses} miss(es)");
-                var missedLeg = await RunLegs(route, leg, scope);
+                var missedLeg = await RunLegs(route, leg, trajectory, scope);
                 if (missedLeg == route.Length)
                 {
                     Diag($"{scope}: at the top of the jump route");
@@ -106,12 +120,16 @@ internal abstract partial class AutoCommon
                     return false;
                 }
 
-                missesOnThatLeg = missedLeg == lastMissedLeg ? missesOnThatLeg + 1 : 1;
-                lastMissedLeg = missedLeg;
+                var missesOnThatLeg = ++missesByLeg[missedLeg];
                 if (missesOnThatLeg >= MaxMissesOnOneLeg)
                 {
-                    Warn($"{scope}: missed leg {missedLeg + 1}/{route.Length} of the jump route to {name} {missesOnThatLeg} times in a row; giving up");
+                    Warn($"{scope}: missed leg {missedLeg + 1}/{route.Length} of the jump route to {name} {missesOnThatLeg} times; stopping with launch diagnostics in the log");
                     return false;
+                }
+
+                if (misses + 1 >= MaxRouteMisses)
+                {
+                    break;
                 }
 
                 leg = await FindWayBackOnto(route, missedLeg, name, scope);
@@ -137,8 +155,9 @@ internal abstract partial class AutoCommon
         }
     }
 
-    private async Task<int> RunLegs(JumpRoute route, int startLeg, string scope)
+    private async Task<int> RunLegs(JumpRoute route, int startLeg, JumpTrajectory trajectory, string scope)
     {
+        var correctionLeg = startLeg;
         for (var leg = startLeg; leg < route.Length; leg++)
         {
             if (CancelToken.IsCancellationRequested)
@@ -146,9 +165,25 @@ internal abstract partial class AutoCommon
                 return leg;
             }
 
-            var step = leg == startLeg ? JumpStep.Walk(route[leg].Point) : route[leg];
-            if (!await RunLeg(step, route.Recorded, $"{scope}-leg{leg + 1}"))
+            var step = leg == startLeg
+                ? JumpStep.Walk(route[leg].Point) with { LandingTolerance = route[leg].LandingTolerance }
+                : route[leg];
+            JumpStep? nextStep = leg + 1 < route.Length ? route[leg + 1] : null;
+            if (!await RunLeg(step, route.Recorded, $"{scope}-leg{leg + 1}", trajectory, nextStep, correction: leg == correctionLeg && leg > 0))
             {
+                if (!CancelToken.IsCancellationRequested && Svc.Objects.LocalPlayer is { } player)
+                {
+                    var followingWalk = JumpPosition.FollowingWalkLeg(route, leg, player.Position, JumpPhysics.IsAirborne());
+                    if (followingWalk != NotOnRoute && JumpLanding.CanCorrect(player.Position, route[followingWalk].Point,
+                        route.Recorded, JumpFooting.InspectWalk(player.Position, route[followingWalk].Point)))
+                    {
+                        Diag($"{scope}-leg{leg + 1}: grounded at following recorded walk leg {followingWalk + 1}; continuing from that foothold");
+                        correctionLeg = followingWalk;
+                        leg = followingWalk - 1;
+                        continue;
+                    }
+                }
+
                 return leg;
             }
         }
@@ -156,170 +191,29 @@ internal abstract partial class AutoCommon
         return route.Length;
     }
 
-    private async Task<bool> RunLeg(JumpStep step, bool settlesOnPoint, string scope)
-    {
-        if (Svc.Objects.LocalPlayer is not { } player)
-        {
-            return false;
-        }
-
-        var navmesh = NavmeshIPC.Instance;
-        var from = player.Position;
-        var jumpFrom = from;
-        var ranUp = 0f;
-        for (var attempt = 0; ; attempt++)
-        {
-            if (step.Jumps)
-            {
-                FaceTowards(step.Point);
-                await NextFrame(1);
-            }
-
-            jumpFrom = player.Position;
-            var startedAt = Stopwatch.GetTimestamp();
-            navmesh.MoveAlong([step.Point], false);
-            if (!step.Jumps)
-            {
-                break;
-            }
-
-            ranUp = await RunUp(step.RunUpSeconds, startedAt, jumpFrom);
-            if (CancelToken.IsCancellationRequested)
-            {
-                navmesh.Stop();
-                return false;
-            }
-
-            if (ranUp <= MaxRunUpMeters(step.RunUpSeconds) || attempt == MaxRunUpRetries)
-            {
-                if (UseGeneralAction(JumpGeneralActionId))
-                {
-                    break;
-                }
-
-                navmesh.Stop();
-                Diag($"{scope}: the game refused the jump to {FormatPrecise(step.Point)} ({ConditionTag()})");
-                return false;
-            }
-
-            navmesh.Stop();
-            Diag($"{scope}: ran {ranUp:F2}m in the {step.RunUpSeconds:F2}s run-up, too far to jump from; stepping back to {FormatPrecise(from)}");
-            await StepBackTo(from, step.Point, scope);
-        }
-
-        var stall = new MoveStallTracker();
-        var touchdown = new JumpTouchdown();
-        await WaitUntilTimed(() => (step.Jumps && touchdown.Check(JumpPhysics.IsAirborne()) && HeightAbove(step.Point) < -SameLevelMeters) || (!navmesh.IsRunning() && !JumpPhysics.IsAirborne()) || stall.Check() != StallKind.None, JumpLegWatchdogMs, scope, 1);
-        navmesh.Stop();
-        await DelayMs(JumpLegSettleMs);
-
-        var landed = HasLandedOn(step.Point);
-        Diag($"{scope}: {(step.Jumps ? $"jump after a {step.RunUpSeconds:F2}s run-up of {ranUp:F2}m" : "walk")} to {FormatPrecise(step.Point)} {(landed ? "landed" : "MISSED")} {GroundDistanceTo(step.Point):F2}m across and {HeightAbove(step.Point):+0.00;-0.00}m high");
-        if (!step.Jumps)
-        {
-            return landed;
-        }
-
-        Diag($"{scope}: {DescribeTouchdown(touchdown.Position, jumpFrom, step.Point)}");
-        if (landed && settlesOnPoint && GroundDistanceTo(step.Point) > SettleAcrossMeters)
-        {
-            await WalkDirectlyTo(step.Point, $"{scope}-settle");
-            Diag($"{scope}: walked back onto the landing point, now {GroundDistanceTo(step.Point):F2}m across");
-        }
-
-        return landed;
-    }
-
-    private static string DescribeTouchdown(Vector3? touchdown, Vector3 jumpFrom, Vector3 target)
-    {
-        if (touchdown is not { } position)
-        {
-            return "never saw the character airborne, so no touchdown point";
-        }
-
-        var line = (target - jumpFrom).ToVector2();
-        var length = line.Length();
-        var direction = length > 0f ? line / length : Vector2.Zero;
-        var offset = (position - target).ToVector2();
-        var past = Vector2.Dot(offset, direction);
-        var beside = MathF.Abs((direction.X * offset.Y) - (direction.Y * offset.X));
-        return $"touched down at {FormatPrecise(position)}, {past:+0.00;-0.00}m past the point along the {length:F2}m jump, {beside:F2}m off its line, {position.Y - target.Y:+0.00;-0.00}m high";
-    }
-
-    private static unsafe void FaceTowards(Vector3 point)
-    {
-        if (Svc.Objects.LocalPlayer is not { } player)
-        {
-            return;
-        }
-
-        var direction = point - player.Position;
-        ((ClientGameObject*)player.Address)->SetRotation(MathF.Atan2(direction.X, direction.Z));
-    }
-
-    // The recorder measured each run-up as a distance and stored it as seconds through the fit. Waiting that long
-    // left the takeoff speed to the navigator's start latency, which differs by machine: a 0.09 s run-up covered
-    // 0.27 m instead of 0.15 m and the jump flew twice as far (issue #7). Moving the recorded distance instead puts
-    // every machine at the same point of the speed ramp; the time only caps a character that cannot move at all.
-    private async Task<float> RunUp(float runUpSeconds, long startedAt, Vector3 from)
-    {
-        var runUpMeters = JumpPhysics.RunUpMeters(runUpSeconds);
-        var capSeconds = runUpSeconds + RunUpCapSlackSeconds;
-        while (DistanceTo(from) < runUpMeters && Stopwatch.GetElapsedTime(startedAt).TotalSeconds < capSeconds)
-        {
-            if (CancelToken.IsCancellationRequested)
-            {
-                return 0f;
-            }
-
-            await NextFrame(1);
-        }
-
-        return DistanceTo(from);
-    }
-
-    private async Task StepBackTo(Vector3 from, Vector3 target, string scope)
-    {
-        var away = new Vector3(from.X - target.X, 0f, from.Z - target.Z);
-        var back = away == Vector3.Zero ? from : from + Vector3.Normalize(away) * NavmeshIPC.DefaultToleranceMeters;
-        await WalkDirectlyTo(back, $"{scope}-stepback");
-    }
-
-    private async Task WalkDirectlyTo(Vector3 point, string scope)
-    {
-        var navmesh = NavmeshIPC.Instance;
-        var stall = new MoveStallTracker();
-        navmesh.MoveAlong([point], false);
-        await WaitUntilTimed(() => !navmesh.IsRunning() || stall.Check() != StallKind.None, JumpLegWatchdogMs, scope, 1);
-        navmesh.Stop();
-        await DelayMs(JumpLegSettleMs);
-    }
-
-    private static float MaxRunUpMeters(float runUpSeconds)
-        => JumpPhysics.RunUpMeters(runUpSeconds) + RunUpSlackMeters;
-
     private async Task<int> FindWayBackOnto(JumpRoute route, int missedLeg, string name, string scope)
     {
-        var stoodOn = NearestLegStoodOn(route);
+        NavmeshIPC.Instance.Stop();
+        if (!await WaitForJumpGrounding(scope) || CancelToken.IsCancellationRequested)
+        {
+            return NotOnRoute;
+        }
+
+        var stoodOn = NearestLegStoodOn(route, missedLeg);
         if (stoodOn != NotOnRoute)
         {
             Diag($"{scope}: still on the route at leg {stoodOn + 1}/{route.Length}");
             return stoodOn;
         }
 
-        var backScope = $"{scope}-back";
-        var label = $"Getting back onto the way up to {name}";
-        var nextLeg = missedLeg + 1;
-        if (nextLeg < route.Length && OvershotJump(route, missedLeg) && IsWalkOnThisLevel(route[nextLeg]))
+        if (Svc.Objects.LocalPlayer is { } groundedPlayer
+            && JumpLanding.RetainedFoothold(route, groundedPlayer.Position, missedLeg))
         {
-            Status = label;
-            Diag($"{backScope}: overshot to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking on to leg {nextLeg + 1}/{route.Length} on this level");
-            if (await RunLeg(JumpStep.Walk(route[nextLeg].Point), false, backScope))
-            {
-                return nextLeg;
-            }
+            Diag($"{scope}: beside the recorded landing/takeoff for leg {missedLeg + 1}, but no verified correction is available; checking another return");
         }
 
+        var backScope = $"{scope}-back";
+        var label = $"Getting back onto the way up to {name}";
         var walks = 0;
         for (var leg = missedLeg - 1; leg > 0 && walks < MaxWalksBackOntoRoute; leg--)
         {
@@ -328,7 +222,7 @@ internal abstract partial class AutoCommon
                 return NotOnRoute;
             }
 
-            if (!IsWalkOnThisLevel(route[leg]))
+            if (Svc.Objects.LocalPlayer is not { } player || !JumpFooting.CanWalkBetween(player.Position, route[leg].Point))
             {
                 continue;
             }
@@ -336,38 +230,35 @@ internal abstract partial class AutoCommon
             walks++;
             Status = label;
             Diag($"{backScope}: fell to {FormatPrecise(Svc.Objects.LocalPlayer?.Position ?? Vector3.Zero)}; walking to leg {leg + 1}/{route.Length} on this level");
-            if (await RunLeg(JumpStep.Walk(route[leg].Point), false, backScope))
+            if (await RunLeg(JumpStep.Walk(route[leg].Point), route.Recorded, backScope))
             {
                 return leg;
             }
         }
 
-        Diag($"{backScope}: walking back to the foot of the route");
-        if (await WalkUpTo(route[0].Point, backScope, name))
+        var roofTakeoff = await ReturnToRoofTakeoff(route, missedLeg - 1, backScope);
+        if (roofTakeoff != NotOnRoute)
         {
-            return 0;
+            return roofTakeoff;
         }
 
-        // A fall often ends off the mesh (an awning, a ledge below the street), where the single walk stalls within
-        // seconds; the travel that reached the foot in the first place snaps to the floor and re-paths (issue #7).
-        Diag($"{backScope}: travelling back to the foot of the route instead");
+        if (CancelToken.IsCancellationRequested)
+        {
+            return NotOnRoute;
+        }
+
+        if (Svc.Objects.LocalPlayer is not { } strandedPlayer)
+        {
+            return NotOnRoute;
+        }
+
+        if (!JumpLanding.IsAtRouteGroundLevel(strandedPlayer.Position, route[0].Point))
+        {
+            return await RestartJumpRoute(route, name, backScope);
+        }
+
+        Diag($"{backScope}: at ground level; travelling back to the foot of the route");
         return await WalkToRouteStart(Svc.ClientState.TerritoryType, route[0].Point, name, backScope) ? 0 : NotOnRoute;
-    }
-
-    private static bool IsWalkOnThisLevel(JumpStep step)
-        => !step.Jumps && MathF.Abs(HeightAbove(step.Point)) <= SameLevelMeters;
-
-    private static bool OvershotJump(JumpRoute route, int leg)
-    {
-        if (leg == 0 || !route[leg].Jumps || Svc.Objects.LocalPlayer is not { } player)
-        {
-            return false;
-        }
-
-        var from = route[leg - 1].Point;
-        var along = (route[leg].Point - from).ToVector2();
-        var travelled = (player.Position - from).ToVector2();
-        return Vector2.Dot(travelled, along) > along.LengthSquared();
     }
 
     private async Task WalkStraightInto(VistaVolume volume, Vector3 logPoint, string scope)
@@ -387,40 +278,20 @@ internal abstract partial class AutoCommon
         Diag($"{scope}: walked straight at the log point from {startedFrom:F1}m out and ended {DescribeStanding(volume)}");
     }
 
-    private static int NearestLegStoodOn(JumpRoute route)
+    private static int NearestLegStoodOn(JumpRoute route, int lastAllowedLeg = int.MaxValue)
     {
         if (Svc.Objects.LocalPlayer is not { } player)
         {
             return NotOnRoute;
         }
 
-        var position = player.Position;
-        var nearestLeg = NotOnRoute;
-        var nearestDistance = float.MaxValue;
-        for (var leg = 0; leg < route.Length; leg++)
-        {
-            var point = route[leg].Point;
-            if (GroundDistance.Between(position, point) > OnRouteAcrossMeters || MathF.Abs(position.Y - point.Y) > OnRouteRiseMeters)
-            {
-                continue;
-            }
-
-            var distance = Vector3.Distance(position, point);
-            if (distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearestLeg = leg;
-            }
-        }
-
-        return nearestLeg;
+        var nearest = JumpPosition.NearestLeg(route, player.Position, JumpPhysics.IsAirborne(), lastAllowedLeg);
+        return nearest != NotOnRoute && JumpLanding.CanCorrect(player.Position, route[nearest].Point,
+            route.Recorded, JumpFooting.InspectWalk(player.Position, route[nearest].Point)) ? nearest : NotOnRoute;
     }
 
-    private static bool HasLandedOn(Vector3 point)
-        => (GroundDistanceTo(point) <= LandedAcrossMeters && HeightAbove(point) >= -LandedBelowMeters) || IsOnLevelWith(point);
-
-    private static bool IsOnLevelWith(Vector3 point)
-        => GroundDistanceTo(point) <= OnRouteAcrossMeters && MathF.Abs(HeightAbove(point)) <= OnRouteRiseMeters;
+    private static bool HasLandedOn(Vector3 point, float across)
+        => Svc.Objects.LocalPlayer is { } player && !JumpPhysics.IsAirborne() && JumpPosition.OnPoint(player.Position, point, across);
 
     private static float HeightAbove(Vector3 point)
         => Svc.Objects.LocalPlayer is { } player ? player.Position.Y - point.Y : float.MinValue;

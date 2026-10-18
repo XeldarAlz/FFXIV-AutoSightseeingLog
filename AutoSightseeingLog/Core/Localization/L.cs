@@ -272,7 +272,10 @@ internal static class L
 
         public static readonly LocString[] Release11100 =
         [
-            new("changelog.r11100.1", "Shiokaze Hostelry (#168) is now climbed all the way to the log point at the top of the tower, from a recording of the full climb"),
+            new("changelog.r11100.1", "Updated Shiokaze Hostelry (#168) with recorded balcony and roof sections, explicit walk-off drops, and corrected takeoff points. Full automatic completion is still being verified."),
+            new("changelog.r11100.2", "Jump timing now adapts to observed acceleration, speed and takeoff delay, with more precise positioning on narrow ledges."),
+            new("changelog.r11100.3", "After a missed jump, recovery checks for a supported route back. If none is available, it teleports to the aetheryte and retries from the entrance, within the climb's retry limits."),
+            new("changelog.r11100.4", "Manual climb recordings now save motion on every frame, and failed jumps include detailed launch and landing diagnostics."),
         ];
 
         public static readonly LocString[] Release11000 =

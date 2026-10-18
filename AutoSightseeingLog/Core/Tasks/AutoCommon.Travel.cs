@@ -63,7 +63,7 @@ internal abstract partial class AutoCommon
 
     private enum LegOutcome { EndedShort, Stalled, Faulted, MountFailed, Remount, FalseStart }
 
-    private enum TeleportPurpose { Shortcut, Recovery, OffMesh }
+    private enum TeleportPurpose { Shortcut, Recovery, OffMesh, JumpRoute }
 
     protected async Task<bool> TravelTo(uint territoryId, Vector3 destination, float arriveWithin)
     {
@@ -417,6 +417,7 @@ internal abstract partial class AutoCommon
         {
             TeleportPurpose.Shortcut => $"{label}: {aetheryte.Name} is {fromAetheryte:F0}m from the spot against {fromHere:F0}m from here; teleporting",
             TeleportPurpose.Recovery => $"{label}: teleporting to {aetheryte.Name} to get unstuck, {fromAetheryte:F0}m from the spot",
+            TeleportPurpose.JumpRoute => $"{label}: teleporting to {aetheryte.Name} to restart the jump route after exhausting local recovery",
             _ => $"{label}: teleporting to {aetheryte.Name} to get back onto the world, {fromAetheryte:F0}m from the spot",
         });
         var moved = false;
@@ -431,19 +432,22 @@ internal abstract partial class AutoCommon
             // Measured after any dismount, so a descent from flight does not pass for teleport progress.
             var before = current.Position;
             var operation = new MoveOp(move => move.Teleport(territoryId, aetheryte.Position, allowSameZoneTeleport: true));
-            await RunCancellable(operation, TravelTeleportWatchdogMs, label, StuckDetector.IdleStallAbort(StuckDetector.IdleStallTimeoutMs));
+            var completed = await RunCancellable(operation, TravelTeleportWatchdogMs, label, StuckDetector.IdleStallAbort(StuckDetector.IdleStallTimeoutMs));
             if (operation.Fault is { } fault)
             {
                 Diag($"{label}: teleport faulted: {fault.Message}");
                 return;
             }
 
-            moved = Svc.Objects.LocalPlayer is { } landed && Vector3.Distance(before, landed.Position) >= TeleportMovedMeters;
+            moved = completed && !CancelToken.IsCancellationRequested
+                && Svc.ClientState.TerritoryType == territoryId
+                && Svc.Objects.LocalPlayer is { } landed && Vector3.Distance(before, landed.Position) >= TeleportMovedMeters
+                && (purpose != TeleportPurpose.JumpRoute || JumpLanding.IsAtTeleportDestination(landed.Position, aetheryte.Position));
         });
 
         if (!moved)
         {
-            Diag($"{label}: the teleport to {aetheryte.Name} did not move the character; carrying on from here");
+            Diag($"{label}: the teleport to {aetheryte.Name} did not establish a confirmed arrival");
             return false;
         }
 

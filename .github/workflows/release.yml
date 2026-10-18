@@ -71,6 +71,10 @@ jobs:
       - name: Build (Release)
         run: dotnet build AutoSightseeingLog.sln --configuration Release
 
+      # Tag builds can run before master CI finishes; gate publishing on the console suite too.
+      - name: Run jump controller regression checks
+        run: dotnet run --project tests/JumpController.Tests --configuration Release
+
       - name: Stage latest.zip
         shell: pwsh
         run: |

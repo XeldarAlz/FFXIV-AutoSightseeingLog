@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="Fixtures/**/*.csv" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../../AutoSightseeingLog/Core/Tasks/JumpMotion.cs" Link="JumpMotion.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Tasks/JumpLanding.cs" Link="JumpLanding.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpFloorPath.cs" Link="JumpFloorPath.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpRecoveryPath.cs" Link="JumpRecoveryPath.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Tasks/JumpTrajectory.cs" Link="JumpTrajectory.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Tasks/JumpLaunchModel.cs" Link="JumpLaunchModel.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpPhysics.cs" Link="JumpPhysics.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpStep.cs" Link="JumpStep.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/RecordedAirMotion.cs" Link="RecordedAirMotion.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpRoute.cs" Link="JumpRoute.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpRoutes.cs" Link="JumpRoutes.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpSurface.cs" Link="JumpSurface.cs" />
+  </ItemGroup>
+</Project>

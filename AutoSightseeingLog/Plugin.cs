@@ -84,6 +84,7 @@ public sealed class Plugin : IDalamudPlugin
     public void Dispose()
     {
         Controller.Stop();
+        JumpRecorder.Dispose();
 
         PluginInterface.UiBuilder.Draw -= OnDraw;
         PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
