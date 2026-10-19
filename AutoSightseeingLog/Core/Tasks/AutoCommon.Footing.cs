@@ -26,6 +26,27 @@ internal abstract partial class AutoCommon
     private const int PlayerFootingWaitMs = 60_000;
     private const int PlayerFootingPollFrames = 10;
 
+    // A character already standing on the spot, by hand or where a paused run left it, is only led off it by an approach
+    // (issue #15). From the air the normal landing still runs, since dismounting in flight drops straight down.
+    protected async Task<bool> AlreadyInside(Vista vista, VistaVolume volume, string scope)
+    {
+        if (Svc.ClientState.TerritoryType != vista.TerritoryId
+            || Svc.Objects.LocalPlayer is not { } player
+            || !volume.Contains(player.Position)
+            || Svc.Condition[ConditionFlag.InFlight])
+        {
+            return false;
+        }
+
+        if (!await SafeDismount($"{scope}-dismount") || !IsStandingInside(volume))
+        {
+            return false;
+        }
+
+        Diag($"{scope}: already {DescribeStanding(volume)}; skipping the approach");
+        return true;
+    }
+
     private async Task<bool> StandInside(Vista vista, VistaVolume volume, string name, string scope)
     {
         var found = VistaFooting.TryFind(volume, out var footing, out var probe);

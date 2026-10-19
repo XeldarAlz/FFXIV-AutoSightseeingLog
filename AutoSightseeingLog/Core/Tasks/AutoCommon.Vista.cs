@@ -57,6 +57,11 @@ internal abstract partial class AutoCommon
         var name = VistaRegistry.Name(vista.Number);
         var volume = VistaVolumes.Of(vista);
         VistaSpot.Show(volume, vista.TerritoryId);
+        if (await AlreadyInside(vista, volume, scope))
+        {
+            return true;
+        }
+
         if (JumpRoutes.TryGet(vista.Number, out var route))
         {
             Diag($"{scope}: heading to #{vista.Number:000} {name} by its {route.Length}-leg jump route from {FormatPosition(route[0].Point)}, log point {FormatPosition(vista.Position)}, {DescribeVolume(volume)}");

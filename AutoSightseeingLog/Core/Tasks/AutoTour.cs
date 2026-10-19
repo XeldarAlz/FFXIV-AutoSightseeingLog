@@ -70,7 +70,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
             }
 
             if (ordered.Length == 0
-                || !VistaRegistry.TryGet(ordered[0], out var next)
+                || !VistaRegistry.TryGet(PickNext(ordered, now), out var next)
                 || !VistaLog.TryGetWindow(next, now, out var window)
                 || (!window.IsOpenAt(now) && window.Start - now > WindowWaitLimitSeconds()))
             {
@@ -81,6 +81,32 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
 
             await Visit(next);
         }
+    }
+
+    // An open vista the character already stands in goes first: any other pick leads away from a log entry the emote
+    // alone would take (issue #15).
+    private static ushort PickNext(ushort[] ordered, long now)
+    {
+        if (Svc.Objects.LocalPlayer is not { } player)
+        {
+            return ordered[0];
+        }
+
+        var territoryId = Svc.ClientState.TerritoryType;
+        for (var index = 0; index < ordered.Length; index++)
+        {
+            if (!VistaRegistry.TryGet(ordered[index], out var vista) || vista.TerritoryId != territoryId)
+            {
+                continue;
+            }
+
+            if (VistaLog.TryGetWindow(vista, now, out var window) && window.IsOpenAt(now) && VistaVolumes.Of(vista).Contains(player.Position))
+            {
+                return vista.Number;
+            }
+        }
+
+        return ordered[0];
     }
 
     private List<ushort> CollectRemaining()
@@ -112,7 +138,9 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
         visits[number] = visits.GetValueOrDefault(number) + 1;
         progress.SetVista(number);
 
-        if (vista.Approach == VistaApproach.NpcGate || (vista.Approach == VistaApproach.JumpPuzzle && !JumpRoutes.Has(number)))
+        // A spot the plugin cannot reach still gets logged when the player is already standing on it.
+        var leftToPlayerApproach = vista.Approach == VistaApproach.NpcGate || (vista.Approach == VistaApproach.JumpPuzzle && !JumpRoutes.Has(number));
+        if (leftToPlayerApproach && !await AlreadyInside(vista, VistaVolumes.Of(vista), scope))
         {
             Diag($"{scope}: {name} is reached {(vista.Approach == VistaApproach.JumpPuzzle ? "by a jump puzzle" : "through an NPC")}; leaving it to the player");
             leftToPlayer.Add(number);
@@ -120,7 +148,7 @@ internal sealed class AutoTour(TourSession session, TourProgress progress) : Aut
         }
 
         progress.SetPhase(TourPhase.Travelling);
-        if (!await ReachVista(vista, scope))
+        if (!leftToPlayerApproach && !await ReachVista(vista, scope))
         {
             if (!CancelToken.IsCancellationRequested && Svc.ClientState.IsLoggedIn)
             {
