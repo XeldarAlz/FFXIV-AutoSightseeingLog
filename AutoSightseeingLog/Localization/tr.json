@@ -237,6 +237,8 @@
   "changelog.new": "Yeni",
   "changelog.changes.one": "{0} değişiklik",
   "changelog.changes.other": "{0} değişiklik",
+  "changelog.r11110.1": "Düzeltildi: Çalışma, zaten üzerinde durduğunuz manzara noktasından uzaklaşıyordu; artık başlangıçta ve devam ederken önce bunu kontrol ediyor ve noktayı, zaman aralığı açıkken sıranın geri kalanından önce, yerinde kaydediyor",
+  "changelog.r11110.2": "Size bırakılan manzara noktaları, bir NPC'nin ardında veya kayıtlı rotası olmayan bir zıplama bulmacasında olanlar, artık zaten üzerinde duruyorsanız kaydediliyor",
   "changelog.r11100.1": "Shiokaze Hostelry (#168) rotası; kaydedilmiş balkon ve çatı bölümleri, zıplamadan kenardan aşağı inme adımları ve düzeltilmiş kalkış noktalarıyla güncellendi. Tüm tırmanışın otomatik tamamlanması hâlâ doğrulanıyor.",
   "changelog.r11100.2": "Zıplama zamanlaması artık gözlemlenen ivmelenmeye, hıza ve kalkış gecikmesine uyarlanıyor; dar çıkıntılarda daha hassas konumlanıyor.",
   "changelog.r11100.3": "Başarısız bir zıplamadan sonra zemini doğrulanmış bir dönüş yolu aranır. Böyle bir yol yoksa eklenti aetheryte'a ışınlanır ve deneme sınırları içinde tırmanışı girişten yeniden dener.",

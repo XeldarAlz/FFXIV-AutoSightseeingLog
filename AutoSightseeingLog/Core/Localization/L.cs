@@ -270,6 +270,12 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release11110 =
+        [
+            new("changelog.r11110.1", "Fixed a run leaving a vista you were already standing at: it now checks first, on start and on resume, and logs it on the spot, ahead of the rest of the queue while its window is open"),
+            new("changelog.r11110.2", "Vistas left to you, behind an NPC or a jump puzzle without a recorded route, are now logged when you are already standing at them"),
+        ];
+
         public static readonly LocString[] Release11100 =
         [
             new("changelog.r11100.1", "Updated Shiokaze Hostelry (#168) with recorded balcony and roof sections, explicit walk-off drops, and corrected takeoff points. Full automatic completion is still being verified."),

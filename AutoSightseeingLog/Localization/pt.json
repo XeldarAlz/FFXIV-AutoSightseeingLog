@@ -237,6 +237,8 @@
   "changelog.new": "Novo",
   "changelog.changes.one": "{0} mudança",
   "changelog.changes.other": "{0} mudanças",
+  "changelog.r11110.1": "Corrigida a sessão que saía de uma vista onde você já estava: agora ela verifica isso primeiro, ao iniciar e ao retomar, e registra no próprio local, antes do resto da fila enquanto a janela dela estiver aberta",
+  "changelog.r11110.2": "Vistas deixadas para você, atrás de um NPC ou de um quebra-cabeça de saltos sem rota gravada, agora são registradas quando você já está nelas",
   "changelog.r11100.1": "Atualizada a rota de Shiokaze Hostelry (#168) com trechos gravados de varandas e telhados, descidas pela borda sem pular e pontos de salto corrigidos. A subida automática completa ainda está em verificação.",
   "changelog.r11100.2": "O momento do salto agora se adapta à aceleração, à velocidade e ao atraso de decolagem observados, com posicionamento mais preciso em apoios estreitos.",
   "changelog.r11100.3": "Após um salto perdido, o plugin procura um caminho de volta com chão contínuo. Se não houver, ele se teletransporta para o aetheryte e tenta a subida novamente desde a entrada, dentro do limite de tentativas.",
