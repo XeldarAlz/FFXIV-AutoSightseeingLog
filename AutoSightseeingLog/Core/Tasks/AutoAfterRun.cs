@@ -1,14 +1,11 @@
 using AutoSightseeingLog.Core.Game.Ops;
-using Dalamud.Game.ClientState.Conditions;
 using ECommons.Automation;
-using ECommons.DalamudServices;
 using System.Threading.Tasks;
 
 namespace AutoSightseeingLog.Core.Tasks;
 
-internal sealed class AutoAfterRun(AfterRunAction action) : AutoCommon
+internal sealed class AutoAfterRun(AfterRunAction action, string postRunCommands) : AutoCommon
 {
-    private const int ReadyWaitMs = 20_000;
     private const int ConfirmationWaitMs = 6_000;
     // The game drops a chat command issued in the middle of a transition.
     private const int PreCommandSettleMs = 800;
@@ -18,19 +15,21 @@ internal sealed class AutoAfterRun(AfterRunAction action) : AutoCommon
     private const string CloseGameCommand = "/xlkill";
 
     private readonly AfterRunAction action = action;
+    private readonly string postRunCommands = postRunCommands;
 
     protected override async Task Execute()
     {
-        if (!await WaitUntilTimed(IsSafeToFinish, ReadyWaitMs, "after-run-ready"))
+        if (!await WaitUntilSafeToFinish("after-run-ready"))
         {
             if (!CancelToken.IsCancellationRequested)
             {
-                Warn($"After-run {action} skipped: no safe moment (combat, casting, or a zone change) within {ReadyWaitMs / TimeUnits.MillisecondsPerSecond}s.");
+                Warn($"After-run chat commands and {action} skipped: no safe moment (combat, casting, or a zone change) within {AfterRunReadyWaitMs / TimeUnits.MillisecondsPerSecond}s.");
             }
 
             return;
         }
 
+        await SendPostRunCommands(postRunCommands);
         switch (action)
         {
             case AfterRunAction.Logout:
@@ -85,10 +84,4 @@ internal sealed class AutoAfterRun(AfterRunAction action) : AutoCommon
         Diag($"After-run: closing the game with {CloseGameCommand}.");
         Chat.ExecuteCommand(CloseGameCommand);
     }
-
-    private static bool IsSafeToFinish()
-        => Svc.Objects.LocalPlayer is not null
-        && !Svc.Condition[ConditionFlag.InCombat]
-        && !Svc.Condition[ConditionFlag.BetweenAreas]
-        && !Svc.Condition[ConditionFlag.Casting];
 }

@@ -34,22 +34,24 @@ internal sealed partial class TourController
         }
 
         ending.AfterActionDispatched = true;
-        var action = Plugin.Instance.Configuration.AfterRun;
-        if (action == AfterRunAction.StayLoggedIn)
+        var configuration = Plugin.Instance.Configuration;
+        var action = configuration.AfterRun;
+        var postRunCommands = configuration.PostRunCommands;
+        if (action == AfterRunAction.StayLoggedIn && string.IsNullOrWhiteSpace(postRunCommands))
         {
-            Diag("Run ended on its own; the after-run action is StayLoggedIn, nothing to do.");
+            Diag("Run ended on its own; the after-run action is StayLoggedIn and no chat commands are set, nothing to do.");
             return false;
         }
 
         if (ending.DidNothing)
         {
-            Diag($"Run ended on its own without logging a vista; skipping after-run action {action}.");
+            Diag($"Run ended on its own without logging a vista; skipping chat commands and after-run action {action}.");
             return false;
         }
 
-        Diag($"Run ended on its own; starting after-run action {action}.");
+        Diag($"Run ended on its own; starting chat commands and after-run action {action}.");
         progress.SetPhase(TourPhase.Finishing);
-        AutoCommon task = action == AfterRunAction.ReturnToInn ? new AutoReturnToInn() : new AutoAfterRun(action);
+        AutoCommon task = action == AfterRunAction.ReturnToInn ? new AutoReturnToInn(postRunCommands) : new AutoAfterRun(action, postRunCommands);
         RunTask(task, () =>
         {
             Diag($"After-run action {action} finished.");

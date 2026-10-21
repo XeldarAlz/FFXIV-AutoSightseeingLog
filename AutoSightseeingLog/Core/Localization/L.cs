@@ -424,6 +424,11 @@ internal static class L
         public static readonly LocString WindowWait = new("settings.general.windowWait", "Wait for a window up to");
         public static readonly LocString WindowWaitHelp = new("settings.general.windowWaitHelp", "How long the plugin waits on the spot for a vista's hour and weather to line up. A vista whose window opens later than this is left for a later run and the tour ends. Raise it when you want one vista done in a single sitting however long its window takes.");
 
+        public static readonly LocString PostRunGroup = new("settings.postRun.group", "Chat commands");
+        public static readonly LocString PostRunLabel = new("settings.postRun.label", "Run when the run finishes");
+        public static readonly LocString PostRunHelp = new("settings.postRun.help", "One command per line, each starting with a slash. They run when a run ends on its own, before the after-run action, and never after Stop or a failure.");
+        public static readonly LocString PostRunCaption = new("settings.postRun.caption", "Lines that do not start with a slash are skipped, so nothing is ever said in chat. Try /li home to head home or /ays m to hand off to AutoRetainer.");
+
         public static readonly LocString Markers = new("settings.markers.title", "Spot markers");
         public static readonly LocString MarkerBox = new("settings.markers.box", "Show the box");
         public static readonly LocString MarkerBoxHelp = new("settings.markers.boxHelp", "The outline drawn in the world around the spot a vista is logged from. It is as large as the spot itself, and turns green once your character stands inside it.");
