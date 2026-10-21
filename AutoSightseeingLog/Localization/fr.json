@@ -237,6 +237,7 @@
   "changelog.new": "Nouveau",
   "changelog.changes.one": "{0} changement",
   "changelog.changes.other": "{0} changements",
+  "changelog.r11120.1": "Correction d'une nouvelle tentative de parcours de sauts qui arrêtait la session après la téléportation vers l'éthérite d'une ville, comme pour l'ascension de Hunu'iliy à Tuliyollal : le plugin reconnaît désormais son arrivée",
   "changelog.r11110.1": "Correction d'une session qui quittait un panorama où vous vous trouviez déjà : elle le vérifie désormais en premier, au lancement comme à la reprise, et l'enregistre sur place, avant le reste de la file tant que sa fenêtre est ouverte",
   "changelog.r11110.2": "Les panoramas laissés à vos soins, derrière un PNJ ou un parcours de sauts sans route enregistrée, sont désormais enregistrés si vous vous y trouvez déjà",
   "changelog.r11100.1": "La route de Shiokaze Hostelry (#168) a été mise à jour avec des passages enregistrés sur les balcons et les toits, des descentes de rebord sans saut et des points de départ corrigés. L'ascension automatique complète reste en cours de vérification.",

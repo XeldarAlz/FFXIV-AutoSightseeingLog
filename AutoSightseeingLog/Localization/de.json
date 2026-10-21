@@ -237,6 +237,7 @@
   "changelog.new": "Neu",
   "changelog.changes.one": "{0} Änderung",
   "changelog.changes.other": "{0} Änderungen",
+  "changelog.r11120.1": "Behoben: Ein neuer Versuch an einem Sprungrätsel beendete den Lauf nach dem Teleport zurück zum Ätheryten einer Stadt, etwa beim Aufstieg nach Hunu'iliy in Tuliyollal; das Plugin erkennt die Ankunft dort jetzt",
   "changelog.r11110.1": "Behoben: Ein Lauf verließ einen Aussichtspunkt, an dem du bereits standest; er prüft das jetzt zuerst, beim Start und beim Fortsetzen, und trägt ihn direkt dort ein, vor dem Rest der Warteschlange, solange sein Zeitfenster offen ist",
   "changelog.r11110.2": "Aussichtspunkte, die dir überlassen werden, hinter einem NPC oder einem Sprungrätsel ohne aufgezeichnete Route, werden jetzt eingetragen, wenn du bereits dort stehst",
   "changelog.r11100.1": "Die Route zur Shiokaze-Herberge (#168) wurde mit aufgezeichneten Balkon- und Dachabschnitten, gezielten Abgängen ohne Sprung und korrigierten Absprungpunkten aktualisiert. Der vollständig automatische Aufstieg wird noch überprüft.",

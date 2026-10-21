@@ -237,6 +237,7 @@
   "changelog.new": "New",
   "changelog.changes.one": "{0} change",
   "changelog.changes.other": "{0} changes",
+  "changelog.r11120.1": "Fixed a jump puzzle retry stopping the run after teleporting back to a city aetheryte, as on the Hunu'iliy climb in Tuliyollal: the plugin now recognises that it arrived",
   "changelog.r11110.1": "Fixed a run leaving a vista you were already standing at: it now checks first, on start and on resume, and logs it on the spot, ahead of the rest of the queue while its window is open",
   "changelog.r11110.2": "Vistas left to you, behind an NPC or a jump puzzle without a recorded route, are now logged when you are already standing at them",
   "changelog.r11100.1": "Updated Shiokaze Hostelry (#168) with recorded balcony and roof sections, explicit walk-off drops, and corrected takeoff points. Full automatic completion is still being verified.",

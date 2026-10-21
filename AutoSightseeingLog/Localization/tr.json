@@ -237,6 +237,7 @@
   "changelog.new": "Yeni",
   "changelog.changes.one": "{0} değişiklik",
   "changelog.changes.other": "{0} değişiklik",
+  "changelog.r11120.1": "Düzeltildi: Bir zıplama bulmacasının yeniden denenmesi, Tuliyollal'daki Hunu'iliy tırmanışında olduğu gibi bir şehir aetheryte'ına geri ışınlandıktan sonra çalışmayı durduruyordu; eklenti artık vardığını tanıyor",
   "changelog.r11110.1": "Düzeltildi: Çalışma, zaten üzerinde durduğunuz manzara noktasından uzaklaşıyordu; artık başlangıçta ve devam ederken önce bunu kontrol ediyor ve noktayı, zaman aralığı açıkken sıranın geri kalanından önce, yerinde kaydediyor",
   "changelog.r11110.2": "Size bırakılan manzara noktaları, bir NPC'nin ardında veya kayıtlı rotası olmayan bir zıplama bulmacasında olanlar, artık zaten üzerinde duruyorsanız kaydediliyor",
   "changelog.r11100.1": "Shiokaze Hostelry (#168) rotası; kaydedilmiş balkon ve çatı bölümleri, zıplamadan kenardan aşağı inme adımları ve düzeltilmiş kalkış noktalarıyla güncellendi. Tüm tırmanışın otomatik tamamlanması hâlâ doğrulanıyor.",

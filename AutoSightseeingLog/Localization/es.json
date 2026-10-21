@@ -237,6 +237,7 @@
   "changelog.new": "Nuevo",
   "changelog.changes.one": "{0} cambio",
   "changelog.changes.other": "{0} cambios",
+  "changelog.r11120.1": "Corregido que el reintento de un rompecabezas de saltos detuviera la sesión tras teletransportarse de vuelta al etérito de una ciudad, como en la subida a Hunu'iliy en Tuliyollal: ahora el plugin reconoce que ha llegado",
   "changelog.r11110.1": "Corregido que una sesión abandonara una vista en la que ya estabas: ahora lo comprueba primero, al empezar y al reanudar, y la registra allí mismo, antes que el resto de la cola mientras su ventana esté abierta",
   "changelog.r11110.2": "Las vistas que quedan en tus manos, tras un NPC o un rompecabezas de saltos sin ruta grabada, ahora se registran si ya estás en ellas",
   "changelog.r11100.1": "Actualizada la ruta de Shiokaze Hostelry (#168) con tramos de balcones y tejados grabados, descensos desde bordes sin saltar y puntos de despegue corregidos. La subida automática completa sigue en fase de verificación.",

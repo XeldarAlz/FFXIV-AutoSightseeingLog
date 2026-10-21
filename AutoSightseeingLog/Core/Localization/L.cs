@@ -270,6 +270,11 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release11120 =
+        [
+            new("changelog.r11120.1", "Fixed a jump puzzle retry stopping the run after teleporting back to a city aetheryte, as on the Hunu'iliy climb in Tuliyollal: the plugin now recognises that it arrived"),
+        ];
+
         public static readonly LocString[] Release11110 =
         [
             new("changelog.r11110.1", "Fixed a run leaving a vista you were already standing at: it now checks first, on start and on resume, and logs it on the spot, ahead of the rest of the queue while its window is open"),
