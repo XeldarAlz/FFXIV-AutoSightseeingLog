@@ -6,7 +6,8 @@ using UIState = FFXIVClientStructs.FFXIV.Client.Game.UI.UIState;
 
 namespace AutoSightseeingLog.Core.Travel;
 
-internal readonly record struct ZoneAetheryte(uint Id, string Name, Vector3 Position);
+// Without a Level row the position comes from the map marker, which has no height and reads as 0.
+internal readonly record struct ZoneAetheryte(uint Id, string Name, Vector3 Position, bool KnownHeight);
 
 internal readonly record struct ZoneGateway(uint AetheryteId, uint TerritoryId, string Name, Vector3 Position);
 
@@ -280,7 +281,7 @@ internal static class ZoneAetherytes
                 continue;
             }
 
-            found.Add(new ZoneAetheryte(row.RowId, ResolveName(row), position));
+            found.Add(new ZoneAetheryte(row.RowId, ResolveName(row), position, HasLevel(row)));
         }
 
         return found.ToArray();
@@ -299,7 +300,7 @@ internal static class ZoneAetherytes
                 continue;
             }
 
-            found.Add(new AethernetNode(new ZoneAetheryte(row.RowId, ResolveName(row), position), PrimaryOf(row), !row.Invisible));
+            found.Add(new AethernetNode(new ZoneAetheryte(row.RowId, ResolveName(row), position, HasLevel(row)), PrimaryOf(row), !row.Invisible));
         }
 
         return found.ToArray();
@@ -372,6 +373,8 @@ internal static class ZoneAetherytes
 
         return float.IsFinite(position.X) && float.IsFinite(position.Y) && float.IsFinite(position.Z);
     }
+
+    private static bool HasLevel(Aetheryte row) => row.Level[0].ValueNullable is not null;
 
     private readonly record struct AethernetNode(ZoneAetheryte Stop, uint PrimaryId, bool Visible);
 

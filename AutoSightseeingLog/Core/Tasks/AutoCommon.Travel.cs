@@ -442,7 +442,7 @@ internal abstract partial class AutoCommon
             moved = completed && !CancelToken.IsCancellationRequested
                 && Svc.ClientState.TerritoryType == territoryId
                 && Svc.Objects.LocalPlayer is { } landed && Vector3.Distance(before, landed.Position) >= TeleportMovedMeters
-                && (purpose != TeleportPurpose.JumpRoute || JumpLanding.IsAtTeleportDestination(landed.Position, aetheryte.Position));
+                && (purpose != TeleportPurpose.JumpRoute || JumpLanding.IsAtTeleportDestination(landed.Position, aetheryte.Position, aetheryte.KnownHeight));
         });
 
         if (!moved)

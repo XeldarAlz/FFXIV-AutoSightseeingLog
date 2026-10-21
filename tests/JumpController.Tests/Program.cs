@@ -50,11 +50,19 @@ var tests = new List<(string Name, Action Run)>
     {
         var aetheryte = new Vector3(50f, 4f, 50f);
         var arrival = aetheryte + new Vector3(4f, 0f, 4f);
-        Assert(JumpLanding.IsAtTeleportDestination(arrival, aetheryte));
+        Assert(JumpLanding.IsAtTeleportDestination(arrival, aetheryte, true));
         Assert(!JumpLanding.IsAtRouteGroundLevel(arrival, new(-42.05f, 14.03f, -36.19f)));
-        Assert(!JumpLanding.IsAtTeleportDestination(new(-54.28f, 53.66f, -64.28f), aetheryte));
-        Assert(!JumpLanding.IsAtTeleportDestination(arrival + Vector3.UnitY * 15f, aetheryte));
-        Assert(!JumpLanding.IsAtTeleportDestination(arrival + Vector3.UnitX * 30f, aetheryte));
+        Assert(!JumpLanding.IsAtTeleportDestination(new(-54.28f, 53.66f, -64.28f), aetheryte, true));
+        Assert(!JumpLanding.IsAtTeleportDestination(arrival + Vector3.UnitY * 15f, aetheryte, true));
+        Assert(!JumpLanding.IsAtTeleportDestination(arrival + Vector3.UnitX * 30f, aetheryte, true));
+    }),
+    ("A reset to a city aetheryte without a recorded height checks only the ground distance", () =>
+    {
+        var marker = new Vector3(-24f, 0f, 2f);
+        var arrival = new Vector3(-20f, 37f, 6f);
+        Assert(JumpLanding.IsAtTeleportDestination(arrival, marker, false));
+        Assert(!JumpLanding.IsAtTeleportDestination(arrival, marker, true));
+        Assert(!JumpLanding.IsAtTeleportDestination(arrival + Vector3.UnitX * 30f, marker, false));
     }),
     ("The upper-roof route follows seven successful recorded landings and excludes the final fall", () =>
     {

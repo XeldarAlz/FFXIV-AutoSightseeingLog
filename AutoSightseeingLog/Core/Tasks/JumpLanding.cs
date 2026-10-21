@@ -35,8 +35,9 @@ internal static class JumpLanding
 
     // The aetheryte can be on a different street level from the puzzle entrance. Verify the
     // teleport destination itself, not the entrance height, before handing over to ground travel.
-    public static bool IsAtTeleportDestination(Vector3 position, Vector3 destination)
-        => JumpPosition.OnPoint(position, destination, 20f, 5f);
+    // A city aetheryte's height is not in the game data, so only its ground distance can be checked.
+    public static bool IsAtTeleportDestination(Vector3 position, Vector3 destination, bool knownHeight)
+        => JumpPosition.OnPoint(position, destination, 20f, knownHeight ? 5f : float.PositiveInfinity);
 }
 
 internal sealed class JumpCorrectionGuard(Vector3 from, Vector3 target)
