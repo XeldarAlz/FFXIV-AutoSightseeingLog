@@ -6,8 +6,10 @@ using UIState = FFXIVClientStructs.FFXIV.Client.Game.UI.UIState;
 
 namespace AutoSightseeingLog.Core.Travel;
 
-// Without a Level row the position comes from the map marker, which has no height and reads as 0.
-internal readonly record struct ZoneAetheryte(uint Id, string Name, Vector3 Position, bool KnownHeight);
+// Position is where the movement library places the stop, which is what aims its teleports and rides. Without a Level row it
+// comes from the map marker, which has no height and reads as 0, and the library scales the map offset down a thousandfold,
+// so on an offset map such as Tuliyollal's it is tens of metres off. Standing is where the stop really is.
+internal readonly record struct ZoneAetheryte(uint Id, string Name, Vector3 Position, bool KnownHeight, Vector3 Standing);
 
 internal readonly record struct ZoneGateway(uint AetheryteId, uint TerritoryId, string Name, Vector3 Position);
 
@@ -19,6 +21,9 @@ internal static class ZoneAetherytes
     private const byte StandardFieldUse = 1;
     // Interacting with a shard, picking the stop and the short load take about as long as running this far.
     private const float AethernetOverheadMeters = 80f;
+    // MapMarker data types: 3 keys an Aetheryte row, 4 an aethernet place name.
+    private const byte AetheryteMarkerType = 3;
+    private const byte AethernetMarkerType = 4;
 
     private enum StopFilter : byte { Any, Attuned, Usable }
 
@@ -293,7 +298,7 @@ internal static class ZoneAetherytes
                 continue;
             }
 
-            found.Add(new ZoneAetheryte(row.RowId, ResolveName(row), position, HasLevel(row)));
+            found.Add(CreateStop(row, position));
         }
 
         return found.ToArray();
@@ -312,7 +317,7 @@ internal static class ZoneAetherytes
                 continue;
             }
 
-            found.Add(new AethernetNode(new ZoneAetheryte(row.RowId, ResolveName(row), position, HasLevel(row)), PrimaryOf(row), !row.Invisible));
+            found.Add(new AethernetNode(CreateStop(row, position), PrimaryOf(row), !row.Invisible));
         }
 
         return found.ToArray();
@@ -387,6 +392,48 @@ internal static class ZoneAetherytes
     }
 
     private static bool HasLevel(Aetheryte row) => row.Level[0].ValueNullable is not null;
+
+    private static ZoneAetheryte CreateStop(Aetheryte row, Vector3 position)
+    {
+        var hasLevel = HasLevel(row);
+        if (hasLevel || !TryFindMarkerPosition(row, out var standing))
+        {
+            standing = position;
+        }
+
+        return new ZoneAetheryte(row.RowId, ResolveName(row), position, hasLevel, standing);
+    }
+
+    private static bool TryFindMarkerPosition(Aetheryte row, out Vector3 position)
+    {
+        position = default;
+        if (row.Territory.ValueNullable?.Map.ValueNullable is not { } map
+            || Svc.Data.GetSubrowExcelSheet<MapMarker>().GetRowOrDefault(map.MapMarkerRange) is not { } markers)
+        {
+            return false;
+        }
+
+        // The library's own lookup order: the marker of the aetheryte itself, else the one of its aethernet name.
+        var found = false;
+        for (var index = 0; index < markers.Count; index++)
+        {
+            var marker = markers[index];
+            var ownMarker = marker.DataType == AetheryteMarkerType && marker.DataKey.RowId == row.RowId;
+            if (!ownMarker && (found || marker.DataType != AethernetMarkerType || marker.DataKey.RowId != row.AethernetName.RowId))
+            {
+                continue;
+            }
+
+            position = MapMarkerPosition.ToWorld(marker.X, marker.Y, map.SizeFactor, map.OffsetX, map.OffsetY);
+            found = true;
+            if (ownMarker)
+            {
+                return true;
+            }
+        }
+
+        return found;
+    }
 
     private readonly record struct AethernetNode(ZoneAetheryte Stop, uint PrimaryId, bool Visible);
 

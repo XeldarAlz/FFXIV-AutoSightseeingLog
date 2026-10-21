@@ -1,4 +1,5 @@
 using AutoSightseeingLog.Core.Tasks;
+using AutoSightseeingLog.Core.Travel;
 using AutoSightseeingLog.Core.Vistas;
 using System.Numerics;
 
@@ -63,6 +64,17 @@ var tests = new List<(string Name, Action Run)>
         Assert(JumpLanding.IsAtTeleportDestination(arrival, marker, false));
         Assert(!JumpLanding.IsAtTeleportDestination(arrival, marker, true));
         Assert(!JumpLanding.IsAtTeleportDestination(arrival + Vector3.UnitX * 30f, marker, false));
+    }),
+    ("A Tuliyollal marker takes the whole map offset, putting the crystal where the reset teleport lands", () =>
+    {
+        var crystal = MapMarkerPosition.ToWorld(1070, 911, 180, 50, -70);
+        Near(-24.4f, crystal.X, 0.1f);
+        Near(7.2f, crystal.Z, 0.1f);
+        var libraryCrystal = new Vector3(24.9f, 0f, -63.2f); // The thousandfold-smaller offset.
+        Assert(!JumpLanding.IsAtTeleportDestination(crystal + new Vector3(4f, 37f, 4f), libraryCrystal, false));
+        Assert(JumpLanding.IsAtTeleportDestination(crystal + new Vector3(4f, 37f, 4f), crystal, false));
+        var brightploom = MapMarkerPosition.ToWorld(1243, 298, 180, 50, -70);
+        Near(203f, Vector2.Distance(new(brightploom.X, brightploom.Z), new(270.2f, -376.1f)), 1f); // 18:38:28, walking from that stop.
     }),
     ("The upper-roof route follows seven successful recorded landings and excludes the final fall", () =>
     {

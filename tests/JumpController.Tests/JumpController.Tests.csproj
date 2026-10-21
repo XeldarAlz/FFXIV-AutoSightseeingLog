@@ -20,5 +20,6 @@
     <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpRoute.cs" Link="JumpRoute.cs" />
     <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpRoutes.cs" Link="JumpRoutes.cs" />
     <Compile Include="../../AutoSightseeingLog/Core/Vistas/JumpSurface.cs" Link="JumpSurface.cs" />
+    <Compile Include="../../AutoSightseeingLog/Core/Travel/MapMarkerPosition.cs" Link="MapMarkerPosition.cs" />
   </ItemGroup>
 </Project>
