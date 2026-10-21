@@ -16,6 +16,8 @@ public sealed class Configuration : IPluginConfiguration
 
     public bool AutoShowOnLogin { get; set; } = false;
 
+    public bool DragWindowFromAnywhere { get; set; } = false;
+
     public string Language { get; set; } = "";
 
     // Sightseeing Log numbers, 1 onward, as the log itself shows them.
