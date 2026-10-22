@@ -270,6 +270,11 @@ internal static class L
         public static readonly LocString New = new("changelog.new", "New");
         public static readonly LocPlural Changes = new("changelog.changes", "{0} change", "{0} changes");
 
+        public static readonly LocString[] Release11210 =
+        [
+            new("changelog.r11210.1", "Fixed the Hunu'iliy climb in Tuliyollal still stopping after its retry teleport: the plugin placed the Tuliyollal aetheryte about 86 m from where it really stands, so it did not see that it had arrived"),
+        ];
+
         public static readonly LocString[] Release11200 =
         [
             new("changelog.r11200.1", "Added Chat commands to the settings: list your own commands, one per line (such as /li home or /ays m), and they run when a run finishes on its own, before the after-run action, never after Stop or a failure"),

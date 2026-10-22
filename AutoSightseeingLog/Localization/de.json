@@ -237,6 +237,7 @@
   "changelog.new": "Neu",
   "changelog.changes.one": "{0} Änderung",
   "changelog.changes.other": "{0} Änderungen",
+  "changelog.r11210.1": "Behoben: Der Aufstieg nach Hunu'iliy in Tuliyollal stoppte nach dem Teleport für den neuen Versuch immer noch; das Plugin verortete den Ätheryten von Tuliyollal etwa 86 m neben seinem tatsächlichen Standort und erkannte die Ankunft daher nicht",
   "changelog.r11200.1": "Chat-Befehle in den Einstellungen hinzugefügt: Trage eigene Befehle ein, einen pro Zeile (etwa /li home oder /ays m); sie laufen, wenn ein Lauf von selbst endet, vor der Aktion nach dem Lauf, und nie nach Stopp oder einem Fehler",
   "changelog.r11200.2": "Behoben: Ein Lauf wartete endlos an einem Ätheryten, wenn keine Station des Ätheryten-Netzes in ein Gebiet abgestimmt war, etwa bei den Toren von Idyllshire ins Hinterland; jetzt endet er mit dem Hinweis, dass eine Station abgestimmt werden muss",
   "changelog.r11200.3": "Das Hauptfenster bewegt sich jetzt nur noch beim Ziehen an der oberen Leiste, Ziehen im Fenster verschiebt es also nicht mehr versehentlich; aktiviere Überall ziehen in den Einstellungen für das alte Verhalten",

@@ -237,6 +237,7 @@
   "changelog.new": "Nuevo",
   "changelog.changes.one": "{0} cambio",
   "changelog.changes.other": "{0} cambios",
+  "changelog.r11210.1": "Corregido que la subida a Hunu'iliy en Tuliyollal siguiera deteniéndose tras el teletransporte del reintento: el plugin situaba el etérito de Tuliyollal a unos 86 m de donde está en realidad, así que no reconocía que había llegado",
   "changelog.r11200.1": "Se añadieron Comandos de chat a los ajustes: escribe tus propios comandos, uno por línea (como /li home o /ays m), y se ejecutan cuando una sesión termina por sí sola, antes de la acción final, nunca tras Detener o un fallo",
   "changelog.r11200.2": "Corregido que una sesión esperara sin fin junto a un etérito central cuando ninguna parada de la red etérea hacia una zona estaba sintonizada, como las puertas de Idyllshire hacia Hinterlands: ahora se detiene con un mensaje que indica que hay que sintonizar una parada",
   "changelog.r11200.3": "La ventana principal ahora solo se mueve al arrastrar su barra superior, así que arrastrar dentro de ella ya no la mueve sin querer; activa Arrastrar desde cualquier punto en los ajustes para el comportamiento anterior",
